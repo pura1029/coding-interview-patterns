@@ -1,6 +1,6 @@
 # Coding Interview Patterns - Java
 
-A comprehensive Java project covering **20 essential coding interview patterns**, each with **30 examples** (10 Easy, 10 Medium, 10 Hard) — **600 total coding solutions**.
+A comprehensive Java project covering **20 essential coding interview patterns** + **7 core data structure & system design topics**, each with **30 examples** (10 Easy, 10 Medium, 10 Hard) — **810 total coding solutions**, plus **SOLID design principles** and **15 Gang-of-Four design patterns** with clear examples.
 
 ## Project Structure
 
@@ -8,6 +8,13 @@ A comprehensive Java project covering **20 essential coding interview patterns**
 coding-interview-patterns/
 ├── pom.xml
 ├── README.md
+├── docs/
+│   ├── system-design-fundamentals.md  # Scalability, Availability, CAP
+│   ├── load-balancing.md              # LB Algorithms, Consistent Hashing
+│   ├── databases.md                   # SQL vs NoSQL, Replication, Sharding
+│   ├── caching-strategies.md           # Write-Through/Back, LRU, LFU, Eviction
+│   ├── kafka.md                       # Master Kafka in 8 Steps
+│   └── rate-limiting.md               # Rate Limiting Deep Dive
 └── src/main/java/patterns/
     ├── prefixsum/               # Pattern 1:  Prefix Sum
     ├── twopointers/             # Pattern 2:  Two Pointers
@@ -28,7 +35,16 @@ coding-interview-patterns/
     ├── backtracking/            # Pattern 17: Backtracking
     ├── trie/                    # Pattern 18: Prefix Search (Trie)
     ├── greedy/                  # Pattern 19: Greedy
-    └── dynamicprogramming/      # Pattern 20: Dynamic Programming
+    ├── dynamicprogramming/      # Pattern 20: Dynamic Programming
+    ├── arrays/                  # Data Structure: Arrays
+    ├── strings/                 # Data Structure: Strings
+    ├── linkedlists/             # Data Structure: Linked Lists
+    ├── stacks/                  # Data Structure: Stacks
+    ├── queues/                  # Data Structure: Queues
+    ├── cachingstrategies/       # System Design: Caching Strategies
+    ├── ratelimiting/            # System Design: Rate Limiting
+    ├── solid/                   # SOLID Design Principles
+    └── designpatterns/          # Top 15 Design Patterns (GoF)
 ```
 
 ## Pattern Summary
@@ -66,6 +82,95 @@ Each pattern file contains **30 examples** organized by difficulty:
 | **Medium** | 10 | Requires combining the pattern with additional logic |
 | **Hard** | 10 | Advanced problems often seen in top-tier coding interviews |
 
+## Core Data Structure Topics (30 Examples Each)
+
+| # | Topic | Key Techniques | Examples |
+|---|-------|---------------|----------|
+| 1 | **[Arrays](src/main/java/patterns/arrays/)** | Hashing, two pointers, sorting, prefix computation, in-place ops | 30 |
+| 2 | **[Strings](src/main/java/patterns/strings/)** | Frequency count, sliding window, DP, pattern matching, backtracking | 30 |
+| 3 | **[Linked Lists](src/main/java/patterns/linkedlists/)** | Dummy head, fast/slow pointers, in-place reversal, merge | 30 |
+| 4 | **[Stacks](src/main/java/patterns/stacks/)** | Monotonic stack, expression parsing, matching, DFS simulation | 30 |
+| 5 | **[Queues](src/main/java/patterns/queues/)** | BFS, deque, circular queue, priority queue, task scheduling | 30 |
+| 6 | **[Caching Strategies](src/main/java/patterns/cachingstrategies/)** | LRU, LFU, FIFO, TTL, write-through/back, Bloom filter, CDN | 30 |
+| 7 | **[Rate Limiting](src/main/java/patterns/ratelimiting/)** | Token bucket, leaky bucket, sliding window, adaptive, distributed | 30 |
+
+### Run Data Structure & System Design Examples
+```bash
+cd src/main/java
+javac patterns/arrays/ArraysPatterns.java
+java patterns.arrays.ArraysPatterns
+
+javac patterns/strings/StringsPatterns.java
+java patterns.strings.StringsPatterns
+
+javac patterns/linkedlists/LinkedListsPatterns.java
+java patterns.linkedlists.LinkedListsPatterns
+
+javac patterns/stacks/StackPatterns.java
+java patterns.stacks.StackPatterns
+
+javac patterns/queues/QueuePatterns.java
+java patterns.queues.QueuePatterns
+
+javac patterns/cachingstrategies/CachingStrategiesPatterns.java
+java patterns.cachingstrategies.CachingStrategiesPatterns
+
+javac patterns/ratelimiting/RateLimitingPatterns.java
+java patterns.ratelimiting.RateLimitingPatterns
+```
+
+## SOLID Design Principles
+
+The `solid/` package demonstrates all 5 SOLID principles with **BAD vs GOOD** code examples:
+
+| Principle | Class | Key Rule |
+|-----------|-------|----------|
+| **S** — Single Responsibility | `SingleResponsibilityPrinciple` | A class should have only one reason to change |
+| **O** — Open/Closed | `OpenClosedPrinciple` | Open for extension, closed for modification |
+| **L** — Liskov Substitution | `LiskovSubstitutionPrinciple` | Subtypes must be substitutable for base types |
+| **I** — Interface Segregation | `InterfaceSegregationPrinciple` | Don't force unused interface methods |
+| **D** — Dependency Inversion | `DependencyInversionPrinciple` | Depend on abstractions, not concretions |
+
+Each file shows a **violation** (BAD) and the **correct approach** (GOOD) with runnable `main()` methods.
+
+## Top 15 Design Patterns (GoF)
+
+The `designpatterns/` package implements 15 essential design patterns with real-world examples:
+
+| # | Pattern | Category | Key Idea |
+|---|---------|----------|----------|
+| 1 | **Singleton** | Creational | One instance, global access |
+| 2 | **Factory Method** | Creational | Delegate object creation to subclasses |
+| 3 | **Builder** | Creational | Step-by-step complex object construction |
+| 4 | **Adapter** | Structural | Convert incompatible interfaces |
+| 5 | **Decorator** | Structural | Add responsibilities dynamically |
+| 6 | **Facade** | Structural | Simplify complex subsystems |
+| 7 | **Proxy** | Structural | Control access (lazy load, security, logging) |
+| 8 | **Composite** | Structural | Tree structures (part-whole hierarchies) |
+| 9 | **Observer** | Behavioral | Notify subscribers on state change |
+| 10 | **Strategy** | Behavioral | Swap algorithms at runtime |
+| 11 | **Command** | Behavioral | Encapsulate requests (undo/redo) |
+| 12 | **Iterator** | Behavioral | Traverse collections uniformly |
+| 13 | **State** | Behavioral | Behavior changes with internal state |
+| 14 | **Template Method** | Behavioral | Algorithm skeleton with customizable steps |
+| 15 | **Chain of Responsibility** | Behavioral | Pass requests along a handler chain |
+
+Each file contains a brief description, real-world example, and runnable `main()` method.
+
+## Technology Deep Dives
+
+The `docs/` folder contains detailed reference guides for system design interview topics:
+
+| Document | Topics Covered |
+|----------|---------------|
+| [**System Design Fundamentals**](docs/system-design-fundamentals.md) | Scalability, Availability, Reliability, Latency, Throughput, CAP Theorem, PACELC |
+| [**Load Balancing**](docs/load-balancing.md) | Round Robin, Least Connections, Consistent Hashing, L4/L7, Health Checks, Real-World Architectures |
+| [**Databases**](docs/databases.md) | SQL vs NoSQL, ACID vs BASE, Replication, Sharding, Indexing, Database Selection Guide |
+| [**Caching Strategies**](docs/caching-strategies.md) | Write-Through, Write-Back, Write-Around, LRU, LFU, FIFO, Cache Stampede, Real-World Architectures |
+| [**Kafka**](docs/kafka.md) | Messages, Topics, Partitions, Producers, Consumers, Clusters, Use Cases |
+| [**Rate Limiting**](docs/rate-limiting.md) | 5 Core Algorithms, Types, Distributed Limiting, Architecture, Real-World Case Studies |
+| [**Java Fundamentals**](docs/java-fundamentals.md) | If-Else, Switch, Ternary, Loops, Pattern Matching, Optional, Operators, Javadoc Conventions |
+
 ## How to Run
 
 ### Prerequisites
@@ -94,6 +199,30 @@ javac patterns/prefixsum/PrefixSumPatterns.java
 java patterns.prefixsum.PrefixSumPatterns
 ```
 
+### Run SOLID examples
+```bash
+cd src/main/java
+javac patterns/solid/*.java
+java patterns.solid.SingleResponsibilityPrinciple
+java patterns.solid.OpenClosedPrinciple
+java patterns.solid.LiskovSubstitutionPrinciple
+java patterns.solid.InterfaceSegregationPrinciple
+java patterns.solid.DependencyInversionPrinciple
+```
+
+### Run Design Pattern examples
+```bash
+cd src/main/java
+javac patterns/designpatterns/*.java
+java patterns.designpatterns.SingletonPattern
+java patterns.designpatterns.FactoryMethodPattern
+java patterns.designpatterns.BuilderPattern
+java patterns.designpatterns.ObserverPattern
+java patterns.designpatterns.StrategyPattern
+java patterns.designpatterns.ChainOfResponsibilityPattern
+# ... and 9 more
+```
+
 ## Resources
 
 1. [Prefix Sum](https://lnkd.in/gCHQegHZ)
@@ -116,5 +245,23 @@ java patterns.prefixsum.PrefixSumPatterns
 18. [Prefix Search (Trie)](https://lnkd.in/gjwmvjrj)
 19. [Greedy](https://lnkd.in/gWfq8B25)
 20. [Dynamic Programming Patterns](https://lnkd.in/gJZXfmHK)
+
+### Design Patterns
+
+1. [Singleton](https://lnkd.in/g3VrJz-k)
+2. [Factory Method](https://lnkd.in/gA6Uew8n)
+3. [Builder](https://lnkd.in/gdTr2BBF)
+4. [Adapter](https://lnkd.in/g_yB_CZn)
+5. [Decorator](https://lnkd.in/g9zWv66w)
+6. [Facade](https://lnkd.in/gHzPeaKG)
+7. [Proxy](https://lnkd.in/g2MF2hvS)
+8. [Composite](https://lnkd.in/gHwStDc3)
+9. [Observer](https://lnkd.in/g4S_eGjy)
+10. [Strategy](https://lnkd.in/gSjXJ3Cq)
+11. [Command](https://lnkd.in/gffxnxih)
+12. [Iterator](https://lnkd.in/g7F_PmD9)
+13. [State](https://lnkd.in/gmfFnubm)
+14. [Template Method](https://lnkd.in/gshGDpKE)
+15. [Chain of Responsibility](https://lnkd.in/gayT82-s)
 
 Full list of patterns at [algomaster.io](https://algomaster.io)

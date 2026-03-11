@@ -13,7 +13,7 @@ import java.util.*;
 public class TwoPointersPatterns {
 
     // ======================= EASY 1 =======================
-    // Two Sum II – Sorted Array
+    /** Two Sum II – Sorted Array. Opposite-end pointers converge. */
     public static int[] twoSumSorted(int[] numbers, int target) {
         int l = 0, r = numbers.length - 1;
         while (l < r) {
@@ -26,7 +26,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 2 =======================
-    // Valid Palindrome
+    /** Valid Palindrome. Compare chars from both ends. */
     public static boolean isPalindrome(String s) {
         int l = 0, r = s.length() - 1;
         while (l < r) {
@@ -39,7 +39,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 3 =======================
-    // Remove Duplicates from Sorted Array
+    /** Remove Duplicates from Sorted Array. Slow pointer tracks unique position. */
     public static int removeDuplicates(int[] nums) {
         if (nums.length == 0) return 0;
         int slow = 0;
@@ -50,7 +50,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 4 =======================
-    // Move Zeroes to end
+    /** Move Zeroes to end. Swap non-zeros to front. */
     public static void moveZeroes(int[] nums) {
         int slow = 0;
         for (int fast = 0; fast < nums.length; fast++) {
@@ -62,7 +62,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 5 =======================
-    // Squares of a Sorted Array
+    /** Squares of a Sorted Array. Merge from both ends. */
     public static int[] sortedSquares(int[] nums) {
         int n = nums.length;
         int[] result = new int[n];
@@ -78,14 +78,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 6 =======================
-    // Reverse String in-place
+    /** Reverse String in-place. Swap opposite ends. */
     public static void reverseString(char[] s) {
         int l = 0, r = s.length - 1;
         while (l < r) { char t = s[l]; s[l++] = s[r]; s[r--] = t; }
     }
 
     // ======================= EASY 7 =======================
-    // Is Subsequence
+    /** Is Subsequence. Two pointers on both strings. */
     public static boolean isSubsequence(String s, String t) {
         int i = 0, j = 0;
         while (i < s.length() && j < t.length()) {
@@ -96,7 +96,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 8 =======================
-    // Merge Sorted Array in-place
+    /** Merge Sorted Array in-place. Fill from the end. */
     public static void merge(int[] nums1, int m, int[] nums2, int n) {
         int p = m + n - 1, p1 = m - 1, p2 = n - 1;
         while (p2 >= 0) {
@@ -106,7 +106,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 9 =======================
-    // Intersection of Two Arrays II
+    /** Intersection of Two Arrays II. Sort + two pointers. */
     public static int[] intersect(int[] nums1, int[] nums2) {
         Arrays.sort(nums1); Arrays.sort(nums2);
         List<Integer> result = new ArrayList<>();
@@ -120,7 +120,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 10 =======================
-    // Valid Palindrome II (can remove at most one char)
+    /** Valid Palindrome II (can remove at most one char). Skip one char and retry. */
     public static boolean validPalindromeII(String s) {
         int l = 0, r = s.length() - 1;
         while (l < r) {
@@ -136,7 +136,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 1 =======================
-    // Three Sum (find all triplets summing to 0)
+    /** Three Sum (find all triplets summing to 0). Fix one, two-pointer on rest. */
     public static List<List<Integer>> threeSum(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> result = new ArrayList<>();
@@ -157,7 +157,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 2 =======================
-    // Three Sum Closest
+    /** Three Sum Closest. Track minimum difference. */
     public static int threeSumClosest(int[] nums, int target) {
         Arrays.sort(nums);
         int closest = nums[0] + nums[1] + nums[2];
@@ -175,7 +175,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 3 =======================
-    // Container With Most Water
+    /** Container With Most Water. Move shorter height inward. */
     public static int maxArea(int[] height) {
         int l = 0, r = height.length - 1, max = 0;
         while (l < r) {
@@ -186,7 +186,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 4 =======================
-    // Sort Colors (Dutch National Flag)
+    /** Sort Colors (Dutch National Flag). Three-way partition. */
     public static void sortColors(int[] nums) {
         int lo = 0, mid = 0, hi = nums.length - 1;
         while (mid <= hi) {
@@ -198,7 +198,7 @@ public class TwoPointersPatterns {
     private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; }
 
     // ======================= MEDIUM 5 =======================
-    // Partition Labels
+    /** Partition Labels. Track last occurrence of each char. */
     public static List<Integer> partitionLabels(String s) {
         int[] lastIndex = new int[26];
         for (int i = 0; i < s.length(); i++) lastIndex[s.charAt(i) - 'a'] = i;
@@ -212,7 +212,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 6 =======================
-    // Remove Duplicates from Sorted Array II (allow at most 2)
+    /** Remove Duplicates from Sorted Array II (allow at most 2). Count duplicates with slow pointer. */
     public static int removeDuplicatesII(int[] nums) {
         if (nums.length <= 2) return nums.length;
         int slow = 2;
@@ -223,7 +223,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 7 =======================
-    // Longest Mountain in Array
+    /** Longest Mountain in Array. Expand peak both directions. */
     public static int longestMountain(int[] arr) {
         int n = arr.length, max = 0;
         for (int i = 1; i < n - 1; ) {
@@ -239,7 +239,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 8 =======================
-    // Boats to Save People (pair heaviest with lightest)
+    /** Boats to Save People (pair heaviest with lightest). Pair lightest with heaviest. */
     public static int numRescueBoats(int[] people, int limit) {
         Arrays.sort(people);
         int l = 0, r = people.length - 1, boats = 0;
@@ -252,7 +252,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 9 =======================
-    // Four Sum (find all quadruplets summing to target)
+    /** Four Sum (find all quadruplets summing to target). Two loops + two-pointer inner. */
     public static List<List<Integer>> fourSum(int[] nums, int target) {
         Arrays.sort(nums);
         List<List<Integer>> result = new ArrayList<>();
@@ -276,7 +276,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 10 =======================
-    // Longest Word Through Deleting (longest subsequence from dict)
+    /** Longest Word Through Deleting (longest subsequence from dict). Subsequence check per candidate. */
     public static String findLongestWord(String s, List<String> dictionary) {
         String result = "";
         for (String word : dictionary) {
@@ -291,7 +291,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 1 =======================
-    // Trapping Rain Water
+    /** Trapping Rain Water. Track left/right max boundaries. */
     public static int trapRainWater(int[] height) {
         int l = 0, r = height.length - 1, lMax = 0, rMax = 0, water = 0;
         while (l < r) {
@@ -302,7 +302,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 2 =======================
-    // Minimum Window Sort (shortest subarray to sort to make whole array sorted)
+    /** Minimum Window Sort (shortest subarray to sort to make whole array sorted). Find unsorted subarray boundaries. */
     public static int findUnsortedSubarray(int[] nums) {
         int n = nums.length, l = -1, r = -1;
         int max = nums[0], min = nums[n - 1];
@@ -318,7 +318,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 3 =======================
-    // Count Pairs with Absolute Difference <= Target (sorted)
+    /** Count Pairs with Absolute Difference <= Target (sorted). Sort + count valid pairs. */
     public static int countPairsWithDiff(int[] nums, int target) {
         Arrays.sort(nums);
         int count = 0, l = 0;
@@ -330,7 +330,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 4 =======================
-    // Three Sum Smaller (count triplets with sum < target)
+    /** Three Sum Smaller (count triplets with sum < target). Count all pairs below target. */
     public static int threeSumSmaller(int[] nums, int target) {
         Arrays.sort(nums);
         int count = 0;
@@ -345,7 +345,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 5 =======================
-    // Backspace String Compare (O(1) space, traverse from end)
+    /** Backspace String Compare (O(1) space, traverse from end) */
     public static boolean backspaceCompare(String s, String t) {
         int i = s.length() - 1, j = t.length() - 1;
         int skipS = 0, skipT = 0;
@@ -368,7 +368,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 6 =======================
-    // Minimum Difference Between Highest and Lowest of K Scores
+    /** Minimum Difference Between Highest and Lowest of K Scores. Sort + sliding window of size k. */
     public static int minimumDifference(int[] nums, int k) {
         Arrays.sort(nums);
         int minDiff = Integer.MAX_VALUE;
@@ -379,7 +379,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 7 =======================
-    // Smallest Range Covering Elements from K Lists
+    /** Smallest Range Covering Elements from K Lists. Merge + two-pointer on sorted events. */
     public static int[] smallestRange(List<List<Integer>> nums) {
         PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
         int max = Integer.MIN_VALUE;
@@ -401,7 +401,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 8 =======================
-    // Number of Subsequences with Max-Min <= Target
+    /** Number of Subsequences with Max-Min <= Target. Sort + count with powers. */
     public static int numSubseq(int[] nums, int target) {
         int MOD = 1_000_000_007;
         Arrays.sort(nums);
@@ -418,7 +418,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 9 =======================
-    // Maximum Erasure Value (longest subarray with unique elements, max sum)
+    /** Maximum Erasure Value (longest subarray with unique elements, max sum). Sliding window unique subarray. */
     public static int maximumUniqueSubarray(int[] nums) {
         Set<Integer> seen = new HashSet<>();
         int l = 0, sum = 0, max = 0;
@@ -432,8 +432,7 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 10 =======================
-    // Count Subarrays with Score Less Than K
-    // Score = sum * length. Find count of subarrays with score < k.
+    /** Count Subarrays with Score Less Than K Score = sum * length. Find count of subarrays with score < k. */
     public static long countSubarraysScoreLessThanK(int[] nums, long k) {
         long sum = 0, count = 0;
         int l = 0;

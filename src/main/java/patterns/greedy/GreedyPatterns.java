@@ -9,69 +9,69 @@ import java.util.*;
  */
 public class GreedyPatterns {
 
-    // EASY 1: Best Time to Buy and Sell Stock
+    /** Best Time to Buy and Sell Stock. Track min price, max profit. */
     public static int maxProfit(int[] prices) { int min=Integer.MAX_VALUE,max=0; for(int p:prices) { min=Math.min(min,p); max=Math.max(max,p-min); } return max; }
-    // EASY 2: Assign Cookies
+    /** Assign Cookies. Sort both, match smallest cookie to child. */
     public static int findContentChildren(int[] g,int[] s) { Arrays.sort(g); Arrays.sort(s); int i=0,j=0; while(i<g.length&&j<s.length) { if(s[j]>=g[i]) i++; j++; } return i; }
-    // EASY 3: Lemonade Change
+    /** Lemonade Change. Greedy: prefer giving $10 change over $5s. */
     public static boolean lemonadeChange(int[] bills) { int five=0,ten=0; for(int b:bills) { if(b==5) five++; else if(b==10) { if(five==0) return false; five--; ten++; } else { if(ten>0&&five>0) { ten--; five--; } else if(five>=3) five-=3; else return false; } } return true; }
-    // EASY 4: Maximum Units on Truck
+    /** Maximum Units on Truck. Sort by units/box descending. */
     public static int maximumUnits(int[][] boxTypes,int truckSize) { Arrays.sort(boxTypes,(a,b)->b[1]-a[1]); int units=0; for(int[] b:boxTypes) { int take=Math.min(b[0],truckSize); units+=take*b[1]; truckSize-=take; if(truckSize==0) break; } return units; }
-    // EASY 5: Minimum Number of Moves to Make Palindrome
-    // EASY 6: Can Place Flowers
+    /** Minimum Number of Moves to Make Palindrome. Greedily plant if neighbors empty. */
+    /** Can Place Flowers. Add all positive price differences. */
     public static boolean canPlaceFlowers(int[] fb,int n) { for(int i=0;i<fb.length&&n>0;i++) if(fb[i]==0&&(i==0||fb[i-1]==0)&&(i==fb.length-1||fb[i+1]==0)) { fb[i]=1; n--; } return n<=0; }
-    // EASY 7: Buy Sell Stock II (multiple transactions)
+    /** Buy Sell Stock II (multiple transactions). Count pairs + one odd center. */
     public static int maxProfitII(int[] prices) { int profit=0; for(int i=1;i<prices.length;i++) if(prices[i]>prices[i-1]) profit+=prices[i]-prices[i-1]; return profit; }
-    // EASY 8: Longest Palindrome
+    /** Longest Palindrome. Increment each to be > previous. */
     public static int longestPalindrome(String s) { int[] f=new int[128]; for(char c:s.toCharArray()) f[c]++; int len=0; boolean hasOdd=false; for(int v:f) { len+=v/2*2; if(v%2==1) hasOdd=true; } return hasOdd?len+1:len; }
-    // EASY 9: Minimum Operations to Make Array Increasing
+    /** Minimum Operations to Make Array Increasing. Sort, sum even-indexed elements. */
     public static int minOperations(int[] nums) { int ops=0; for(int i=1;i<nums.length;i++) if(nums[i]<=nums[i-1]) { ops+=nums[i-1]-nums[i]+1; nums[i]=nums[i-1]+1; } return ops; }
-    // EASY 10: Array Partition
+    /** Array Partition. Simulate moves, track max distance. */
     public static int arrayPairSum(int[] nums) { Arrays.sort(nums); int s=0; for(int i=0;i<nums.length;i+=2) s+=nums[i]; return s; }
 
-    // MEDIUM 1: Jump Game
+    /** Jump Game. Track farthest reachable index. */
     public static boolean canJump(int[] nums) { int reach=0; for(int i=0;i<=reach&&i<nums.length;i++) { reach=Math.max(reach,i+nums[i]); if(reach>=nums.length-1) return true; } return false; }
-    // MEDIUM 2: Jump Game II
+    /** Jump Game II. Greedy BFS levels for min jumps. */
     public static int jump(int[] nums) { int jumps=0,farthest=0,end=0; for(int i=0;i<nums.length-1;i++) { farthest=Math.max(farthest,i+nums[i]); if(i==end) { jumps++; end=farthest; } } return jumps; }
-    // MEDIUM 3: Gas Station
+    /** Gas Station. Track surplus, find valid start. */
     public static int canCompleteCircuit(int[] gas,int[] cost) { int total=0,cur=0,start=0; for(int i=0;i<gas.length;i++) { total+=gas[i]-cost[i]; cur+=gas[i]-cost[i]; if(cur<0) { start=i+1; cur=0; } } return total>=0?start:-1; }
-    // MEDIUM 4: Task Scheduler
+    /** Task Scheduler. Most frequent task determines idle slots. */
     public static int leastInterval(char[] tasks,int n) { int[] f=new int[26]; for(char c:tasks) f[c-'A']++; Arrays.sort(f); int maxF=f[25]-1,idle=maxF*n; for(int i=24;i>=0&&f[i]>0;i--) idle-=Math.min(f[i],maxF); return Math.max(tasks.length,tasks.length+idle); }
-    // MEDIUM 5: Non-overlapping Intervals
+    /** Non-overlapping Intervals. Sort by end, keep non-overlapping. */
     public static int eraseOverlapIntervals(int[][] iv) { Arrays.sort(iv,Comparator.comparingInt(a->a[1])); int rem=0,end=Integer.MIN_VALUE; for(int[] i:iv) { if(i[0]>=end) end=i[1]; else rem++; } return rem; }
-    // MEDIUM 6: Minimum Number of Arrows
+    /** Minimum Number of Arrows. Sort by end, count groups. */
     public static int findMinArrowShots(int[][] points) { Arrays.sort(points,Comparator.comparingInt(a->a[1])); int arrows=1,end=points[0][1]; for(int i=1;i<points.length;i++) if(points[i][0]>end) { arrows++; end=points[i][1]; } return arrows; }
-    // MEDIUM 7: Partition Labels
+    /** Partition Labels. Last occurrence defines partition end. */
     public static List<Integer> partitionLabels(String s) { int[] last=new int[26]; for(int i=0;i<s.length();i++) last[s.charAt(i)-'a']=i; List<Integer> r=new ArrayList<>(); int start=0,end=0; for(int i=0;i<s.length();i++) { end=Math.max(end,last[s.charAt(i)-'a']); if(i==end) { r.add(end-start+1); start=end+1; } } return r; }
-    // MEDIUM 8: Boats to Save People
+    /** Boats to Save People. Pair heaviest with lightest. */
     public static int numRescueBoats(int[] people,int limit) { Arrays.sort(people); int l=0,r=people.length-1,boats=0; while(l<=r) { if(people[l]+people[r]<=limit) l++; r--; boats++; } return boats; }
-    // MEDIUM 9: Remove K Digits
+    /** Remove K Digits. Monotonic stack removes k digits. */
     public static String removeKdigits(String num,int k) { Deque<Character> st=new ArrayDeque<>(); for(char c:num.toCharArray()) { while(k>0&&!st.isEmpty()&&st.peek()>c) { st.pop(); k--; } st.push(c); } while(k-->0) st.pop(); StringBuilder sb=new StringBuilder(); for(char c:st) sb.append(c); sb.reverse(); while(sb.length()>0&&sb.charAt(0)=='0') sb.deleteCharAt(0); return sb.length()==0?"0":sb.toString(); }
-    // MEDIUM 10: Minimum Platforms (train station)
+    /** Minimum Platforms (train station). Sort arrivals/departures, sweep. */
     public static int minPlatforms(int[] arrival,int[] departure) { Arrays.sort(arrival); Arrays.sort(departure); int plat=0,max=0,i=0,j=0; while(i<arrival.length) { if(arrival[i]<=departure[j]) { plat++; i++; } else { plat--; j++; } max=Math.max(max,plat); } return max; }
 
-    // HARD 1: Candy Distribution
+    /** Candy Distribution. Two passes: left-to-right, right-to-left. */
     public static int candy(int[] ratings) { int n=ratings.length; int[] candies=new int[n]; Arrays.fill(candies,1); for(int i=1;i<n;i++) if(ratings[i]>ratings[i-1]) candies[i]=candies[i-1]+1; for(int i=n-2;i>=0;i--) if(ratings[i]>ratings[i+1]) candies[i]=Math.max(candies[i],candies[i+1]+1); int sum=0; for(int c:candies) sum+=c; return sum; }
-    // HARD 2: IPO (maximize capital)
+    /** IPO (maximize capital). Sort by capital, max-heap for profits. */
     public static int findMaximizedCapital(int k,int w,int[] profits,int[] capital) { int n=profits.length; int[][] proj=new int[n][2]; for(int i=0;i<n;i++) proj[i]=new int[]{capital[i],profits[i]}; Arrays.sort(proj,Comparator.comparingInt(a->a[0])); PriorityQueue<Integer> pq=new PriorityQueue<>(Collections.reverseOrder()); int i=0; while(k-->0) { while(i<n&&proj[i][0]<=w) pq.offer(proj[i++][1]); if(pq.isEmpty()) break; w+=pq.poll(); } return w; }
-    // HARD 3: Minimum Number of Refueling Stops
+    /** Minimum Number of Refueling Stops. Max-heap of passed station fuel. */
     public static int minRefuelStops(int target,int startFuel,int[][] stations) { PriorityQueue<Integer> pq=new PriorityQueue<>(Collections.reverseOrder()); int fuel=startFuel,stops=0,i=0; while(fuel<target) { while(i<stations.length&&stations[i][0]<=fuel) pq.offer(stations[i++][1]); if(pq.isEmpty()) return -1; fuel+=pq.poll(); stops++; } return stops; }
-    // HARD 4: Course Schedule III
+    /** Course Schedule III. Sort by deadline, max-heap for duration. */
     public static int scheduleCourse(int[][] courses) { Arrays.sort(courses,Comparator.comparingInt(a->a[1])); PriorityQueue<Integer> pq=new PriorityQueue<>(Collections.reverseOrder()); int time=0; for(int[] c:courses) { time+=c[0]; pq.offer(c[0]); if(time>c[1]) time-=pq.poll(); } return pq.size(); }
-    // HARD 5: Maximum Performance of Team
+    /** Maximum Performance of Team. Sort by efficiency, max-heap for speed. */
     public static int maxPerformance(int n,int[] speed,int[] efficiency,int k) { int[][] eng=new int[n][2]; for(int i=0;i<n;i++) eng[i]=new int[]{efficiency[i],speed[i]}; Arrays.sort(eng,(a,b)->b[0]-a[0]); PriorityQueue<Integer> pq=new PriorityQueue<>(); long sumS=0,max=0; for(int[] e:eng) { sumS+=e[1]; pq.offer(e[1]); if(pq.size()>k) sumS-=pq.poll(); max=Math.max(max,sumS*e[0]); } return (int)(max%1_000_000_007); }
-    // HARD 6: Minimum Cost to Hire K Workers
+    /** Minimum Cost to Hire K Workers. Sort by wage/quality ratio. */
     public static double mincostToHireWorkers(int[] quality,int[] wage,int k) { int n=quality.length; int[][] workers=new int[n][2]; for(int i=0;i<n;i++) workers[i]=new int[]{quality[i],wage[i]}; Arrays.sort(workers,(a,b)->Double.compare((double)a[1]/a[0],(double)b[1]/b[0])); PriorityQueue<Integer> pq=new PriorityQueue<>(Collections.reverseOrder()); int sumQ=0; double min=Double.MAX_VALUE; for(int[] w:workers) { sumQ+=w[0]; pq.offer(w[0]); if(pq.size()>k) sumQ-=pq.poll(); if(pq.size()==k) min=Math.min(min,sumQ*((double)w[1]/w[0])); } return min; }
-    // HARD 7: Minimum Interval to Include Each Query
+    /** Minimum Interval to Include Each Query. Sort + sweep with priority queue. */
     public static int[] minInterval(int[][] intervals,int[] queries) { Arrays.sort(intervals,Comparator.comparingInt(a->a[0])); int[][] sortedQ=new int[queries.length][2]; for(int i=0;i<queries.length;i++) sortedQ[i]=new int[]{queries[i],i}; Arrays.sort(sortedQ,Comparator.comparingInt(a->a[0])); PriorityQueue<int[]> pq=new PriorityQueue<>(Comparator.comparingInt(a->a[0])); int[] ans=new int[queries.length]; Arrays.fill(ans,-1); int j=0; for(int[] q:sortedQ) { while(j<intervals.length&&intervals[j][0]<=q[0]) { pq.offer(new int[]{intervals[j][1]-intervals[j][0]+1,intervals[j][1]}); j++; } while(!pq.isEmpty()&&pq.peek()[1]<q[0]) pq.poll(); if(!pq.isEmpty()) ans[q[1]]=pq.peek()[0]; } return ans; }
-    // HARD 8: Patching Array
+    /** Patching Array. Greedily patch gaps in reachable sums. */
     public static int minPatches(int[] nums,int n) { long miss=1; int patches=0,i=0; while(miss<=n) { if(i<nums.length&&nums[i]<=miss) { miss+=nums[i++]; } else { miss+=miss; patches++; } } return patches; }
-    // HARD 9: Create Maximum Number
+    /** Create Maximum Number. Merge two max subsequences of total k. */
     public static int[] maxNumber(int[] nums1,int[] nums2,int k) { int[] best=new int[k]; for(int i=Math.max(0,k-nums2.length);i<=Math.min(k,nums1.length);i++) { int[] a=maxSubseq(nums1,i),b=maxSubseq(nums2,k-i); int[] merged=merge(a,b); if(compare(merged,0,best,0)>0) best=merged; } return best; }
     private static int[] maxSubseq(int[] nums,int k) { int[] r=new int[k]; int drop=nums.length-k,j=0; for(int n:nums) { while(j>0&&drop>0&&r[j-1]<n) { j--; drop--; } if(j<k) r[j++]=n; else drop--; } return r; }
     private static int[] merge(int[] a,int[] b) { int[] r=new int[a.length+b.length]; int i=0,j=0,k=0; while(i<a.length&&j<b.length) r[k++]=compare(a,i,b,j)>=0?a[i++]:b[j++]; while(i<a.length) r[k++]=a[i++]; while(j<b.length) r[k++]=b[j++]; return r; }
     private static int compare(int[] a,int i,int[] b,int j) { while(i<a.length&&j<b.length&&a[i]==b[j]) { i++; j++; } if(i==a.length) return -1; if(j==b.length) return 1; return a[i]-b[j]; }
-    // HARD 10: Reorganize String
+    /** Reorganize String. Alternate most frequent characters. */
     public static String reorganizeString(String s) { int[] f=new int[26]; for(char c:s.toCharArray()) f[c-'a']++; PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->b[1]-a[1]); for(int i=0;i<26;i++) if(f[i]>0) pq.offer(new int[]{i,f[i]}); StringBuilder sb=new StringBuilder(); int[] prev=null; while(!pq.isEmpty()) { int[] cur=pq.poll(); sb.append((char)(cur[0]+'a')); cur[1]--; if(prev!=null&&prev[1]>0) pq.offer(prev); prev=cur; } return sb.length()==s.length()?sb.toString():""; }
 
     public static void main(String[] args) {
