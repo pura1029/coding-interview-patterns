@@ -1,19 +1,114 @@
 # Pattern 10: Overlapping Intervals
 
 ## What is it?
-Sort intervals by start/end time, then process sequentially to detect, merge, or count overlaps.
+
+Interval problems involve ranges `[start, end]`. The core technique: **sort** the intervals, then **sweep** left-to-right, making decisions based on overlap.
+
+```
+Two intervals overlap if:     They DON'T overlap if:
+
+  A: [───────]                  A: [────]
+  B:     [───────]              B:          [────]
+
+  A.start < B.end AND           A.end ≤ B.start
+  B.start < A.end               (no overlap)
+```
+
+> **Real-world analogy:** Meeting room scheduling. Each meeting has a start and end time. To find how many rooms you need, sort meetings and track overlaps.
+
+---
+
+## Core Techniques
+
+### 1. Merge Intervals
+
+```
+Input:  [[1,3], [2,6], [8,10], [15,18]]
+
+Sort by start: (already sorted)
+
+Scan and merge overlapping:
+  [1,3] + [2,6] → overlap (2 < 3) → merge to [1,6]
+  [1,6] + [8,10] → no overlap (8 > 6) → keep both
+  [8,10] + [15,18] → no overlap (15 > 10) → keep both
+
+Result: [[1,6], [8,10], [15,18]]
+
+  1  2  3  4  5  6  7  8  9  10     15 16 17 18
+  [──────]                           
+     [──────────]                    
+  [──────────────]  ← merged         
+                    [────────]       
+                                    [──────────]
+```
+
+### 2. Sweep Line (Meeting Rooms II)
+
+```
+How many rooms needed for meetings [[0,30],[5,10],[15,20]]?
+
+Events:  +1 at start, -1 at end
+  time 0:  +1  → rooms = 1
+  time 5:  +1  → rooms = 2 ← max
+  time 10: -1  → rooms = 1
+  time 15: +1  → rooms = 2
+  time 20: -1  → rooms = 1
+  time 30: -1  → rooms = 0
+
+  Answer: 2 rooms
+
+  Room 1: [═══════════════════════════════]  [0,30]
+  Room 2:      [═════]    [═════]            [5,10] [15,20]
+          0    5    10   15   20        30
+```
+
+### 3. Greedy by End Time (Min Removals)
+
+```
+Non-overlapping Intervals: remove minimum to eliminate all overlaps.
+
+  Input: [[1,2], [2,3], [3,4], [1,3]]
+  Sort by END time: [[1,2], [2,3], [1,3], [3,4]]
+
+  Greedy: keep interval that ends earliest (leaves most room).
+
+  Keep [1,2], end=2
+  Keep [2,3], 2≥2, end=3
+  Skip [1,3], 1<3 → overlaps!
+  Keep [3,4], 3≥3, end=4
+
+  Removed 1 interval ✅
+```
+
+---
+
+## Real-World Applications
+
+| Domain          | Application                   | Technique                |
+| --------------- | ----------------------------- | ------------------------ |
+| **Scheduling**  | Conference room booking       | Sweep line / min-heap    |
+| **OS**          | Memory allocation / defrag    | Merge intervals          |
+| **Airlines**    | Gate assignment               | Meeting rooms II         |
+| **Video**       | Subtitle overlap merging      | Merge intervals          |
+| **Networks**    | Bandwidth allocation windows  | Sweep line               |
+
+---
 
 ## When to Use
-- Merge overlapping intervals
-- Meeting room scheduling
-- Minimum groups / platforms needed
-- Interval intersections and insertions
+
+- **Merge overlapping intervals** — sort by start, extend end boundary
+- **Meeting room scheduling** — sweep line or min-heap of end times
+- **Minimum groups / platforms** — sweep line counting concurrent events
+- **Interval intersections** — two-pointer on two sorted lists
+- **Interval insertions** — find position, merge neighbors
 
 ## Complexity
+
 | Operation | Time | Space |
 |-----------|------|-------|
 | Sort intervals | O(n log n) | O(1) |
 | Sweep line | O(n) | O(n) |
+| Min-heap for rooms | O(n log n) | O(n) |
 
 ## Examples (30)
 
@@ -51,4 +146,5 @@ Sort intervals by start/end time, then process sequentially to detect, merge, or
 | 30 | Points That Intersect With Cars | Hard | Merge intervals, count total points |
 
 ## Key Insight
-> Sort by start (or end for greedy), then sweep left-to-right tracking the current end boundary.
+
+> Sort by **start** (for merge) or by **end** (for greedy selection), then sweep left-to-right tracking the current end boundary. For "how many concurrent" problems, use the **sweep line**: +1 at each start, -1 at each end, track the running maximum.

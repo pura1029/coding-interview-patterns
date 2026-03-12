@@ -1,14 +1,150 @@
 # Queues
 
 ## What is it?
-A Queue (FIFO — First In, First Out) stores elements such that the first element added is the first to be removed. Queues are used for BFS traversal, task scheduling, sliding window problems, and message processing. Key variants include circular queue, priority queue (heap), and deque.
+
+A Queue follows **FIFO** (First In, First Out) — like a line at a coffee shop. The first person in line is the first to be served.
+
+```
+Enqueue (add):    Dequeue (remove):
+
+  ┌───┬───┬───┐     ┌───┬───┬───┐
+  │ C │ B │ A │ ──►  │ C │ B │   │ → A (removed)
+  └───┴───┴───┘     └───┴───┴───┘
+  back        front  back    front
+
+  Enqueue D:         Dequeue:
+  ┌───┬───┬───┬───┐  returns front element (A)
+  │ D │ C │ B │ A │
+  └───┴───┴───┴───┘
+
+  Java: Queue<Integer> q = new LinkedList<>();
+        q.offer(x)  → enqueue
+        q.poll()     → dequeue
+        q.peek()     → front element without removing
+```
+
+> **Real-world analogy:** A printer job queue. Documents are printed in the order they were submitted — first come, first served.
+
+---
+
+## Queue Variants
+
+### 1. Standard Queue (FIFO)
+
+```
+BFS level-order traversal:
+  Tree:      1
+           /   \
+          2     3
+         / \
+        4   5
+
+  Queue: [1]
+  Poll 1, add 2,3 → Queue: [2, 3]
+  Poll 2, add 4,5 → Queue: [3, 4, 5]
+  Poll 3           → Queue: [4, 5]
+  Poll 4           → Queue: [5]
+  Poll 5           → Queue: []
+
+  Output: 1, 2, 3, 4, 5 (level order)
+```
+
+### 2. Deque (Double-Ended Queue)
+
+```
+Insert and remove from BOTH ends in O(1).
+
+  addFirst ◄── ┌───┬───┬───┐ ──► addLast
+  pollFirst ──► │ A │ B │ C │ ◄── pollLast
+               └───┴───┴───┘
+
+  Use case: Sliding Window Maximum (monotonic deque)
+  
+  nums = [1, 3, -1, -3, 5],  k=3
+  
+  Maintain DECREASING deque of indices:
+  i=0: deque=[0(1)]
+  i=1: 3>1 → remove 0, deque=[1(3)]
+  i=2: deque=[1(3), 2(-1)]      → max = 3
+  i=3: deque=[1(3), 3(-3)]      → max = 3 (remove 2, outdated)
+  i=4: 5>all → clear, deque=[4(5)] → max = 5
+```
+
+### 3. Priority Queue (Heap)
+
+```
+Elements dequeued by PRIORITY, not insertion order.
+
+  Min-Heap: smallest element at front
+  Max-Heap: largest element at front
+
+  Insert: 5, 2, 8, 1, 9
+  
+  Min-Heap state:    Max-Heap state:
+       1                  9
+      / \                / \
+     2   8              5   8
+    / \                / \
+   5   9              1   2
+
+  poll() from min-heap: 1, 2, 5, 8, 9 (ascending)
+  poll() from max-heap: 9, 8, 5, 2, 1 (descending)
+
+  Java: PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+```
+
+### 4. Circular Queue
+
+```
+Fixed-size array with wrap-around using modular arithmetic.
+
+  Capacity = 4:
+  
+  ┌───┬───┬───┬───┐
+  │   │   │   │   │   front=0, rear=0
+  └───┴───┴───┴───┘
+  
+  Enqueue A, B, C:
+  ┌───┬───┬───┬───┐
+  │ A │ B │ C │   │   front=0, rear=3
+  └───┴───┴───┴───┘
+  
+  Dequeue A:
+  ┌───┬───┬───┬───┐
+  │   │ B │ C │   │   front=1, rear=3
+  └───┴───┴───┴───┘
+  
+  Enqueue D, E:
+  ┌───┬───┬───┬───┐
+  │ E │ B │ C │ D │   front=1, rear=1 (wrapped around!)
+  └───┴───┴───┴───┘
+  
+  rear = (rear + 1) % capacity → handles wrap-around
+```
+
+---
+
+## Real-World Applications
+
+| Domain          | Application                        | Queue Type        |
+| --------------- | ---------------------------------- | ----------------- |
+| **OS**          | Process scheduling (round-robin)   | Circular queue    |
+| **Web servers** | Request handling                   | Standard queue    |
+| **Messaging**   | Kafka, RabbitMQ, SQS              | Standard queue    |
+| **Gaming**      | Event processing loop              | Priority queue    |
+| **Networking**  | Packet buffering (routers)         | Circular queue    |
+| **Caching**     | LRU eviction (deque)               | Deque             |
+
+---
 
 ## When to Use
-- BFS traversal (shortest path, level-order)
-- Task scheduling with cooldowns or priorities
-- Sliding window max/min (monotonic deque)
-- Stream processing and hit counting
-- Multi-source BFS (rotting oranges, walls & gates)
+
+- **BFS traversal** — shortest path (unweighted), level-order
+- **Task scheduling** — with cooldowns or priorities (heap)
+- **Sliding window max/min** — monotonic deque
+- **Stream processing** — hit counting, moving average
+- **Multi-source BFS** — rotting oranges, walls & gates, distance maps
 
 ## Complexity
 
@@ -55,4 +191,5 @@ A Queue (FIFO — First In, First Out) stores elements such that the first eleme
 | 30 | Maximum Frequency Stack | Hard | Freq map + group-by-freq stacks |
 
 ## Key Insight
-> Queues are the backbone of BFS — whenever you see "shortest path (unweighted)", "level-order", or "minimum steps", think queue. The **monotonic deque** extends this to sliding window problems. Priority queues (heaps) handle "next best" scheduling. Master multi-source BFS for problems where multiple starting points propagate simultaneously.
+
+> Queues are the backbone of BFS — whenever you see "shortest path (unweighted)", "level-order", or "minimum steps", think queue. The **monotonic deque** extends this to sliding window problems. **Priority queues** (heaps) handle "next best" scheduling. Master **multi-source BFS** for problems where multiple starting points propagate simultaneously.

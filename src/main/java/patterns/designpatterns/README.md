@@ -2,6 +2,25 @@
 
 Design patterns are proven solutions to common software design problems. They are categorized into three types: **Creational**, **Structural**, and **Behavioral**.
 
+```
+The Three Categories:
+
+  CREATIONAL                  STRUCTURAL                  BEHAVIORAL
+  (How objects are made)      (How objects compose)        (How objects communicate)
+
+  ┌──────────────┐           ┌──────────────┐            ┌────────────────────┐
+  │ Singleton    │           │ Adapter      │            │ Observer           │
+  │ Factory      │           │ Decorator    │            │ Strategy           │
+  │ Builder      │           │ Facade       │            │ Command            │
+  └──────────────┘           │ Proxy        │            │ Iterator           │
+                             │ Composite    │            │ State              │
+                             └──────────────┘            │ Template Method    │
+                                                         │ Chain of Resp.     │
+                                                         └────────────────────┘
+```
+
+> **When to use which?** Need ONE instance → Singleton. Need to create different types → Factory. Need to wrap/extend → Decorator. Need to simplify → Facade. Need to react to changes → Observer. Need to swap behavior → Strategy.
+
 ## Overview
 
 | # | Pattern | Category | Intent | Real-World Analogy |
@@ -21,6 +40,94 @@ Design patterns are proven solutions to common software design problems. They ar
 | 13 | **State** | Behavioral | Change behavior based on state | Order lifecycle (New→Paid→Shipped→Delivered) |
 | 14 | **Template Method** | Behavioral | Define algorithm skeleton, vary steps | Data processors (CSV/JSON/XML) |
 | 15 | **Chain of Responsibility** | Behavioral | Pass request along a handler chain | Support escalation, middleware pipeline |
+
+---
+
+## Pattern Visualizations
+
+### Creational Patterns — How Objects Are Made
+
+```
+Singleton:    Only ONE instance ever
+              ┌──────────────────┐
+  get() ────► │  Instance (1)    │ ◄──── get()
+              │  (shared state)  │
+  get() ────► │                  │ ◄──── get()
+              └──────────────────┘
+
+Factory:      Create different types from ONE method
+              ┌──────────────────┐
+  "email" ──► │  Factory.create()│ ──► EmailNotification
+  "sms"   ──► │                  │ ──► SMSNotification
+  "push"  ──► │                  │ ──► PushNotification
+              └──────────────────┘
+
+Builder:      Build complex objects step by step
+              User.builder("Alice", "email")
+                  .phone("+1-555")      ← optional
+                  .company("TechCorp") ← optional
+                  .age(28)             ← optional
+                  .build()             ← final object
+```
+
+### Structural Patterns — How Objects Compose
+
+```
+Adapter:      Convert incompatible interface
+  Client ──► [Adapter] ──► LegacySystem
+              (translates calls)
+
+Decorator:    Stack behaviors like layers
+  request ──► [Logging] ──► [Auth] ──► [Compress] ──► Core
+              Each layer adds behavior without modifying the core.
+
+Facade:       Simplify complex subsystem
+  Client ──► [OrderFacade.placeOrder()]
+              ├── inventory.checkStock()
+              ├── payment.processPayment()
+              └── shipping.shipOrder()
+
+Proxy:        Control access
+  Client ──► [Proxy] ──(check permissions)──► RealObject
+              "You can READ but not DROP TABLE"
+
+Composite:    Tree structure (files + folders)
+  Directory "project"
+  ├── File "README.md" (1KB)
+  ├── Directory "src"
+  │   ├── File "Main.java" (15KB)
+  │   └── File "Utils.java" (8KB)
+  └── Directory "test"
+      └── File "MainTest.java" (10KB)
+  project.getSize() = recursively sum all children
+```
+
+### Behavioral Patterns — How Objects Communicate
+
+```
+Observer:     Publish-subscribe
+  EventBus ──► [EmailAlert]      "ORDER_PLACED"
+           ──► [SlackNotifier]   "ORDER_PLACED"
+           ──► [SMSAlert]        "ORDER_PLACED"
+  One event → all subscribers notified.
+
+Strategy:     Swap algorithms at runtime
+  sorter.setStrategy(new BubbleSort())  → sort with bubble
+  sorter.setStrategy(new QuickSort())   → sort with quick
+  Same interface, different implementations.
+
+State:        Behavior changes with state
+  Order: NEW ──► PAID ──► SHIPPED ──► DELIVERED
+         │       │        │           │
+         cancel  refund   track       review
+  Each state has different allowed actions.
+
+Chain of Responsibility:
+  Request ──► [Bot] ──► [Level1] ──► [Level2] ──► [Manager]
+              "Can I     "Can I       "Can I       "I'll
+               handle?"   handle?"     handle?"     handle it"
+  First handler that can handle it processes the request.
+```
 
 ---
 
@@ -261,6 +368,55 @@ java patterns.designpatterns.StatePattern
 java patterns.designpatterns.TemplateMethodPattern
 java patterns.designpatterns.ChainOfResponsibilityPattern
 ```
+
+## Quick Decision Guide
+
+```
+Need exactly ONE instance?              → Singleton
+Need to create objects without knowing
+  the exact class?                      → Factory Method
+Need to build complex objects with
+  many optional parameters?             → Builder
+Need to use a class with an
+  incompatible interface?               → Adapter
+Need to add behavior dynamically
+  without subclassing?                  → Decorator
+Need to simplify a complex subsystem?   → Facade
+Need to control access, add logging,
+  or lazy-load?                         → Proxy
+Need uniform handling of tree
+  structures (part-whole)?              → Composite
+Need multiple objects to react to
+  state changes?                        → Observer
+Need to swap algorithms at runtime?     → Strategy
+Need undo/redo, queuing, or
+  logging of operations?                → Command
+Need to traverse a collection
+  without exposing internals?           → Iterator
+Need object behavior to change
+  based on internal state?              → State
+Need a fixed algorithm with
+  customizable steps?                   → Template Method
+Need a pipeline of handlers where
+  each can process or pass along?       → Chain of Responsibility
+```
+
+## Real-World Usage in Popular Frameworks
+
+| Pattern | Used In | How |
+|---------|---------|-----|
+| **Singleton** | Spring Beans, `Runtime.getRuntime()` | Default bean scope, single JVM instance |
+| **Factory** | Spring `BeanFactory`, JDBC `DriverManager` | Create objects from configuration |
+| **Builder** | Lombok `@Builder`, StringBuilder | Fluent API for complex construction |
+| **Adapter** | Java IO (InputStreamReader) | Adapts byte stream to character stream |
+| **Decorator** | Java IO (BufferedReader wraps Reader) | Stack buffering, compression, encryption |
+| **Facade** | Spring Boot auto-configuration | Simplifies complex framework setup |
+| **Proxy** | Spring AOP, JDK Dynamic Proxy | Transactions, security, caching |
+| **Observer** | Java Swing listeners, Spring Events | UI events, application events |
+| **Strategy** | `Comparator`, `Runnable` | Swap comparison/execution logic |
+| **Iterator** | Java `Iterable`/`Iterator` | For-each loops on any collection |
+| **State** | TCP connection states, order workflows | State-dependent behavior |
+| **Template** | `HttpServlet.doGet()`, JUnit lifecycle | Override specific steps of a process |
 
 ## Resources
 
