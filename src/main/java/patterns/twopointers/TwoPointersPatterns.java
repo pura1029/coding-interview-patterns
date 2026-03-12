@@ -672,44 +672,79 @@ public class TwoPointersPatterns {
         System.out.println("=== TWO POINTERS PATTERN (30 Examples) ===\n");
 
         System.out.println("--- EASY ---");
+        // new int[]{...} → sorted array; uses while (left < right) with if (sum == target) return, else if (sum < target) left++, else right--
         System.out.println("1. Two Sum Sorted: " + Arrays.toString(twoSumSorted(new int[]{2, 7, 11, 15}, 9)));
+        // uses while (left < right) with if (!isLetterOrDigit) skip, if (toLowerCase mismatch) return false — two-pointer convergence
         System.out.println("2. Valid Palindrome: " + isPalindrome("A man, a plan, a canal: Panama"));
+        // two-pointer for-loop: slow pointer j writes, fast pointer i scans; if (nums[i] != nums[j]) advance slow and copy
         System.out.println("3. Remove Duplicates: " + removeDuplicates(new int[]{1, 1, 2, 3, 3}));
+        // z → array modified in-place; moveZeroes uses for-loop with if (nums[i] != 0) swap with slow pointer — partitions zeros to end
         int[] z = {0, 1, 0, 3, 12}; moveZeroes(z);
+        // Move Zeroes: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("4. Move Zeroes: " + Arrays.toString(z));
+        // new int[]{...} → sorted with negatives; creates new int[n] result; while (left <= right) with if (abs compare) fills from end
         System.out.println("5. Sorted Squares: " + Arrays.toString(sortedSquares(new int[]{-4, -1, 0, 3, 10})));
+        // "hello".toCharArray() → creates new char[]; reverseString uses while (left < right) swap — classic two-pointer in-place reversal
         char[] rs = "hello".toCharArray(); reverseString(rs);
+        // new String[]{...} → creates string array
         System.out.println("6. Reverse String: " + new String(rs));
+        // two pointers: i for subsequence, j for target; for-loop on j with if (s[i] == t[j]) i++ — checks if all chars found in order
         System.out.println("7. Is Subsequence: " + isSubsequence("ace", "abcde"));
+        // m1 → pre-allocated with trailing zeros; merge uses while-loop from end with if-else to place larger element — avoids extra array
         int[] m1 = {1, 2, 3, 0, 0, 0}; merge(m1, 3, new int[]{2, 5, 6}, 3);
+        // Merge Sorted: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("8. Merge Sorted: " + Arrays.toString(m1));
+        // new int[]{...} → two arrays; creates new HashMap<>() or sorts both; two-pointer with if (a[i]==b[j]) add to result, else advance smaller
         System.out.println("9. Intersect: " + Arrays.toString(intersect(new int[]{1, 2, 2, 1}, new int[]{2, 2})));
+        // uses two-pointer with if (mismatch) try skipping left OR right — allows at most one deletion; recursive/helper check
         System.out.println("10. Valid Palindrome II: " + validPalindromeII("abca"));
 
         System.out.println("\n--- MEDIUM ---");
+        // new int[]{...} → array to sort; Arrays.sort + for-loop + while (lo < hi) with if-else on sum; skips duplicates with while (nums[i]==nums[i-1])
         System.out.println("11. Three Sum: " + threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
+        // sorted array; for-loop + two-pointer while with if (Math.abs(sum-target) < Math.abs(closest-target)) update closest
         System.out.println("12. Three Sum Closest: " + threeSumClosest(new int[]{-1, 2, 1, -4}, 1));
+        // new int[]{...} → heights; while (left < right): if (height[left] < height[right]) move left++, else right-- — greedy two-pointer
         System.out.println("13. Container Most Water: " + maxArea(new int[]{1, 8, 6, 2, 5, 4, 8, 3, 7}));
+        // Dutch National Flag; sortColors uses while (mid <= hi) with if (0) swap low++, else if (2) swap hi--, else mid++ — 3-way partition
         int[] sc = {2, 0, 2, 1, 1, 0}; sortColors(sc);
+        // Sort Colors: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("14. Sort Colors: " + Arrays.toString(sc));
+        // creates new int[26] lastIndex; for-loop with if (i == end) partition complete — two-pointer tracking max last occurrence
         System.out.println("15. Partition Labels: " + partitionLabels("ababcbacadefegdehijhklij"));
+        // for-loop with if (i < 2 || nums[i] != nums[j-2]) copy — allows at most 2 duplicates using slow/fast pointers
         System.out.println("16. Remove Dup II: " + removeDuplicatesII(new int[]{1, 1, 1, 2, 2, 3}));
+        // for-loop with nested while-loops: climb up while (increasing), then down while (decreasing); if (both sides > 0) update max
         System.out.println("17. Longest Mountain: " + longestMountain(new int[]{2, 1, 4, 7, 3, 2, 5}));
+        // Arrays.sort() + two-pointer: while (left <= right) with if (people[left] + people[right] <= limit) pair both, else just heaviest
         System.out.println("18. Rescue Boats: " + numRescueBoats(new int[]{3, 2, 2, 1}, 3));
+        // new int[]{...} → sorted; nested for-loops + two-pointer while; if (sum == target) add + skip duplicates with while-loops
         System.out.println("19. Four Sum: " + fourSum(new int[]{1, 0, -1, 0, -2, 2}, 0));
+        // Arrays.asList() → creates List; for-loop with isSubsequence check; if (longer || same length but lexically smaller) update result
         System.out.println("20. Longest Word: " + findLongestWord("abpcplea", Arrays.asList("ale", "apple", "monkey", "plea")));
 
         System.out.println("\n--- HARD ---");
+        // new int[]{...} → elevation; while (left < right) with if (leftMax <= rightMax) accumulate left water, else right — two-pointer O(1) space
         System.out.println("21. Trap Rain Water: " + trapRainWater(new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}));
+        // two passes with for-loop: left-to-right tracking max with if (nums[i] < max) update right boundary; reverse for left boundary
         System.out.println("22. Unsorted Subarray: " + findUnsortedSubarray(new int[]{2, 6, 4, 8, 10, 9, 15}));
+        // Arrays.sort() + two-pointer; while-loop with if (diff == target) count++, else if (diff < target) right++, else left++
         System.out.println("23. Pairs Diff<=Target: " + countPairsWithDiff(new int[]{1, 3, 5, 7}, 3));
+        // sorted; for-loop + while (lo < hi): if (sum < target) count += (hi - lo) and lo++, else hi-- — counts all valid pairs at once
         System.out.println("24. Three Sum Smaller: " + threeSumSmaller(new int[]{-2, 0, 1, 3}, 2));
+        // two-pointer from end; while-loop with if (char == '#') skip++, else if (skip > 0) skip-- — simulates backspace without extra space
         System.out.println("25. Backspace Compare: " + backspaceCompare("ab#c", "ad#c"));
+        // Arrays.sort(); for-loop with sliding window of size k; if (nums[i+k-1] - nums[i] < min) update — sorted window minimizes diff
         System.out.println("26. Min Diff K Scores: " + minimumDifference(new int[]{9, 4, 1, 7}, 2));
+        // Arrays.asList creates List
         List<List<Integer>> lists = Arrays.asList(Arrays.asList(4,10,15,24,26), Arrays.asList(0,9,12,20), Arrays.asList(5,18,22,30));
+        // Arrays.asList() of Lists; creates new PriorityQueue<>() min-heap with Comparator; while-loop with if (range < min) update; polls min, adds next
         System.out.println("27. Smallest Range: " + Arrays.toString(smallestRange(lists)));
+        // Arrays.sort() + two-pointer; while (left <= right) with if (sum <= target) add 2^(right-left) using precomputed power array, else right--
         System.out.println("28. Num Subseq: " + numSubseq(new int[]{3, 5, 6, 7}, 9));
+        // creates new HashSet<>(); while-loop sliding window: if (set.contains) remove left, else add right and update max sum
         System.out.println("29. Max Erasure Value: " + maximumUniqueSubarray(new int[]{4, 2, 4, 5, 6}));
+        // two-pointer sliding window; while (score >= k) shrink left; count += (right - left + 1) at each step — conditional accumulation
         System.out.println("30. Subarrays Score<K: " + countSubarraysScoreLessThanK(new int[]{2, 1, 4, 3, 5}, 10));
     }
 }

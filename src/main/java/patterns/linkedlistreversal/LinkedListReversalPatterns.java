@@ -478,40 +478,73 @@ public class LinkedListReversalPatterns {
 
     public static void main(String[] args) {
         System.out.println("=== LINKED LIST IN-PLACE REVERSAL (30 Examples) ===\n");
+        // --- EASY (1-10) ---
         System.out.println("--- EASY ---");
+        // build() creates new ListNode chain; reverseList uses while-loop: prev/curr/next pointer swap — head.next = prev reverses direction
         System.out.println("1. Reverse: " + str(reverseList(build(1,2,3,4,5))));
+        // reverseListRecursive: if (head == null || head.next == null) return head; recursive call, then head.next.next = head, head.next = null — base case + pointer swap
         System.out.println("2. Reverse Recursive: " + str(reverseListRecursive(build(1,2,3))));
+        // while (curr.next != null): if (curr.val == curr.next.val) curr.next = curr.next.next (skip), else curr = curr.next — conditional skip
         System.out.println("3. Delete Dups: " + str(deleteDuplicates(build(1,1,2,3,3))));
+        // new ListNode(0) dummy head; while (curr.next != null): if (curr.next.val == val) unlink, else advance — conditional removal
         System.out.println("4. Remove Elements: " + str(removeElements(build(1,2,6,3,4,5,6), 6)));
+        // while (l1 != null && l2 != null): if (l1.val <= l2.val) take l1, else take l2 — merge comparison with conditional selection
         System.out.println("5. Merge Two: " + str(mergeTwoLists(build(1,2,4), build(1,3,4))));
+        // while (head != null): result = result * 2 + head.val; head = head.next — no conditional, pure accumulation
         System.out.println("6. Binary to Int: " + getDecimalValue(build(1,0,1)));
+        // deleteNode: node.val = node.next.val; node.next = node.next.next — copies next node's data and bypasses it (no prev pointer needed)
         ListNode dn = build(4,5,1,9); deleteNode(dn.next); System.out.println("7. Delete Node: " + str(dn));
+        // while (node != null) count++; node = node.next — simple traversal counter with while-loop condition
         System.out.println("8. Length: " + getLength(build(1,2,3,4)));
+        // two pointers: advance fast k steps, then while (fast != null) move both — gap technique finds kth from end
         System.out.println("9. Kth from End: " + kthFromEnd(build(1,2,3,4,5), 2).val);
+        // for-loop to position; new ListNode(val) inserted: newNode.next = curr.next, curr.next = newNode — pointer insertion
         System.out.println("10. Insert at 2: " + str(insertAtPosition(build(1,2,4,5), 3, 2)));
 
+        // --- MEDIUM (11-20) ---
         System.out.println("\n--- MEDIUM ---");
+        // for-loop navigates to position m-1; for-loop (m to n) reverses sublist: prev/curr/next pointer swap within bounds
         System.out.println("11. Reverse Between: " + str(reverseBetween(build(1,2,3,4,5), 2, 4)));
+        // new ListNode(0) dummy; while (curr.next && curr.next.next) swap pair: rewire a.next→b, b.next→a — pairwise pointer manipulation
         System.out.println("12. Swap Pairs: " + str(swapPairs(build(1,2,3,4))));
+        // fast/slow find middle; reverse second half; while-compare: if (val mismatch) return false — three-phase algorithm
         System.out.println("13. Palindrome: " + isPalindrome(build(1,2,2,1)));
+        // while (even && even.next): odd.next = even.next, even.next = odd.next.next — alternating pointer reassignment
         System.out.println("14. Odd Even: " + str(oddEvenList(build(1,2,3,4,5))));
+        // count length; k %= len; if (k==0) return; form circle, for-loop to cut point — modular rotation with conditional shortcut
         System.out.println("15. Rotate: " + str(rotateRight(build(1,2,3,4,5), 2)));
+        // two dummies (before/after); while: if (val < x) append to before, else to after — conditional partitioning
         System.out.println("16. Partition: " + str(partition(build(1,4,3,2,5,2), 3)));
+        // dummy head; while: if (val == next.val) inner while skips ALL dupes with while (curr && curr.val == dupVal) — nested while for multi-dupe skip
         System.out.println("17. Del Dup II: " + str(deleteDuplicatesII(build(1,2,3,3,4,4,5))));
+        // while (l1 || l2 || carry): sum = carry + (l1 ? l1.val : 0) + (l2 ? l2.val : 0); new ListNode(sum%10) — ternary null checks
         System.out.println("18. Add Two: " + str(addTwoNumbers(build(2,4,3), build(5,6,4))));
+        // new ListNode(0) dummy sorted head; while: find correct position via while (prev.next.val <= curr.val), insert — insertion sort with linked list
         System.out.println("19. Insertion Sort: " + str(insertionSortList(build(4,2,1,3))));
+        // ArrayDeque<>() monotonic stack; for-loop with while (stack && top.val < curr.val) assign next larger — stack-based next greater element
         System.out.println("20. Next Larger: " + Arrays.toString(nextLargerNodes(build(2,7,4,3,5))));
 
+        // --- HARD (21-30) ---
         System.out.println("\n--- HARD ---");
+        // count k nodes; if (count < k) return as-is; for-loop reverses k, recursive call for rest — conditional group reversal with recursion
         System.out.println("21. Reverse K-Group: " + str(reverseKGroup(build(1,2,3,4,5,6,7,8), 3)));
+        // new ListNode[]{...} → array of sorted lists; PriorityQueue<>() min-heap with Comparator; while (pq) poll min, if (node.next) offer
         System.out.println("22. Merge K: " + str(mergeKLists(new ListNode[]{build(1,4,5), build(1,3,4), build(2,6)})));
+        // count k; reverse k nodes, then for-loop skips k (without reversing), recursive call — alternating reverse/skip logic
         System.out.println("23. Rev Alt K: " + str(reverseAlternateKGroup(build(1,2,3,4,5,6,7,8), 3)));
+        // merge sort: fast/slow split; recursive sort; while-merge with if (l1.val <= l2.val) — divide-and-conquer on linked list
         System.out.println("24. Sort List: " + str(sortList(build(4,2,1,3))));
+        // find middle, reverse second half, while-interleave: t1=first.next, t2=second.next, rewire — three-phase reordering
         ListNode rl = build(1,2,3,4,5); reorderList(rl); System.out.println("25. Reorder: " + str(rl));
+        // Flatten: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("26. Flatten: (nested list example)");
+        // new int[]{2,3,3} → group sizes; for each group size: if (count < groupSize) stop; for-loop reverses groupSize nodes — variable-sized groups
         System.out.println("27. Rev Groups: " + str(reverseInGroups(build(1,2,3,4,5,6,7,8), new int[]{2,3,3})));
+        // advance first pointer k steps, second to n-k+1; swap values — two-pointer with counted positioning
         System.out.println("28. Swap Kth: " + str(swapNodes(build(1,2,3,4,5), 2)));
+        // HashMap<Integer,ListNode> prefix sum → node; while: if (prefix seen) skip zero-sum segment by rewiring prev.next — prefix sum technique on linked list
         System.out.println("29. Remove Zero Sum: " + str(removeZeroSumSublists(build(1,2,-3,3,1))));
+        // fast/slow find middle; reverse second half; while sum pairs: Math.max(first.val + second.val, max) — twin sum from both ends
         System.out.println("30. Twin Sum: " + pairSum(build(5,4,2,1)));
     }
 }

@@ -93,11 +93,14 @@ public class FacadePattern {
         System.out.println("=== Facade Pattern ===\n");
 
         System.out.println("--- Computer Startup Facade ---");
+        // new ComputerFacade() → creates internal CPU, Memory, HardDrive objects; start() calls cpu.boot(), memory.load(), hd.read() in sequence — simplifies multi-step startup
         ComputerFacade computer = new ComputerFacade();
         computer.start();
 
         System.out.println("--- Order Facade ---");
+        // new OrderFacade() → creates internal Inventory, Payment, Shipping objects; placeOrder() orchestrates: check stock, charge, ship — one call replaces three
         OrderFacade order = new OrderFacade();
+        // placeOrder() → calls inventory.check(), payment.charge(), shipping.ship() internally; returns tracking number — complex workflow behind simple interface
         String tracking = order.placeOrder("Laptop", 999.99, "123 Main St");
         System.out.println("  Order placed! Tracking: " + tracking);
 

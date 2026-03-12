@@ -284,29 +284,50 @@ public class MatrixTraversalPatterns {
     public static void main(String[] args) {
         System.out.println("=== MATRIX TRAVERSAL PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // Flood Fill: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("1. Flood Fill: done");
+        // new int[]{...} → creates array literal; returns boolean; uses if-else conditional checks
         System.out.println("2. Island Perimeter: " + islandPerimeter(new int[][]{{0,1,0,0},{1,1,1,0},{0,1,0,0},{1,1,0,0}}));
+        // Transpose: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("3. Transpose: done");
+        // Reshape: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("4. Reshape: done");
         System.out.println("5-10: Foundation matrix problems");
+        // union-find or DFS; for-loop: if (cell == '1') merge neighbors — count components after all merges
         System.out.println("9. Diagonal Sum: " + diagonalSum(new int[][]{{1,2,3},{4,5,6},{7,8,9}}));
+        // while (boundaries valid): 4 for-loops (right, down, left, up); if (boundary crossed) stop direction — boundary shrinking spiral
         System.out.println("10. Max Wealth: " + maximumWealth(new int[][]{{1,2,3},{3,2,1}}));
         System.out.println("\n--- MEDIUM ---");
+        // while (boundaries valid): 4 for-loops (right, down, left, up) with if (boundary check) at each direction change — boundary shrinking
         System.out.println("11. Spiral: " + spiralOrder(new int[][]{{1,2,3},{4,5,6},{7,8,9}}));
+        // DFS labels islands with id + HashMap stores area; for each 0: sum adjacent distinct ids + 1 — component labeling + neighbor query
         System.out.println("12. Rotate: done");
+        // Dijkstra PriorityQueue<>(); while: if (reached end) return; 4-dir: if (max effort < dist[nr][nc]) update — min-effort path
         System.out.println("13. Set Zeroes: done");
+        // DP with obstacles: for-loops: if (grid[i][j]==1) dp=0; else dp[j] += dp[j-1] — dynamic programming grid paths
         System.out.println("14. Game of Life: done");
+        // nested for-loops: if (grid[i][j] == '1') DFS flood-fill marking visited; count++ — connected component counting
         System.out.println("15. Num Islands: " + numIslands(new char[][]{{'1','1','0'},{'0','1','0'},{'0','0','1'}}));
+        // nested for-loops: if (grid[i][j] == 1) DFS returns 1 + recursive 4-dir sum; Math.max tracks largest — area accumulation
         System.out.println("16. Max Area: " + maxAreaOfIsland(new int[][]{{0,0,1,0},{0,1,1,0},{0,0,0,0}}));
+        // BFS/DFS grid traversal variant; for 4/8 directions with boundary checks; if (condition) explore neighbor — grid search pattern
         System.out.println("17. Surrounded: done");
+        // grid DP or BFS; for-loops with if (cell meets criteria) dp[i][j] = formula — grid-based dynamic programming
         System.out.println("18. Ball Fall: " + Arrays.toString(findBall(new int[][]{{1,1,1,-1,-1},{1,1,1,-1,-1},{-1,-1,-1,1,1},{1,1,1,1,-1},{-1,-1,-1,-1,-1}})));
+        // multi-source BFS or DFS; processes grid cells in specific order; if (condition) propagate — level-based grid processing
         System.out.println("19. Diagonal: " + Arrays.toString(findDiagonalOrder(new int[][]{{1,2,3},{4,5,6},{7,8,9}})));
+        // advanced grid traversal; combines DFS/BFS with state tracking; if (visited[state]) skip — state-space grid exploration
         System.out.println("20. Spiral II: done");
         System.out.println("\n--- HARD ---");
+        // grid binary search or BFS; for 4-dir: if (condition) explore; tracks visited — optimized grid pathfinding
         System.out.println("21. Binary Matrix: " + shortestPathBinaryMatrix(new int[][]{{0,0,0},{1,1,0},{1,1,0}}));
+        // DFS with int[][] memo; for each cell: if (memo != 0) return cached; recurse 4-dir with if (neighbor > current) — memoized DFS
         System.out.println("22. Longest Inc: " + longestIncreasingPath(new int[][]{{9,9,4},{6,6,8},{2,1,1}}));
+        // DFS labels components with id, HashMap stores area; for each 0: sum adjacent distinct ids + 1; if (total > max) update — component ID + BFS
         System.out.println("23. Largest Island: " + largestIsland(new int[][]{{1,0},{0,1}}));
+        // PriorityQueue<>() Dijkstra; while (pq): if (reached end) return effort; 4-dir: if (max diff < dist[nr][nc]) update, offer — modified shortest path
         System.out.println("24. Min Effort: " + minimumEffortPath(new int[][]{{1,2,2},{3,8,2},{5,3,5}}));
+        // new int[] dp; for-loops: if (obstacle) dp[j] = 0, else if (j > 0) dp[j] += dp[j-1] — DP with obstacle blocking
         System.out.println("25. Unique Paths Obs: " + uniquePathsWithObstacles(new int[][]{{0,0,0},{0,1,0},{0,0,0}}));
         System.out.println("26-30: Advanced matrix traversal problems");
     }

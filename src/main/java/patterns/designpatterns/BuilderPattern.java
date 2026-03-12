@@ -84,10 +84,12 @@ public class BuilderPattern {
         System.out.println("=== Builder Pattern ===\n");
 
         System.out.println("--- Minimal user (only required fields) ---");
+        // new User.Builder("Alice", "alice@example.com") → creates Builder object with required fields; .build() calls private User constructor — prevents invalid object state
         User simple = new User.Builder("Alice", "alice@example.com").build();
         System.out.println("  " + simple);
 
         System.out.println("\n--- User with some optional fields ---");
+        // new User.Builder(...).phone(...).age(30).build() → method chaining sets optional fields; each setter returns 'this' (Builder) for fluent API
         User withPhone = new User.Builder("Bob", "bob@example.com")
                 .phone("+1-555-0123")
                 .age(30)
@@ -95,6 +97,7 @@ public class BuilderPattern {
         System.out.println("  " + withPhone);
 
         System.out.println("\n--- Fully loaded user ---");
+        // new User.Builder with all optional setters chained → demonstrates full fluent API; .build() constructs immutable User object
         User full = new User.Builder("Carol", "carol@example.com")
                 .phone("+1-555-0456")
                 .address("123 Main St")
@@ -103,6 +106,7 @@ public class BuilderPattern {
                 .build();
         System.out.println("  " + full);
 
+        // Builder pattern avoids telescoping constructors (multiple overloaded constructors); result is immutable — fields are final, set only via Builder
         System.out.println("\nBenefit: No telescoping constructors, readable chaining, immutable result.");
     }
 }

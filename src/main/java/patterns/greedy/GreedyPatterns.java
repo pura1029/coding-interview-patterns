@@ -306,36 +306,64 @@ public class GreedyPatterns {
     public static void main(String[] args) {
         System.out.println("=== GREEDY PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // for-loop with if (prices[i] > prices[i-1]) profit += diff — collect every upward movement greedily
         System.out.println("1. Max Profit: " + maxProfit(new int[]{7,1,5,3,6,4}));
+        // new int[]{...} → creates array literal; new int[]{...} → creates array literal; for-loop or binary search with if-else to locate target
         System.out.println("2. Assign Cookies: " + findContentChildren(new int[]{1,2,3},new int[]{1,1}));
+        // for-loop with if (bill==5) fives++, else if (bill==10) fives--, tens++, else if (tens>0) tens--, fives--, else fives-=3 — greedy change
         System.out.println("3. Lemonade: " + lemonadeChange(new int[]{5,5,5,10,20}));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("4. Max Units: " + maximumUnits(new int[][]{{1,3},{2,2},{3,1}},4));
         System.out.println("5-6: Flower/palindrome");
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("7. Max Profit II: " + maxProfitII(new int[]{7,1,5,3,6,4}));
+        // tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("8. Longest Palin: " + longestPalindrome("abccccdd"));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("9. Min Ops Inc: " + minOperations(new int[]{1,1,1}));
+        // Arrays.sort by start; PriorityQueue<>() min-heap of end days; for each day: offer events starting, if (peek >= day) attend — greedy scheduling
         System.out.println("10. Array Pair: " + arrayPairSum(new int[]{1,4,3,2}));
         System.out.println("\n--- MEDIUM ---");
+        // for-loop with if (i > maxReach) return false; maxReach = Math.max(maxReach, i + nums[i]) — greedy forward reach
         System.out.println("11. Jump Game: " + canJump(new int[]{2,3,1,1,4}));
+        // for-loop tracking currentEnd/farthest; if (i == currentEnd) jumps++, currentEnd = farthest — greedy BFS-like levels
         System.out.println("12. Jump II: " + jump(new int[]{2,3,1,1,4}));
+        // for-loop tracking total/current tank; if (current < 0) reset start = i+1, current = 0 — greedy start selection
         System.out.println("13. Gas Station: " + canCompleteCircuit(new int[]{1,2,3,4,5},new int[]{3,4,5,1,2}));
+        // Arrays.sort; for-loop: if (nums[i] <= nums[i-1]) need increment to nums[i-1]+1, accumulate cost — greedy gap filling
         System.out.println("14. Task Sched: " + leastInterval(new char[]{'A','A','A','B','B','B'},2));
+        // Arrays.sort by end time; for-loop: if (start >= lastEnd) keep interval, else remove (count++) — greedy minimum removals
         System.out.println("15. Erase Overlap: " + eraseOverlapIntervals(new int[][]{{1,2},{2,3},{3,4},{1,3}}));
+        // greedy color alternation; for-loop: if (cost[current color] > cost[alternate]) switch — minimize total painting cost
         System.out.println("16. Min Arrows: " + findMinArrowShots(new int[][]{{10,16},{2,8},{1,6},{7,12}}));
+        // creates new int[26] last occurrence; for-loop with if (i == end) partition complete, update end = Math.max(end, last[c]) — greedy partitioning
         System.out.println("17. Partition: " + partitionLabels("ababcbacadefegdehijhklij"));
+        // sort by end/start; for-loop: if (compatible) include, update boundary — interval scheduling maximization
         System.out.println("18. Boats: " + numRescueBoats(new int[]{3,2,2,1},3));
+        // greedy with sorting; for-loop: if (can fulfill) assign, count++ — matching/assignment greedy approach
         System.out.println("19. Remove K: " + removeKdigits("1432219",3));
+        // sort + greedy; for-loop with conditional accumulation; Math.max/Math.min tracks optimal — greedy optimization
         System.out.println("20. Min Platforms: " + minPlatforms(new int[]{900,940,950,1100,1500,1800},new int[]{910,1200,1120,1130,1900,2000}));
         System.out.println("\n--- HARD ---");
+        // creates new int[n] filled with 1; left-to-right for-loop: if (ratings[i] > ratings[i-1]) candy[i]++; right-to-left same — two-pass greedy
         System.out.println("21. Candy: " + candy(new int[]{1,0,2}));
+        // greedy simulation; for-loop with if-else state tracking; accumulates optimal choices — sequential greedy decisions
         System.out.println("22. IPO: " + findMaximizedCapital(2,0,new int[]{1,2,3},new int[]{0,1,1}));
+        // sort by criteria; two-pointer or scanning; if (pair valid) match — greedy pairing/matching
         System.out.println("23. Refuel: " + minRefuelStops(100,10,new int[][]{{10,60},{20,30},{30,30},{60,40}}));
+        // greedy + stack/deque; for-loop: if (improves result) keep, else discard — greedy character/element selection
         System.out.println("24. Course III: " + scheduleCourse(new int[][]{{100,200},{200,1300},{1000,1250},{2000,3200}}));
+        // sorted by speed desc; PriorityQueue<>() min-heap of efficiency; for-loop: offer eff, if (size > k) poll min; track maxPerf = sum * speed[i]
         System.out.println("25. Max Perf: " + maxPerformance(6,new int[]{2,10,3,1,5,8},new int[]{5,4,3,9,7,2},2));
+        // PriorityQueue + greedy; while: poll best candidate, if (feasible) assign — deadline-based greedy scheduling
         System.out.println("26. Hire K: " + mincostToHireWorkers(new int[]{10,20,5},new int[]{70,50,30},2));
+        // mathematical greedy; for-loop: if (optimal split point) divide, else continue — number theory + greedy
         System.out.println("27. Min Interval: " + Arrays.toString(minInterval(new int[][]{{1,4},{2,4},{3,6},{4,4}},new int[]{2,3,4,5})));
+        // sort + two-pointer greedy; for-loop: if (match condition) pair up, advance both — greedy matching from sorted
         System.out.println("28. Patches: " + minPatches(new int[]{1,3},6));
+        // greedy with prefix/suffix analysis; for-loop tracks state; if (condition violated) adjust — multi-pass greedy
         System.out.println("29. Max Number: " + Arrays.toString(maxNumber(new int[]{3,4,6,5},new int[]{9,1,2,5,8,3},5)));
+        // comprehensive greedy; sort + iterate: if (can extend solution) include; return accumulated result — greedy construction
         System.out.println("30. Reorganize: " + reorganizeString("aab"));
     }
 }

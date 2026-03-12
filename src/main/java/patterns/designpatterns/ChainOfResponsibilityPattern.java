@@ -140,33 +140,46 @@ public class ChainOfResponsibilityPattern {
         System.out.println("=== Chain of Responsibility Pattern ===\n");
 
         System.out.println("--- Support Ticket Chain ---");
+        // new BotSupport(), Level1Support(), etc. → each handler holds reference to next; setNext() chains them — linked list of handlers
         BotSupport bot = new BotSupport();
+        // new Level1Support() → creates object
         Level1Support l1 = new Level1Support();
+        // new Level2Support() → creates object
         Level2Support l2 = new Level2Support();
+        // new ManagerSupport() → creates object
         ManagerSupport mgr = new ManagerSupport();
+        // setNext() returns next handler for chaining; builds: bot → l1 → l2 → mgr — each handler if (canHandle) process, else pass to next
         bot.setNext(l1).setNext(l2).setNext(mgr);
 
+        // handle() → BotSupport: if (severity <= 1) handle here, else if (next != null) next.handle() — conditional forwarding through chain
         System.out.println("Ticket: \"Password reset\" (severity 1)");
         bot.handle("Password reset", 1);
         System.out.println("\nTicket: \"App not loading\" (severity 3)");
         bot.handle("App not loading", 3);
         System.out.println("\nTicket: \"Data corruption\" (severity 5)");
         bot.handle("Data corruption", 5);
+        // severity 8 passes through bot→l1→l2→mgr; ManagerSupport handles all remaining — chain exhaustion
         System.out.println("\nTicket: \"System down\" (severity 8)");
         bot.handle("System down", 8);
 
         System.out.println("\n--- Middleware Chain ---");
+        // new AuthMiddleware(), RateLimitMiddleware(), LoggingMiddleware() → middleware handlers; linkWith() chains them for HTTP request processing
         AuthMiddleware auth = new AuthMiddleware();
+        // new RateLimitMiddleware() → creates object
         RateLimitMiddleware rateLimit = new RateLimitMiddleware();
+        // new LoggingMiddleware() → creates object
         LoggingMiddleware logging = new LoggingMiddleware();
+        // linkWith() → builds chain: logging → rateLimit → auth; check() passes through each if (condition met), else rejects
         logging.linkWith(rateLimit).linkWith(auth);
 
+        // check() → logging logs request, then next.check(); rateLimit: if (requestCount < limit) pass, else reject; auth: if (valid credentials) pass
         System.out.println("Request 1:");
         logging.check("admin", "secret");
         System.out.println("Request 2:");
         logging.check("admin", "secret");
         System.out.println("Request 3:");
         logging.check("admin", "secret");
+        // 4th request → rateLimit: if (count >= 3) reject — doesn't reach auth handler; chain short-circuits
         System.out.println("Request 4 (rate limited):");
         logging.check("admin", "secret");
 

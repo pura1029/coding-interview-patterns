@@ -89,16 +89,21 @@ public class FactoryMethodPattern {
         System.out.println("=== Factory Method Pattern ===\n");
 
         System.out.println("--- Simple Factory ---");
+        // NotificationFactory.create("email") → if ("email") return new EmailNotification(), else if ("sms") return new SMSNotification() — conditional type creation
         Notification email = NotificationFactory.create("email");
         Notification sms = NotificationFactory.create("sms");
         Notification push = NotificationFactory.create("push");
+        // send() → polymorphic call; actual class determined by factory's if-else logic — caller doesn't know concrete type
         email.send("Welcome to the platform!");
         sms.send("Your OTP is 123456");
         push.send("New message received");
 
         System.out.println("\n--- Factory Method (subclass decides) ---");
+        // new EmailService() → concrete creator; overrides createNotification() returning new EmailNotification() — subclass decides which object to create
         NotificationService emailSvc = new EmailService();
+        // new SMSService() → different creator; returns new SMSNotification() — each subclass encapsulates its creation logic
         NotificationService smsSvc = new SMSService();
+        // notify() → template: calls createNotification().send() — caller uses abstract creator, concrete class handles the rest
         emailSvc.notify("Monthly report ready");
         smsSvc.notify("Account alert");
     }

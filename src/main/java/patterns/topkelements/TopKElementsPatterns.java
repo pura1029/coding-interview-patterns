@@ -296,38 +296,69 @@ public class TopKElementsPatterns {
     public static void main(String[] args) {
         System.out.println("=== TOP K ELEMENTS PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // new int[]{...} → creates array literal
         System.out.println("1. Kth Largest: " + kthLargest(new int[]{3,2,1,5,6,4}, 2));
+        // creates new PriorityQueue<>(Collections.reverseOrder()) max-heap; while (size >= 2) poll two, if (y != x) offer y-x — collision simulation
         System.out.println("2. Last Stone: " + lastStoneWeight(new int[]{2,7,4,1,8,1}));
+        // new KthLargestStream() → creates object; new int[]{...} → creates array literal
         KthLargestStream kls = new KthLargestStream(3, new int[]{4,5,8,2}); System.out.println("3. Kth Stream: " + kls.add(3));
+        // new int[]{...} → creates array literal; uses Arrays.sort() or custom sort with Comparator
         System.out.println("4. Freq Sort: " + Arrays.toString(frequencySort(new int[]{1,1,2,2,2,3})));
+        // new int[]{...} → creates array literal; for-loop or binary search with if-else to locate target
         System.out.println("5. Rel Ranks: " + Arrays.toString(findRelativeRanks(new int[]{5,4,3,2,1})));
+        // new int[][]{{...}} → points; PriorityQueue<>() max-heap by distance; for-loop with if (pq.size() > k) poll farthest — keeps k closest
         System.out.println("6. K Closest: " + Arrays.deepToString(kClosest(new int[][]{{1,3},{-2,2}}, 1)));
+        // new int[]{...} → creates array literal; new int[]{...} → creates array literal
         System.out.println("7. K Pairs: " + kSmallestPairs(new int[]{1,7,11}, new int[]{2,4,6}, 3));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("8. Max Product: " + maxProduct(new int[]{3,4,5,2}));
+        // new int[]{...} → creates array literal
         System.out.println("9. K Largest: " + Arrays.toString(kLargest(new int[]{3,2,1,5,6,4}, 2)));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("10. Min Candy Cost: " + minimumCost(new int[]{1,2,3}));
         System.out.println("\n--- MEDIUM ---");
+        // creates HashMap<>() counts + PriorityQueue<>() min-heap; for-loop with if (pq.size() > k) poll — keeps k most frequent
         System.out.println("11. Top K Freq: " + topKFrequent(new int[]{1,1,1,2,2,3}, 2));
+        // uses Arrays.sort() or custom sort with Comparator
         System.out.println("12. Freq Sort Str: " + frequencySortStr("tree"));
+        // creates new int[26] freq; PriorityQueue<>() max-heap; while (size >= 2) poll two, append, re-offer if (freq > 0) — alternating placement
         System.out.println("13. Reorganize: " + reorganizeString("aab"));
+        // new char[]{...} → creates char array/matrix
         System.out.println("14. Task Scheduler: " + leastInterval(new char[]{'A','A','A','B','B','B'}, 2));
+        // new int[]{...} → creates array literal
         System.out.println("15. Kth Smallest Matrix: " + kthSmallest(new int[][]{{1,5,9},{10,11,13},{12,13,15}}, 8));
+        // creates HashMap<>() word→count; PriorityQueue<>() with Comparator (freq asc, then lex desc); for-loop + poll k — custom ordering
         System.out.println("16. Top K Words: " + topKFrequentWords(new String[]{"i","love","leetcode","i","love","coding"}, 2));
+        // PriorityQueue<>() with custom Comparator; for-loop offers elements; polls k results — selection with ordering criteria
         System.out.println("17. Least Unique: " + findLeastNumOfUniqueInts(new int[]{5,5,4}, 1));
+        // combines PriorityQueue with HashMap or TreeMap; for-loop with conditional heap operations — frequency + ordering
         System.out.println("18. Kth Pair Dist: " + smallestDistancePair(new int[]{1,3,1}, 1));
+        // PriorityQueue approach; while (heap not empty): poll, process, if (condition) re-offer — simulation with priority ordering
         System.out.println("19. Ugly Number II: " + nthUglyNumber(10));
+        // new SeatManager(5) → PriorityQueue<>() min-heap initialized with all seats; reserve polls smallest, unreserve offers back — O(log n) ops
         SeatManager sm = new SeatManager(5); System.out.println("20. Seat: " + sm.reserve());
         System.out.println("\n--- HARD ---");
+        // new MedianFinder() → two PriorityQueue<>() (maxHeap for lower half, minHeap for upper); addNum balances with if (size diff > 1) rebalance
         MedianFinder mf = new MedianFinder(); mf.addNum(1); mf.addNum(2); System.out.println("21. Median: " + mf.findMedian());
+        // PriorityQueue + binary search or two pointers; for-loop narrows candidates; if (qualifies) add — hybrid approach
         System.out.println("22. Merge K: (list merge example)");
+        // PriorityQueue<>() k-way merge variant; while (not empty): poll smallest, advance pointer, offer next — sorted sequence generation
         System.out.println("23. Sliding Median: " + Arrays.toString(medianSlidingWindow(new int[]{1,3,-1,-3,5,3,6,7}, 3)));
+        // PriorityQueue with deferred evaluation; for-loop with if (already processed) skip — lazy heap with dedup
         System.out.println("24. IPO: " + findMaximizedCapital(2, 0, new int[]{1,2,3}, new int[]{0,1,1}));
+        // Arrays.asList creates List
         List<List<Integer>> lists = Arrays.asList(Arrays.asList(4,10,15,24,26), Arrays.asList(0,9,12,20), Arrays.asList(5,18,22,30));
+        // two PriorityQueues (max + min) or TreeMap; sliding window with add/remove/rebalance — streaming median variant
         System.out.println("25. Smallest Range: " + Arrays.toString(smallestRange(lists)));
+        // PriorityQueue<>() with Comparator; processes events in priority order; while (heap) poll and accumulate — event processing
         System.out.println("26. Trap Rain 3D: " + trapRainWater(new int[][]{{1,4,3,1,3,2},{3,2,1,3,2,4},{2,3,3,2,3,1}}));
+        // combines PriorityQueue with graph traversal; BFS/DFS + heap for top-k paths/values — graph + heap hybrid
         FreqStack fs = new FreqStack(); fs.push(5); fs.push(7); fs.push(5); fs.push(7); fs.push(4); fs.push(5); System.out.println("27. Freq Stack pop: " + fs.pop());
+        // PriorityQueue + DP or memoization; for-loop with if (not computed) compute and offer — top-k optimization
         System.out.println("28. Course Sched III: " + scheduleCourse(new int[][]{{100,200},{200,1300},{1000,1250},{2000,3200}}));
+        // advanced PriorityQueue usage; combines with segment tree or BIT; for-loop with range queries — efficient top-k range
         System.out.println("29. K Closest QS: " + Arrays.deepToString(kClosestQuickSelect(new int[][]{{3,3},{5,-1},{-2,4}}, 2)));
+        // PriorityQueue<>() for final aggregation; multiple passes or streaming; if (result qualifies) add to output — comprehensive top-k
         System.out.println("30. Min Hire Cost: " + mincostToHireWorkers(new int[]{10,20,5}, new int[]{70,50,30}, 2));
     }
 }

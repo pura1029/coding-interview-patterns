@@ -292,35 +292,62 @@ public class TriePatterns {
     public static void main(String[] args) {
         System.out.println("=== TRIE PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // for-loop over chars: if (node.children[c-'a'] == null) node.children[c-'a'] = new TrieNode(); traverse down; mark isEnd = true
         Trie trie=new Trie(); trie.insert("apple");
+        // for-loop traverses children: if (node.children[c-'a'] == null) return false; after loop: return node.isEnd — full word match
         System.out.println("1. Search apple: " + trie.search("apple"));
+        // same traversal as search but returns true after loop without checking isEnd — prefix match only
         System.out.println("2. Prefix app: " + trie.startsWith("app"));
+        // builds Trie from all words; traverse from root while (only one child && !isEnd) — single-path traversal gives LCP
         System.out.println("3. LCP: " + longestCommonPrefix(new String[]{"flower","flow","flight"}));
+        // new String[]{...} → creates string array
         System.out.println("4. Word In Trie: " + wordInTrie(new String[]{"cat","dog"},"dog"));
+        // new String[]{...} → creates string array; for-loop with if (condition) count/accumulate
         System.out.println("5. Count Prefix: " + countPrefix(new String[]{"pay","attention","practice","attend"},"at"));
+        // new String[] MORSE lookup; creates HashSet<>(); for-loop builds morse for each word with StringBuilder; set.size() counts unique transformations
         System.out.println("6. Morse: " + uniqueMorseRepresentations(new String[]{"gin","zen","gig","msg"}));
+        // new String[]{...} → creates string array; for-loop with if (condition) count/accumulate
         System.out.println("7. Count By Len: " + countByLength(new String[]{"ab","cd","abc"}));
+        // returns boolean; uses if-else conditional checks
         System.out.println("8. All Codes: " + hasAllCodes("00110110",2));
+        // new String[]{...} → creates string array
         System.out.println("9. Index Pairs: " + Arrays.deepToString(indexPairs("thestoryofleetcodeandme",new String[]{"story","fleet","leetcode"})));
+        // new String[]{...} → creates string array; for-loop with if (condition) count/accumulate
         System.out.println("10. Prefix Scores: " + Arrays.toString(sumPrefixScores(new String[]{"abc","ab","bc","b"})));
         System.out.println("\n--- MEDIUM ---");
+        // new WordDictionary() → Trie with DFS search; '.' wildcard: for-loop tries ALL 26 children recursively; if (any path matches) true
         WordDictionary wd=new WordDictionary(); wd.addWord("bad"); wd.addWord("dad");
+        // Trie variant; insert/search with specific key transformation; for-loop traverses nodes with if (child null) create — custom Trie application
         System.out.println("11. WildCard .ad: " + wd.search(".ad"));
+        // builds Trie from dictionary; for each word in sentence: traverse Trie, if (node.isEnd) replace with prefix, else keep original — shortest prefix match
         System.out.println("12. Replace: " + replaceWords(Arrays.asList("cat","bat","rat"),"the cattle was rattled by the battery"));
+        // new MapSum() → Trie with int values; insert sets leaf val; sum(): DFS from prefix node accumulates all descendant values
         MapSum ms=new MapSum(); ms.insert("apple",3); ms.insert("app",2);
+        // Trie with additional node data; insert stores metadata; search aggregates via DFS — augmented Trie structure
         System.out.println("13. Map Sum ap: " + ms.sum("ap"));
+        // Trie + autocomplete; insert words; for prefix: traverse to node, DFS collect all words below — prefix-based suggestion
         System.out.println("14. Suggestions: " + suggestedProducts(new String[]{"mobile","mouse","moneypot","monitor","mousepad"},"mouse"));
+        // builds binary Trie (bit by bit from MSB); for each number: traverse choosing opposite bit if available (if node.children[1-bit] != null) — greedy XOR max
         System.out.println("15. Max XOR: " + findMaximumXOR(new int[]{3,10,5,25,2,8}));
+        // new MagicDictionary() → Trie; search allows exactly 1 char mismatch: DFS with edit count; if (edits > 1) prune branch
         MagicDictionary md=new MagicDictionary(); md.buildDict(new String[]{"hello","leetcode"});
+        // Magic: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("16. Magic: " + md.search("hhllo"));
         System.out.println("17-18: Stream/Camel");
+        // new String[]{...} → creates string array
         System.out.println("19. Group Shifted: " + groupStrings(new String[]{"abc","bcd","acef","xyz","az","ba","a","z"}));
+        // for-loop with if (condition) count/accumulate
         System.out.println("20. Distinct Subs: " + countDistinctSubstrings("abc"));
         System.out.println("\n--- HARD ---");
+        // new char[]{...} → creates char array/matrix; new String[]{...} → creates string array; for-loop or binary search with if-else to locate target
         System.out.println("21. Word Search II: " + findWords(new char[][]{{'o','a','a','n'},{'e','t','a','e'},{'i','h','k','r'},{'i','f','l','v'}},new String[]{"oath","pea","eat","rain"}));
+        // wordBreak() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("22. Word Break II: " + wordBreak("catsanddog",Arrays.asList("cat","cats","and","sand","dog")));
+        // builds Trie; for each word: canForm DFS with if (node.isEnd) try starting new word from position; if (count >= 2) it's concatenated
         System.out.println("23. Concatenated: " + findAllConcatenatedWordsInADict(new String[]{"cat","cats","catsdogcats","dog","dogcatsdog","hippopotamuses","rat","ratcatdogcat"}));
+        // builds Trie; for each word: verify every prefix exists via Trie search; if (longer || same length + lex smaller) update result
         System.out.println("24. Longest Word: " + longestWord(new String[]{"w","wo","wor","worl","world"}));
+        // creates HashSet<>() from wordDict; boolean[] dp; for-loop: for (j < i) if (dp[j] && set.contains(substring(j,i))) dp[i] = true
         System.out.println("25. Word Break I: " + wordBreakI("leetcode",Arrays.asList("leet","code")));
         System.out.println("26-30: Advanced Trie operations");
     }

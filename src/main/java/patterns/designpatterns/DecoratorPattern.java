@@ -75,15 +75,19 @@ public class DecoratorPattern {
     public static void main(String[] args) {
         System.out.println("=== Decorator Pattern ===\n");
 
+        // new SimpleCoffee() → base component implementing Coffee interface; cost() returns base price, description() returns "Simple Coffee"
         Coffee plain = new SimpleCoffee();
         printOrder(plain);
 
+        // new MilkDecorator(new SimpleCoffee()) → wraps base; cost() returns decoratedCoffee.cost() + 0.50 — each decorator adds to the chain
         Coffee withMilk = new MilkDecorator(new SimpleCoffee());
         printOrder(withMilk);
 
+        // Nested decorators: Whip(Vanilla(Milk(Simple))) → cost chains: whip + vanilla + milk + base; description chains similarly — layered wrapping
         Coffee latte = new WhipDecorator(new VanillaDecorator(new MilkDecorator(new SimpleCoffee())));
         printOrder(latte);
 
+        // Double SugarDecorator → same decorator applied twice; cost adds sugar price twice — flexible composition without new subclass per combination
         Coffee sweet = new SugarDecorator(new SugarDecorator(new MilkDecorator(new SimpleCoffee())));
         printOrder(sweet);
 

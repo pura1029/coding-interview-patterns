@@ -100,19 +100,23 @@ public class OpenClosedPrinciple {
         System.out.println("=== Open/Closed Principle (OCP) ===\n");
 
         System.out.println("--- BAD: Must modify calculator for each new shape ---");
+        // new BadAreaCalculator() → uses if-else chain: if (shape instanceof Rectangle) ... else if (Circle) — adding Triangle means editing this class (violates OCP)
         BadAreaCalculator badCalc = new BadAreaCalculator();
         System.out.println("Rectangle area: " + badCalc.calculateArea(new BadRectangle(5, 3)));
         System.out.println("Circle area: " + String.format("%.2f", badCalc.calculateArea(new BadCircle(4))));
         System.out.println("Adding Triangle? Must edit BadAreaCalculator!\n");
 
         System.out.println("--- GOOD: Just add a new Shape class ---");
+        // List.of() → creates immutable List; each new Shape() implements area() — adding new shapes doesn't modify existing code (open for extension, closed for modification)
         List<Shape> shapes = List.of(
             new Rectangle(5, 3),
             new Circle(4),
             new Triangle(6, 4)
         );
 
+        // new AreaCalculator() → uses polymorphism; calculateArea(shape) calls shape.area() — no if-else chain for shape types; open for extension via new Shape subclass
         AreaCalculator calc = new AreaCalculator();
+        // for-each iterates shapes; s.area() dispatches polymorphically — no instanceof check or switch needed; each Shape knows its own area formula
         for (Shape s : shapes) {
             System.out.printf("  %s → area = %.2f%n", s.name(), s.area());
         }

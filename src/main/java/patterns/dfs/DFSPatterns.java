@@ -350,38 +350,69 @@ public class DFSPatterns {
     public static void main(String[] args) {
         System.out.println("=== DFS PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // nested for-loops with if (grid[i][j] == '1') dfs flood-fill, count++; dfs marks visited with if (out of bounds || not '1') return
         System.out.println("1. Num Islands: " + numIslands(new char[][]{{'1','1','0'},{'1','1','0'},{'0','0','1'}}));
+        // new TreeNode() → creates object; new TreeNode() → creates object
         TreeNode t = new TreeNode(3,new TreeNode(9),new TreeNode(20,new TreeNode(15),new TreeNode(7)));
+        // tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("2. Max Depth: " + maxDepth(t));
+        // if (p==null && q==null) true; if (p==null || q==null) false; if (p.val != q.val) false; recurse left && right — multi-condition DFS
         System.out.println("3. Same Tree: " + isSameTree(t,t));
+        // for-loop with if (condition) count/accumulate; returns boolean; uses if-else conditional checks
         System.out.println("4. Path Sum: " + hasPathSum(t,12));
+        // Flood Fill: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("5. Flood Fill: done");
+        // leafSimilar() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("6. Leaf Similar: " + leafSimilar(t,t));
+        // new TreeNode() → creates object; new TreeNode() → creates object; for-loop with if (condition) count/accumulate
         System.out.println("7. Range Sum BST: " + rangeSumBST(new TreeNode(10,new TreeNode(5),new TreeNode(15)),7,15));
+        // Is Subtree: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("8. Is Subtree: true");
+        // Merge Trees: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("9. Merge Trees: done");
+        // builds adjacency list; for-loop: if (!visited[i]) DFS + count++ — connected component counting via boolean[] visited
         System.out.println("10. Sum Left Leaves: " + sumOfLeftLeaves(t));
         System.out.println("\n--- MEDIUM ---");
+        // creates adjacency list + int[] inDegree; for-loop: if (inDegree[i]==0) add to queue; BFS with count — if (count == numCourses) all completable
         System.out.println("11. Course Sched: " + canFinish(2,new int[][]{{1,0}}));
+        // same as canFinish but records order: if (inDegree[i]==0) start; BFS polls and adds to result; if (result.length != n) return empty — topological sort
         System.out.println("12. Course Order: " + Arrays.toString(findOrder(4,new int[][]{{1,0},{2,0},{3,1},{3,2}})));
+        // same as canFinish + records topological order; if (result.length != n) return empty — ordered course scheduling
         System.out.println("13. Clone Graph: done");
+        // ArrayList<>() paths; recursive DFS from node 0; if (node == n-1) add path copy; for each neighbor recurse + backtrack
         System.out.println("14. Provinces: " + findCircleNum(new int[][]{{1,1,0},{1,1,0},{0,0,1}}));
+        // builds Trie from words; nested for-loops start DFS from each cell; if (node.word != null) add to result — Trie + board DFS
         System.out.println("15. Pacific Atlantic: " + pacificAtlantic(new int[][]{{1,2,2,3,5},{3,2,3,4,4},{2,4,5,3,1},{6,7,1,4,5},{5,1,1,2,4}}).size()+" cells");
+        // Tarjan's bridge finding; DFS with disc[]/low[]; if (low[v] > disc[u]) edge is critical — low-link update algorithm
         System.out.println("16. Surrounded: done");
+        // creates ArrayList<>(); recursive DFS from node 0: if (node == n-1) add path copy; for each neighbor recurse — backtracking all paths
         System.out.println("17. All Paths: " + allPathsSourceTarget(new int[][]{{1,2},{3},{3},{}}));
+        // nested for-loops with if (grid[i][j]==1) DFS flood-fill; DFS returns 1 + sum of 4 recursive calls — area counting
         System.out.println("18. Keys Rooms: " + canVisitAllRooms(Arrays.asList(Arrays.asList(1),Arrays.asList(2),Arrays.asList(3),Arrays.asList())));
+        // border DFS marks reachable; nested for-loops: if (grid[i][j]==1 && not reachable) count++ — boundary-based elimination
         System.out.println("19. Valid Tree: " + validTree(5,new int[][]{{0,1},{0,2},{0,3},{1,4}}));
+        // builds adjacency list; for-loop: if (!visited[i]) DFS + count++; return components - 1 as minimum edges to add
         System.out.println("20. Accounts: (merge example)");
         System.out.println("\n--- HARD ---");
+        // builds TrieNode tree from words; nested for-loops: DFS from each cell; if (node.word != null) add to result, set null to dedup — Trie + DFS pruning
         System.out.println("21. Word Search II: " + findWords(new char[][]{{'o','a','a','n'},{'e','t','a','e'},{'i','h','k','r'},{'i','f','l','v'}},new String[]{"oath","pea","eat","rain"}));
+        // Tarjan's: DFS with disc[] and low[] arrays; if (low[v] > disc[u]) edge is bridge — post-order low-link update
         System.out.println("22. Bridges: " + criticalConnections(4,Arrays.asList(Arrays.asList(0,1),Arrays.asList(1,2),Arrays.asList(2,0),Arrays.asList(1,3))));
+        // if (edges < n-1) return -1; count components via DFS; return components - 1 — minimum cable redirects
         System.out.println("23. Longest Inc Path: " + longestIncreasingPath(new int[][]{{9,9,4},{6,6,8},{2,1,1}}));
+        // builds HashMap<>() graph + HashMap<>() inDegree from word pairs; for-loop with if (chars differ) add edge; BFS topological sort; if (result.length != total) invalid
         System.out.println("24. Alien Dict: " + alienOrder(new String[]{"wrt","wrf","er","ett","rftt"}));
+        // nested for-loops with if (grid[i][j] == 1) dfsArea; DFS returns 1 + sum of 4 recursive calls; marks visited by setting to 0
         System.out.println("25. Max Area Island: " + maxAreaOfIsland(new int[][]{{0,0,1,0},{0,1,1,0},{0,0,0,0}}));
+        // Num Enclaves: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("26. Num Enclaves: done");
+        // builds adjacency list; for-loop with if (!visited[i]) DFS + count++ — connected components via boolean[] visited
         System.out.println("27. Components: " + countComponents(5,new int[][]{{0,1},{1,2},{3,4}}));
+        // DFS: if (out of bounds || visited) false; if (arr[start] == 0) true; mark visited (negate), recurse start+arr[start] and start-arr[start]
         System.out.println("28. Can Reach: " + canReach(new int[]{4,2,3,0,3,1,2},5));
+        // Closed Islands: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("29. Closed Islands: done");
+        // if (edges < n-1) return -1; countComponents via DFS; return components - 1 — minimum cables to redirect
         System.out.println("30. Make Connected: " + makeConnected(4,new int[][]{{0,1},{0,2},{1,2}}));
     }
 }

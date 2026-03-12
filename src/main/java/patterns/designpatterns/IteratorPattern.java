@@ -114,23 +114,28 @@ public class IteratorPattern {
 
         System.out.println("--- Custom Range Iterator (1 to 20, step 3) ---");
         System.out.print("  ");
+        // new NumberRange(1, 20, 3) → implements Iterable; iterator() returns object with hasNext(): if (current <= end), next(): current += step — custom iteration
         for (int n : new NumberRange(1, 20, 3)) {
             System.out.print(n + " ");
         }
 
         System.out.println("\n\n--- BST Inorder Iterator ---");
+        // new TreeNode(7, left, right) → constructs BST; nested constructors build tree structure — each new TreeNode() creates a node with optional children
         TreeNode bst = new TreeNode(7,
             new TreeNode(3, new TreeNode(1), new TreeNode(5)),
             new TreeNode(11, new TreeNode(9), new TreeNode(13))
         );
+        // new BSTIterator(bst) → creates object with ArrayDeque<>() stack; constructor pushes left chain; hasNext: if (!stack.empty); next: pop, push right's left chain
         BSTIterator it = new BSTIterator(bst);
         System.out.print("  ");
+        // while (it.hasNext()) → classic Iterator pattern loop; next() returns elements in sorted order via inorder traversal using internal stack
         while (it.hasNext()) {
             System.out.print(it.next() + " ");
         }
 
         System.out.println("\n\n--- Fibonacci Iterator (first 12) ---");
         System.out.print("  ");
+        // new FibonacciSequence(12) → implements Iterable; hasNext: if (count < limit); next: computes fib = a + b, shifts a=b, b=fib — lazy generation
         for (long fib : new FibonacciSequence(12)) {
             System.out.print(fib + " ");
         }

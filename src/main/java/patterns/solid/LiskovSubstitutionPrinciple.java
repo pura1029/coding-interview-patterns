@@ -92,7 +92,9 @@ public class LiskovSubstitutionPrinciple {
         System.out.println("=== Liskov Substitution Principle (LSP) ===\n");
 
         System.out.println("--- BAD: Penguin breaks the Bird contract ---");
+        // List.of(new BadEagle(), new BadPenguin()) → both extend BadBird; BadPenguin.fly() throws UnsupportedOperationException — violates LSP
         List<BadBird> badBirds = List.of(new BadEagle(), new BadPenguin());
+        // for-each with try-catch: if (penguin.fly()) throws exception → subtype cannot substitute base type safely — LSP violation demonstrated
         for (BadBird b : badBirds) {
             try {
                 System.out.println("  " + b.name() + ": " + b.fly());
@@ -102,10 +104,13 @@ public class LiskovSubstitutionPrinciple {
         }
 
         System.out.println("\n--- GOOD: Proper hierarchy, no surprises ---");
+        // List.of(new Eagle(), new Sparrow()) → both implement FlyingBird interface; Penguin is NOT a FlyingBird — correct hierarchy prevents LSP violation
         List<FlyingBird> flyingBirds = List.of(new Eagle(), new Sparrow());
         System.out.println("Flying birds:");
+        // makeBirdsFly iterates with for-each: bird.fly() works for all FlyingBird instances — no runtime exceptions, safe substitution
         makeBirdsFly(flyingBirds);
 
+        // new Penguin() → implements SwimmingBird, not FlyingBird; separate interface = no forced fly() — ISP + LSP combined properly
         Penguin penguin = new Penguin();
         System.out.println("\nSwimming bird:");
         System.out.println("  " + penguin.name() + ": " + penguin.swim());

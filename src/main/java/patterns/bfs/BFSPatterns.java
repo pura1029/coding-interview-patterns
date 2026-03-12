@@ -303,37 +303,66 @@ public class BFSPatterns {
 
     public static void main(String[] args) {
         System.out.println("=== BFS PATTERN (30 Examples) ===\n");
+        // new TreeNode() → creates object; new TreeNode() → creates object
         TreeNode root=new TreeNode(3,new TreeNode(9),new TreeNode(20,new TreeNode(15),new TreeNode(7)));
         System.out.println("--- EASY ---");
+        // creates ArrayList<>() result + LinkedList<>() queue; while (!queue.empty): for (size) poll, add val to level list; if (left/right != null) offer
         System.out.println("1. Level Order: " + levelOrder(root));
+        // BFS with LinkedList<>() queue; for each level: if (node.left == null && node.right == null) return depth — first leaf found is minimum
         System.out.println("2. Min Depth: " + minDepth(root));
+        // BFS: for (size) poll and accumulate sum; result.add(sum / size) — level average with double division
         System.out.println("3. Avg Levels: " + averageOfLevels(root));
+        // N-ary Level: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("4. N-ary Level: (similar to level order)");
+        // returns boolean; uses if-else conditional checks
         System.out.println("5. Cousins: " + isCousins(root,9,20));
+        // nested for-loops: if (grid[i][j]=='1') BFS LinkedList<>() queue flood-fill, count++ — multi-source BFS island counting
         System.out.println("6. Unival Tree: " + isUnivalTree(new TreeNode(1,new TreeNode(1),new TreeNode(1))));
+        // BFS LinkedList<>() queue + HashSet<>() visited; for each position try +1/-1; if (!deadend && !visited) offer — lock combination shortest path
         System.out.println("7. Max Depth: " + maxDepth(root));
+        // multi-source BFS: queue all rotten (==2); for each level 4-dir: if (fresh) rot, offer; count minutes — simultaneous BFS expansion
         System.out.println("8. Path Exists: " + validPath(3,new int[][]{{0,1},{1,2},{2,0}},0,2));
+        // DFS finds first island; BFS expands from all island cells; if (grid[nr][nc]==1 && !visited) bridge found — DFS + BFS combination
         System.out.println("9. Symmetric: " + isSymmetric(new TreeNode(1,new TreeNode(2,new TreeNode(3),new TreeNode(4)),new TreeNode(2,new TreeNode(4),new TreeNode(3)))));
+        // BFS LinkedList<>() queue + HashSet<>() words; for each word try 26 chars at each position; if (wordSet.contains) offer — word graph BFS
         System.out.println("10. Nearest Exit: " + nearestExit(new char[][]{{'+','+','.','+'},{'.','.','.','+'},{'+','+','+','.'}},new int[]{1,2}));
         System.out.println("\n--- MEDIUM ---");
+        // multi-source BFS: for-loop finds all rotten (==2) → queue; for each level: 4-dir expansion with if (fresh) rot it; count time
         System.out.println("11. Rotting: " + orangesRotting(new int[][]{{2,1,1},{1,1,0},{0,1,1}}));
+        // two boolean[][] for Pacific/Atlantic; BFS from each ocean edge; if (both[i][j]) add to result — dual-source reachability
         System.out.println("12. Word Ladder: " + ladderLength("hit","cog",Arrays.asList("hot","dot","dog","lot","log","cog")));
+        // sorts trees by height; for each tree: BFS shortest path from current position; if (unreachable) return -1 — sequential BFS
         System.out.println("13. 01 Matrix: done");
+        // BFS with LinkedList<>() queue + HashSet<>() visited; for each position: try +1 and -1 (8 moves); if (!deadend && !visited) offer — shortest path
         System.out.println("14. Open Lock: " + openLock(new String[]{"0201","0101","0102","1212","2002"},"0202"));
+        // nested for-loops: if (grid[i][j] == '1') BFS flood-fill with LinkedList<>() queue, mark visited; count++ — multi-source BFS
         System.out.println("15. Islands BFS: " + numIslands(new char[][]{{'1','1','0'},{'0','1','0'},{'0','0','1'}}));
+        // DFS finds first island marking visited; BFS expands from all island cells; if (grid[nr][nc] == 1 && !visited) found bridge — DFS + BFS combo
         System.out.println("16. Shortest Bridge: " + shortestBridge(new int[][]{{0,1},{1,0}}));
+        // BFS builds parent HashMap level-by-level; if (endWord found) backtrack parents for all shortest paths — BFS + DFS reconstruction
         System.out.println("17. Cheapest Flight: " + findCheapestPrice(3,new int[][]{{0,1,100},{1,2,100},{0,2,500}},0,2,1));
+        // modified Dijkstra with PriorityQueue<>() min-heap; while: poll min elevation; if (reached end) return — minimum bottleneck path
         System.out.println("18. Far from Land: " + maxDistance(new int[][]{{1,0,1},{0,0,0},{1,0,1}}));
+        // Snakes&Ladders: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("19. Snakes&Ladders: done");
+        // new String[]{...} → creates string array; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("20. Min Mutation: " + minMutation("AACCGGTT","AAACGGTA",new String[]{"AACCGGTA","AACCGCTA","AAACGGTA"}));
         System.out.println("\n--- HARD ---");
+        // Word Ladder II: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("21. Word Ladder II: (shortest paths)");
+        // new int[]{...} → creates array literal
         System.out.println("22. Sliding Puzzle: " + slidingPuzzle(new int[][]{{1,2,3},{4,0,5}}));
+        // Cut Off Trees: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("23. Cut Off Trees: done");
+        // BFS with LinkedList<>() queue; 8-direction exploration; if (grid[0][0]==1) return -1; if (reached n-1,n-1) return steps — shortest clear path
         System.out.println("24. Shortest Binary Matrix: " + shortestPathBinaryMatrix(new int[][]{{0,0,0},{1,1,0},{1,1,0}}));
+        // BFS with 3D boolean[][][] visited (row, col, remaining k); if (obstacle) k--; if (k >= 0 && !visited) offer — state-space BFS
         System.out.println("25. Path w/ Obstacles: " + shortestPathWithObstacles(new int[][]{{0,0,0},{1,1,0},{0,0,0},{0,1,1},{0,0,0}},1));
+        // BFS with LinkedList<>() queue + HashSet<>() visited; 8 knight moves; if (reached target) return steps — bounded BFS with coordinate hashing
         System.out.println("26. Knight Moves: " + minKnightMoves(2,1));
+        // BFS builds HashMap<>() parent map level-by-level; if (end found) backtrack through parents to reconstruct all shortest paths — BFS + DFS backtrack
         System.out.println("27. Word Ladder II: " + findLadders("hit","cog",new ArrayList<>(Arrays.asList("hot","dot","dog","lot","log","cog"))).size()+" paths");
+        // modified Dijkstra with PriorityQueue<>() min-heap; while (pq): poll min elevation; if (reached n-1,n-1) return elevation — minimum bottleneck path
         System.out.println("28. Swim in Water: " + swimInWater(new int[][]{{0,2},{1,3}}));
         System.out.println("29-30: Additional BFS variants");
     }

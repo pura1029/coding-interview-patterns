@@ -933,63 +933,78 @@ public class RateLimitingPatterns {
         System.out.println("--- EASY ---");
         // 1. Fixed Window
         FixedWindowCounter fw = new FixedWindowCounter(3, 1000);
+        // FixedWindowCounter: int counter + window timestamp; if (newWindow) reset; if (counter < limit) increment, return true — time-bucketed counting
         System.out.println("1. Fixed Window: " + fw.tryAcquire() + " " + fw.tryAcquire() + " " + fw.tryAcquire() + " " + fw.tryAcquire() + " remaining=" + fw.remaining());
 
         // 2. Token Bucket
         TokenBucket tb = new TokenBucket(5, 10);
+        // new StringBuilder() builds result; for-loop calls tb.tryAcquire(): ternary (allow ? "OK" : "NO") — token bucket burst test
         StringBuilder tbRes = new StringBuilder();
         for (int i = 0; i < 7; i++) tbRes.append(tb.tryAcquire() ? "OK " : "NO ");
+        // TokenBucket: refills tokens by elapsed * rate; if (tokens >= 1) consume, return true (OK); else return false (NO) — burst + rate control
         System.out.println("2. Token Bucket: " + tbRes.toString().trim());
 
         // 3. Leaky Bucket
         LeakyBucket lb = new LeakyBucket(3, 1);
+        // LeakyBucket: queue-based; leak() removes processed items; if (queue.size < capacity) add, return true; else reject — constant drain rate
         System.out.println("3. Leaky Bucket: " + lb.tryAcquire() + " " + lb.tryAcquire() + " " + lb.tryAcquire() + " " + lb.tryAcquire());
 
         // 4. Simple Counter
         SimpleCounter sc = new SimpleCounter(3);
+        // SimpleCounter: int counter; tryAcquire: if (counter < limit) counter++, return true; else false — simplest rate limiter, no time window
         System.out.println("4. Simple Counter: " + sc.tryAcquire() + " " + sc.tryAcquire() + " " + sc.tryAcquire() + " " + sc.tryAcquire());
 
         // 5. Per-User
         PerUserRateLimiter purl = new PerUserRateLimiter(2, 1000);
+        // PerUserRateLimiter: HashMap<userId, counter/limiter>; each user gets own limit; if (user.counter < limit) allow — per-identity throttling
         System.out.println("5. Per-User: alice=" + purl.tryAcquire("alice") + " " + purl.tryAcquire("alice") + " " + purl.tryAcquire("alice") + " bob=" + purl.tryAcquire("bob"));
 
         // 6. Throttler
         Throttler thr = new Throttler(100);
+        // Throttler: if (now - lastRequestTime < minIntervalMs) reject; else update lastRequestTime, allow — minimum interval enforcement
         System.out.println("6. Throttler: " + thr.tryAcquire() + " " + thr.tryAcquire() + " wait=" + thr.waitTimeMs() + "ms");
 
         // 7. Retry-After
         RetryAfterLimiter ral = new RetryAfterLimiter(2, 1000);
+        // RetryAfterLimiter: if (limit exceeded) return retryAfterMs instead of boolean — tells caller when to retry
         System.out.println("7. Retry-After: " + ral.tryAcquire() + "ms " + ral.tryAcquire() + "ms " + ral.tryAcquire() + "ms(wait)");
 
         // 8. Concurrency Limiter
         ConcurrencyLimiter cl = new ConcurrencyLimiter(2);
+        // Concurrency: uses AtomicInteger or Semaphore; if (concurrent < limit) acquire, process, release; else reject — concurrent request cap
         System.out.println("8. Concurrency: " + cl.acquire() + " " + cl.acquire() + " " + cl.acquire() + " (after release: " + (cl.release() || true) + ")");
 
         // 9. Bandwidth
         BandwidthLimiter bwl = new BandwidthLimiter(1024, 1000);
+        // BandwidthLimiter: tracks bytes consumed; if (bytesUsed + requestSize <= byteLimit) consume, allow; else reject — data volume throttling
         System.out.println("9. Bandwidth: 500B=" + bwl.tryConsume(500) + " 500B=" + bwl.tryConsume(500) + " 100B=" + bwl.tryConsume(100) + " remaining=" + bwl.remainingBytes());
 
         // 10. IP-Based
         IPRateLimiter iprl = new IPRateLimiter(2, 1000);
+        // IP-Based: HashMap<IP, counter/limiter>; if (ip.requestCount >= limit) block — IP address based throttling
         System.out.println("10. IP-Based: " + iprl.tryAcquire("10.0.0.1") + " " + iprl.tryAcquire("10.0.0.1") + " " + iprl.tryAcquire("10.0.0.1") + " other_ip=" + iprl.tryAcquire("10.0.0.2"));
 
         System.out.println("\n--- MEDIUM ---");
         // 11. Sliding Window Log
         SlidingWindowLog swl = new SlidingWindowLog(3, 1000);
+        // SlidingWindowLog: LinkedList<Long> timestamps; remove expired while (peek < now-window); if (size < limit) add, allow — precise sliding window
         System.out.println("11. Sliding Log: " + swl.tryAcquire() + " " + swl.tryAcquire() + " " + swl.tryAcquire() + " " + swl.tryAcquire());
 
         // 12. Sliding Window Counter
         SlidingWindowCounter swc = new SlidingWindowCounter(3, 1000);
+        // SlidingWindowCounter: weighted count = current + (prev × overlapRatio); if (weighted < limit) allow — approximate sliding window
         System.out.println("12. Sliding Counter: " + swc.tryAcquire() + " " + swc.tryAcquire() + " " + swc.tryAcquire() + " " + swc.tryAcquire());
 
         // 13. Burst Token Bucket
         BurstTokenBucket btb = new BurstTokenBucket(10, 2.0);
+        // Burst: allows burst up to burstLimit; then enforces sustained rate; if (tokens available) allow — two-phase rate control
         System.out.println("13. Burst Bucket: single=" + btb.tryAcquire(1) + " bulk5=" + btb.tryAcquire(5) + " remaining≈" + String.format("%.0f", btb.availableTokens()));
 
         // 14. Per-Endpoint
         EndpointRateLimiter erl = new EndpointRateLimiter();
         erl.configure("/api/search", 2, 1000);
         erl.configure("/api/login", 5, 1000);
+        // EndpointRateLimiter: HashMap<endpoint, RateLimiter>; each endpoint has own limit; if (endpoint.limiter.allow()) process — per-route throttling
         System.out.println("14. Endpoint: search=" + erl.tryAcquire("/api/search") + " " + erl.tryAcquire("/api/search") + " " + erl.tryAcquire("/api/search") + " login=" + erl.tryAcquire("/api/login"));
 
         // 15. Tiered
@@ -997,26 +1012,32 @@ public class RateLimitingPatterns {
         trl.setTier("free_user", TieredRateLimiter.Tier.FREE);
         trl.setTier("premium_user", TieredRateLimiter.Tier.PREMIUM);
         int freeOk = 0; for (int i = 0; i < 10; i++) if (trl.tryAcquire("free_user")) freeOk++;
+        // TieredRateLimiter: HashMap<tier, limit>; if (user.tier == "premium") higher limit; else standard — tier-based access control
         System.out.println("15. Tiered: free(10 attempts)=" + freeOk + "/5 premium=" + trl.tryAcquire("premium_user"));
 
         // 16. Leaky Bucket Queue
         LeakyBucketQueue lbq = new LeakyBucketQueue(3);
         lbq.enqueue("req1"); lbq.enqueue("req2"); lbq.enqueue("req3");
+        // Leaky Queue: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("16. Leaky Queue: full=" + lbq.isFull() + " overflow=" + lbq.enqueue("req4") + " process=" + lbq.process());
 
         // 17. Quota Manager
         QuotaManager qm = new QuotaManager();
         qm.setQuota("alice", 100, 10);
+        // new String[]{...} → creates string array
         StringBuilder qmRes = new StringBuilder();
         for (int i = 0; i < 12; i++) qmRes.append(qm.tryConsume("alice")).append(" ");
+        // Quota: HashMap<user, remainingQuota>; if (quota > 0) decrement, allow; at reset interval restore quota — periodic quota allocation
         System.out.println("17. Quota: " + qmRes.toString().trim());
 
         // 18. Exponential Backoff
         ExponentialBackoff eb = new ExponentialBackoff(100, 10000, true);
+        // ExponentialBackoff: delay = base * 2^attempt + jitter; for-loop: if (success) return; else Thread.sleep(delay), retry — progressive delay
         System.out.println("18. Backoff: " + eb.nextDelayMs() + "ms " + eb.nextDelayMs() + "ms " + eb.nextDelayMs() + "ms " + eb.nextDelayMs() + "ms");
 
         // 19. Middleware
         RateLimiterMiddleware mw = new RateLimiterMiddleware(3, 10);
+        // RateLimitMiddleware: wraps handler; if (limiter.tryAcquire()) delegate to next handler; else return 429 Too Many Requests — middleware chain pattern
         System.out.println("19. Middleware: " + mw.handleRequest("client1", "/api/data"));
         System.out.println("    " + mw.handleRequest("client1", "/api/data"));
         System.out.println("    " + mw.handleRequest("client1", "/api/data"));
@@ -1024,6 +1045,7 @@ public class RateLimitingPatterns {
 
         // 20. Composite
         CompositeRateLimiter comp = new CompositeRateLimiter(100, 50, 3, 10);
+        // Composite: combines multiple strategies; if (allStrategies.allow()) process; else reject — multi-strategy rate limiting
         System.out.println("20. Composite: " + comp.tryAcquire("u1") + " " + comp.tryAcquire("u1") + " " + comp.tryAcquire("u1") + " " + comp.tryAcquire("u1"));
 
         System.out.println("\n--- HARD ---");
@@ -1031,26 +1053,32 @@ public class RateLimitingPatterns {
         AdaptiveRateLimiter arl = new AdaptiveRateLimiter(50, 10, 200, 1.2, 0.5);
         for (int i = 0; i < 20; i++) arl.recordSuccess();
         arl.recordError();
+        // Adaptive: adjusts limit based on metrics; if (error rate high) decrease limit; if (healthy) increase — dynamic rate adjustment
         System.out.println("21. Adaptive: " + arl.stats());
 
         // 22. Distributed
         DistributedRateLimiter drl = new DistributedRateLimiter(3, 1000);
+        // Distributed: uses Redis/shared store for counter; if (counter < limit) increment and allow; else reject — multi-node rate limiting
         System.out.println("22. Distributed: " + drl.tryAcquire("api:user1") + " " + drl.tryAcquire("api:user1") + " " + drl.tryAcquire("api:user1") + " " + drl.tryAcquire("api:user1") + " count=" + drl.getCount("api:user1"));
 
         // 23. Sliding Buckets
         SlidingWindowBuckets swb = new SlidingWindowBuckets(5, 1000, 10);
+        // new String[]{...} → creates string array
         StringBuilder swbRes = new StringBuilder();
         for (int i = 0; i < 7; i++) swbRes.append(swb.tryAcquire() ? "OK " : "NO ");
+        // Sliding Buckets: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("23. Sliding Buckets: " + swbRes.toString().trim());
 
         // 24. Priority
         PriorityRateLimiter prl = new PriorityRateLimiter(10, 1000);
+        // PriorityRateLimiter: if (priority == HIGH) use higherLimit; else use standardLimit; PriorityQueue orders requests — priority-based allocation
         System.out.println("24. Priority: HIGH=" + prl.tryAcquire(PriorityRateLimiter.Priority.HIGH)
                 + " MED=" + prl.tryAcquire(PriorityRateLimiter.Priority.MEDIUM)
                 + " LOW=" + prl.tryAcquire(PriorityRateLimiter.Priority.LOW));
 
         // 25. Circuit Breaker
         CircuitBreakerLimiter cb = new CircuitBreakerLimiter(3, 1000, 2);
+        // CircuitBreaker: CLOSED (allow) → if (failures > threshold) OPEN (reject all) → after timeout HALF_OPEN (test one) — fault tolerance state machine
         System.out.println("25. Circuit: state=" + cb.getState() + " allow=" + cb.tryAcquire());
         cb.recordFailure(); cb.recordFailure(); cb.recordFailure();
         System.out.println("    After 3 fails: state=" + cb.getState() + " allow=" + cb.tryAcquire());
@@ -1058,24 +1086,29 @@ public class RateLimitingPatterns {
         // 26. Priority Token Bucket
         PriorityTokenBucket ptb = new PriorityTokenBucket(3, 10);
         ptb.submit("r1", false); ptb.submit("r2", true); ptb.submit("r3", false); ptb.submit("r4", true);
+        // Priority: PriorityQueue or tiered limits; if (priority == HIGH) higher limit; else standard limit — priority-based rate allocation
         System.out.println("26. Priority Bucket: processed=" + ptb.processAvailable());
 
         // 27. Geo-Based
         GeoRateLimiter geo = new GeoRateLimiter();
         geo.configureRegion("US", 5, 1000); geo.configureRegion("EU", 3, 1000);
+        // GeoRateLimiter: HashMap<region, RateLimiter>; determines region from IP; if (region.limiter.allow()) process — geographic throttling
         System.out.println("27. Geo: US=" + geo.tryAcquire("US", "u1") + " EU=" + geo.tryAcquire("EU", "u1"));
 
         // 28. Cost-Based
         CostBasedRateLimiter cbl = new CostBasedRateLimiter(10, 1000);
         cbl.setOperationCost("read", 1); cbl.setOperationCost("write", 3); cbl.setOperationCost("delete", 5);
+        // CostBasedLimiter: each op has weight (read=1, write=5); if (totalCost + opWeight <= budget) deduct, allow; else reject — weighted throttling
         System.out.println("28. Cost-Based: read=" + cbl.tryAcquire("u1", "read") + " write=" + cbl.tryAcquire("u1", "write") + " delete=" + cbl.tryAcquire("u1", "delete") + " delete2=" + cbl.tryAcquire("u1", "delete"));
 
         // 29. Penalty Box
         PenaltyBoxLimiter pbl = new PenaltyBoxLimiter(2, 1000);
+        // PenaltyBoxLimiter: if (violation detected) add to penalty set with expiry; if (user in penalty box) reject all until expiry — punitive throttling
         System.out.println("29. Penalty: " + pbl.tryAcquire("bad_client") + " " + pbl.tryAcquire("bad_client") + " " + pbl.tryAcquire("bad_client"));
 
         // 30. Multi-Algorithm
         MultiAlgorithmLimiter mal = new MultiAlgorithmLimiter(5, 10, 10, 1000, 3);
+        // MultiAlgoLimiter: combines TokenBucket + SlidingWindow; request must pass ALL algorithms; if (any rejects) deny — layered rate limiting
         System.out.println("30. Multi-Algo: " + mal.tryAcquire() + " " + mal.tryAcquire() + " " + mal.tryAcquire() + " " + mal.tryAcquire());
     }
 }

@@ -649,43 +649,77 @@ public class LinkedListsPatterns {
         System.out.println("=== LINKED LISTS (30 Examples) ===\n");
 
         System.out.println("--- EASY ---");
+        // of(1,2,3,4,5) → creates linked list via new ListNode() chain; reverseList uses while-loop with prev/curr/next pointer swapping
         System.out.println("1. Reverse: " + toString(reverseList(of(1, 2, 3, 4, 5))));
+        // of() creates two sorted lists; mergeTwoLists uses while-loop with if (l1.val <= l2.val) advance l1, else l2 — merge comparison
         System.out.println("2. Merge Two: " + toString(mergeTwoLists(of(1, 2, 4), of(1, 3, 4))));
+        // of() builds list, then manually links last.next → second node to create cycle; hasCycle uses while with fast/slow pointer if (fast==slow)
         ListNode cycleNode = of(3, 2, 0, -4); cycleNode.next.next.next.next = cycleNode.next;
+        // returns boolean; uses if-else conditional checks
         System.out.println("3. Has Cycle: " + hasCycle(cycleNode));
+        // of() builds 5-node list; middleNode uses fast/slow pointers: while (fast != null && fast.next != null) slow=slow.next, fast=fast.next.next
         System.out.println("4. Middle: " + middleNode(of(1, 2, 3, 4, 5)).val);
+        // of() builds list; uses two pointers with n-gap: for-loop advances fast n steps, then while-loop moves both until fast reaches end
         System.out.println("5. Remove Nth: " + toString(removeNthFromEnd(of(1, 2, 3, 4, 5), 2)));
+        // of() builds list; finds middle with fast/slow, reverse second half, while-loop compares both halves with if (val mismatch) return false
         System.out.println("6. Palindrome: " + isPalindrome(of(1, 2, 2, 1)));
+        // of() builds sorted list; while (current.next != null) with if (current.val == next.val) skip next, else advance — removes duplicates
         System.out.println("7. Delete Dups: " + toString(deleteDuplicates(of(1, 1, 2, 3, 3))));
+        // Intersection: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("8. Intersection: (demo skipped)");
+        // Delete Node: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("9. Delete Node: (in-place)");
+        // of() builds list; length uses while (node != null) count++, node = node.next — simple traversal counter
         System.out.println("10. Length: " + length(of(1, 2, 3, 4)));
 
         System.out.println("\n--- MEDIUM ---");
+        // of() creates two number-as-list inputs; while-loop with if (l1 != null) add val, carry = sum/10, new ListNode(sum%10) for each digit
         System.out.println("11. Add Two: " + toString(addTwoNumbers(of(2, 4, 3), of(5, 6, 4))));
+        // of() builds list; while (even != null && even.next != null) links odd nodes together, then even nodes; odd.next = evenHead concatenates
         System.out.println("12. Odd Even: " + toString(oddEvenList(of(1, 2, 3, 4, 5))));
+        // of() builds list; uses dummy head + while (prev.next != null && prev.next.next != null) swaps pair with pointer rewiring
         System.out.println("13. Swap Pairs: " + toString(swapPairs(of(1, 2, 3, 4))));
+        // Cycle Start: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("14. Cycle Start: (demo skipped)");
+        // of() builds list; finds length with while-loop, k %= len; forms circle (tail.next = head), for-loop advances to cut point
         System.out.println("15. Rotate: " + toString(rotateRight(of(1, 2, 3, 4, 5), 2)));
+        // of() builds list; creates two dummy heads (before/after); while-loop with if (val < x) append to before, else to after; concatenate
         System.out.println("16. Partition: " + toString(partition(of(1, 4, 3, 2, 5, 2), 3)));
+        // Flatten: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("17. Flatten: (simplified)");
+        // of() builds unsorted list; merge sort: fast/slow split, recursive sort, while-loop merge with if (l1.val <= l2.val) comparison
         System.out.println("18. Sort List: " + toString(sortList(of(4, 2, 1, 3))));
+        // of() builds sorted list; uses dummy head + while-loop with if (head.next != null && val == next.val) skip ALL duplicates
         System.out.println("19. Delete Dups II: " + toString(deleteDuplicatesII(of(1, 2, 3, 3, 4, 4, 5))));
+        // of() builds list; while-loop extracts each node, inner while finds correct sorted position with if (prev.next.val > cur.val) insert
         System.out.println("20. Insertion Sort: " + toString(insertionSortList(of(4, 2, 1, 3))));
 
         System.out.println("\n--- HARD ---");
+        // of() builds list; counts k nodes with while; if (count < k) return as-is; for-loop reverses k nodes, recursive call for rest
         System.out.println("21. K-Group Rev: " + toString(reverseKGroup(of(1, 2, 3, 4, 5), 2)));
+        // new ListNode[]{...} → array of sorted lists; creates PriorityQueue<>() with Comparator; while (pq not empty) poll min, if (node.next) offer
         System.out.println("22. Merge K: " + toString(mergeKLists(new ListNode[]{of(1, 4, 5), of(1, 3, 4), of(2, 6)})));
+        // Copy Random: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("23. Copy Random: (demo skipped)");
+        // new LRUCache(2) → creates object with HashMap<>() + doubly-linked list; get/put use if (exists) move to head, if (full) remove tail
         LRUCache lru = new LRUCache(2); lru.put(1, 1); lru.put(2, 2);
+        // LRU Cache get(1): uses internal conditional logic (if/else, for/while) for computation
         System.out.println("24. LRU Cache get(1): " + lru.get(1));
+        // of() builds list; for-loop navigates to position m; for-loop reverses m-to-n nodes with prev/curr/next pointer manipulation
         System.out.println("25. Reverse Between: " + toString(reverseBetween(of(1, 2, 3, 4, 5), 2, 4)));
+        // of() builds list; reorderList finds middle, reverses second half, while-loop interleaves: first.next=second, second.next=first.next
         ListNode reo = of(1, 2, 3, 4); reorderList(reo);
+        // toString() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("26. Reorder: " + toString(reo));
+        // of() builds list; creates HashMap<Integer,ListNode> prefix sum → node; for-loop with if (prefix seen before) skip zero-sum segment
         System.out.println("27. Zero Sum: " + toString(removeZeroSumSublists(of(1, 2, -3, 3, 1))));
+        // of() builds list; calculates partSize = len/k, extra = len%k; for-loop with inner for cuts list, if (i < extra) one extra node
         ListNode[] parts = splitListToParts(of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 3);
+        // enhanced for-each loop → iterates over ListNode[] array; toString prints each part as string — demonstrates array iteration
         System.out.print("28. Split Parts: "); for (ListNode p : parts) System.out.print(toString(p) + " "); System.out.println();
+        // of() builds list; two pointers: advance first k steps, then both until end; swap values with temp variable — if-based position tracking
         System.out.println("29. Swap Kth: " + toString(swapNodes(of(1, 2, 3, 4, 5), 2)));
+        // of() builds list; finds middle with fast/slow, reverses second half, while-loop sums pairs with Math.max — twin from start+end
         System.out.println("30. Twin Sum: " + pairSum(of(5, 4, 2, 1)));
     }
 }

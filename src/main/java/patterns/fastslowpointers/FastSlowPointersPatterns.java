@@ -740,58 +740,99 @@ public class FastSlowPointersPatterns {
         System.out.println("=== FAST & SLOW POINTERS PATTERN (30 Examples) ===\n");
 
         System.out.println("--- EASY ---");
+        // isHappy uses Floyd's cycle: do-while loop with slow=digitSqSum(slow), fast=digitSqSum(digitSqSum(fast)); if (slow==1) happy, else cycle detected
         System.out.println("1. Happy Number (19): " + isHappy(19));
+        // recursive backtracking with if (base case) add result
         ListNode cycleList = buildList(3, 2, 0, -4);
         cycleList.next.next.next.next = cycleList.next;
+        // cycleList → manually linked to create cycle; hasCycle uses while (fast != null && fast.next != null) with if (slow == fast) return true
         System.out.println("2. Has Cycle: " + hasCycle(cycleList));
+        // buildList creates linked list via new ListNode(); middleNode uses while (fast != null && fast.next != null) slow advances to middle
         System.out.println("3. Middle Node: " + middleNode(buildList(1, 2, 3, 4, 5)).val);
+        // buildList creates list; find middle with fast/slow, reverse second half via while-loop, compare halves with while + if (val mismatch)
         System.out.println("4. Palindrome List: " + isPalindromeList(buildList(1, 2, 2, 1)));
+        // buildList creates list + new ListNode(0) dummy; for-loop advances fast n+1 steps, while-loop moves both; slow.next = slow.next.next removes target
         System.out.println("5. Remove Nth End: " + listStr(removeNthFromEnd(buildList(1, 2, 3, 4, 5), 2)));
+        // recursive backtracking with if (base case) add result
         ListNode common = buildList(8, 4, 5);
+        // new ListNode[]{...} → creates array of list nodes; new ListNode[]{...} → creates array of list nodes
         ListNode a = new ListNode(4, new ListNode(1, common));
+        // new ListNode[]{...} → creates array of list nodes; new ListNode[]{...} → creates array of list nodes
         ListNode b = new ListNode(5, new ListNode(6, new ListNode(1, common)));
+        // new ListNode() creates nodes + shared tail; two pointers: while (a != b) with ternary (a==null ? headB : a.next) — length alignment trick
         System.out.println("6. Intersection: " + (getIntersectionNode(a, b) != null ? getIntersectionNode(a, b).val : "null"));
+        // new int[]{...} → circular array; nested for-loop + do-while with fast/slow; if (direction consistent && slow==fast) cycle found
         System.out.println("7. Circular Loop: " + isCircularLoop(new int[]{2, -1, 1, 2, 2}));
+        // new int[]{...} → array; creates new HashSet<>(); for-loop with if (set.contains(2*n) || (n%2==0 && set.contains(n/2))) return true
         System.out.println("8. Double Exists: " + checkIfDoubleExists(new int[]{10, 2, 5, 3}));
+        // isPowerOfTwo uses bit trick: return n > 0 && (n & (n-1)) == 0 — single conditional expression, no loop needed
         System.out.println("9. Power of Two (16): " + isPowerOfTwo(16));
+        // Count Nodes: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("10. Count Nodes: (complete tree example)");
 
         System.out.println("\n--- MEDIUM ---");
+        // recursive backtracking with if (base case) add result
         ListNode cycleList2 = buildList(3, 2, 0, -4);
         cycleList2.next.next.next.next = cycleList2.next;
+        // cycleList2 → manually linked cycle; Floyd's: after fast/slow meet, reset slow to head; while (slow != fast) advance both one step → entry point
         System.out.println("11. Cycle Start: " + detectCycleStart(cycleList2).val);
+        // buildList creates list; find middle with fast/slow, reverse second half, while-loop interleaves with temp variables t1/t2
         ListNode reorder = buildList(1, 2, 3, 4, 5); reorderList(reorder);
+        // listStr() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("12. Reorder List: " + listStr(reorder));
+        // buildList creates list; merge sort: fast/slow split via while, recursive sort both halves, while-loop merge with if (l1.val <= l2.val)
         System.out.println("13. Sort List: " + listStr(sortList(buildList(4, 2, 1, 3))));
+        // buildList creates two lists; reverse both, while (l1 || l2 || carry) with if (l1 != null) sum += l1.val; new ListNode(sum%10) per digit
         System.out.println("14. Add Two Numbers: " + listStr(addTwoNumbers(buildList(7, 2, 4, 3), buildList(5, 6, 4))));
+        // buildList creates list; while (even != null && even.next != null) separate odd/even indexed nodes; odd.next = evenHead links them
         System.out.println("15. Odd Even List: " + listStr(oddEvenList(buildList(1, 2, 3, 4, 5))));
+        // buildList creates list; if (head.next == null) return null; fast starts 2 ahead, while-loop: slow.next = slow.next.next removes middle
         System.out.println("16. Delete Middle: " + listStr(deleteMiddle(buildList(1, 3, 4, 7, 1, 2, 6))));
+        // buildList creates list; count length via while, k %= len; if (k==0) return; form circle with tail.next=head, for-loop to cut at new head
         System.out.println("17. Rotate Right: " + listStr(rotateRight(buildList(1, 2, 3, 4, 5), 2)));
+        // buildList creates list + new ListNode(0) dummy; while (prev.next && prev.next.next) swap pair a,b with pointer rewiring
         System.out.println("18. Swap Pairs: " + listStr(swapPairs(buildList(1, 2, 3, 4))));
+        // buildList creates list + two new ListNode(0) dummies (before/after); while with if (val < x) append to before, else after
         System.out.println("19. Partition List: " + listStr(partition(buildList(1, 4, 3, 2, 5, 2), 3)));
+        // buildList creates list + new ListNode(0) dummy; while with if (head.next && val==next.val) inner while skips all dupes, prev.next = head.next
         System.out.println("20. Delete Dup II: " + listStr(deleteDuplicatesII(buildList(1, 2, 3, 3, 4, 4, 5))));
 
         System.out.println("\n--- HARD ---");
+        // new int[]{...} → array as implicit linked list; do-while Floyd's: slow=nums[slow], fast=nums[nums[fast]]; find entry point
         System.out.println("21. Find Duplicate: " + findDuplicate(new int[]{1, 3, 4, 2, 2}));
+        // recursive backtracking with if (base case) add result
         ListNode cycleList3 = buildList(1, 2, 3, 4, 5);
         cycleList3.next.next.next.next.next = cycleList3.next;
+        // buildList + manual cycle link; Floyd's detect, then while (t != s) count cycle length; reset to head, while (s != f) find entry value
         int[] info = cycleInfo(cycleList3);
+        // Cycle Info: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("22. Cycle Info: entry=" + info[0] + ", length=" + info[1]);
+        // buildList creates list; count length, partSize=len/k, extra=len%k; for-loop with inner for cuts parts, if (i < extra) one extra node
         ListNode[] parts = splitListToParts(buildList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), 3);
         System.out.print("23. Split Parts: ");
         for (ListNode p : parts) System.out.print(listStr(p) + " ");
         System.out.println();
+        // Flatten List: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("24. Flatten List: (simplified)");
+        // new RandomNode() → creates object
         RandomNode rn = new RandomNode(buildList(1, 2, 3));
+        // Random Node: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("25. Random Node: " + rn.getRandom());
+        // listStr() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("26. Copy List: " + listStr(copyRandomList(buildList(1, 2, 3))));
+        // new ListNode[]{...} → array of lists; divide & conquer: recursive split at mid, mergeSorted uses while with if (l1.val <= l2.val)
         System.out.println("27. Merge K Lists: " + listStr(mergeKLists(new ListNode[]{buildList(1, 4, 5), buildList(1, 3, 4), buildList(2, 6)})));
+        // buildList creates list; count nodes; if (count < k) return; for-loop reverses k nodes, for-loop skips k, recursive call for rest
         System.out.println("28. Reverse Alt K: " + listStr(reverseAlternateKGroup(buildList(1, 2, 3, 4, 5, 6, 7, 8), 3)));
+        // new LRUCache(2) → creates object with LinkedHashMap<>(); get removes+re-puts for access order, put uses if (size > capacity) remove eldest
         LRUCache lru = new LRUCache(2);
         lru.put(1, 1); lru.put(2, 2);
+        // LRU get(1): uses internal conditional logic (if/else, for/while) for computation
         System.out.println("29. LRU get(1): " + lru.get(1));
+        // recursive backtracking with if (base case) add result
         ListNode loopList = buildList(1, 2, 3, 4, 5);
         loopList.next.next.next.next.next = loopList.next.next;
+        // buildList + manual loop; Floyd's: after meet, reset slow; if (s==f) find node before entry via while (f.next != s), set f.next = null
         System.out.println("30. Remove Loop: " + listStr(detectAndRemoveLoop(loopList)));
     }
 }

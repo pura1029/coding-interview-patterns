@@ -85,18 +85,22 @@ public class DependencyInversionPrinciple {
         System.out.println("=== Dependency Inversion Principle (DIP) ===\n");
 
         System.out.println("--- BAD: OrderService hardcoded to Stripe ---");
+        // new BadOrderService() → internally creates new StripePayment() directly — high-level module depends on low-level implementation (violates DIP)
         BadOrderService badService = new BadOrderService();
         badService.placeOrder("Laptop", 999.99);
         System.out.println("  Want PayPal? Must rewrite BadOrderService!\n");
 
         System.out.println("--- GOOD: OrderService works with any PaymentGateway ---");
 
+        // new OrderService(new StripePayment()) → constructor injection: depends on PaymentGateway interface, not concrete StripePayment — DIP satisfied
         OrderService stripeOrder = new OrderService(new StripePayment());
         stripeOrder.placeOrder("Laptop", 999.99);
 
+        // new OrderService(new PayPalPayment()) → swap implementation at construction time; OrderService code unchanged — depends on abstraction
         OrderService paypalOrder = new OrderService(new PayPalPayment());
         paypalOrder.placeOrder("Headphones", 199.99);
 
+        // new OrderService(new CryptoPayment()) → add new payment method by creating new class implementing PaymentGateway — open for extension
         OrderService cryptoOrder = new OrderService(new CryptoPayment());
         cryptoOrder.placeOrder("Keyboard", 149.99);
 

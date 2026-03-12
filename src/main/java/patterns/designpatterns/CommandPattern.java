@@ -124,10 +124,13 @@ public class CommandPattern {
     public static void main(String[] args) {
         System.out.println("=== Command Pattern ===\n");
 
+        // new TextEditor() → receiver with StringBuilder content; new CommandManager() → invoker with ArrayDeque<>() undoStack + redoStack
         TextEditor editor = new TextEditor();
+        // new CommandManager() → creates object
         CommandManager mgr = new CommandManager();
 
         System.out.println("--- Building text with undo/redo ---");
+        // new InsertCommand(editor, "Hello") → encapsulates action as object; execute() calls editor.insert(); mgr pushes to undoStack
         mgr.execute(new InsertCommand(editor, "Hello"));
         System.out.println("  Content: \"" + editor.getContent() + "\"");
 
@@ -138,21 +141,26 @@ public class CommandPattern {
         System.out.println("  Content: \"" + editor.getContent() + "\"");
 
         System.out.println("\n--- Undo ---");
+        // undo() → if (!undoStack.isEmpty()) pop command, call command.undo(), push to redoStack — conditional stack operation
         mgr.undo();
         System.out.println("  Content: \"" + editor.getContent() + "\"");
         mgr.undo();
         System.out.println("  Content: \"" + editor.getContent() + "\"");
 
         System.out.println("\n--- Redo ---");
+        // redo() → if (!redoStack.isEmpty()) pop command, call command.execute(), push back to undoStack — mirror of undo
         mgr.redo();
         System.out.println("  Content: \"" + editor.getContent() + "\"");
 
         System.out.println("\n--- Macro Command ---");
+        // new MacroCommand("greeting") → composite command with ArrayList<Command>; .add() chains InsertCommands — command aggregation
         TextEditor editor2 = new TextEditor();
+        // new MacroCommand() → creates object
         MacroCommand macro = new MacroCommand("greeting")
             .add(new InsertCommand(editor2, "Dear "))
             .add(new InsertCommand(editor2, "User"))
             .add(new InsertCommand(editor2, ", welcome!"));
+        // macro.execute() → for-each command in list: command.execute() — batch execution; undo() reverses in opposite order
         macro.execute();
         System.out.println("  Content: \"" + editor2.getContent() + "\"");
         macro.undo();

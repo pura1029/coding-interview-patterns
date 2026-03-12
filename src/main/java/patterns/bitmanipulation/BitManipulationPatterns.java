@@ -313,37 +313,67 @@ public class BitManipulationPatterns {
     public static void main(String[] args) {
         System.out.println("=== BIT MANIPULATION PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // for-loop with XOR (^=): pairs cancel out (a^a=0), leaving the single number — no conditionals needed
         System.out.println("1. Single Number: " + singleNumber(new int[]{2,2,1}));
+        // while (n != 0): n &= (n-1) clears lowest set bit, count++ — Brian Kernighan's bit trick
         System.out.println("2. Hamming Weight: " + hammingWeight(11));
+        // return n > 0 && (n & (n-1)) == 0 — single conditional; power of two has exactly one set bit
         System.out.println("3. Power of Two: " + isPowerOfTwo(16));
+        // for-loop (32 iterations): result = (result << 1) | (n & 1), n >>= 1 — shift and mask each bit
         System.out.println("4. Reverse Bits: " + reverseBits(43261596));
+        // for-loop XOR all indices and values: result ^= i ^ nums[i] — missing number remains after all pairs cancel
         System.out.println("5. Missing Number: " + missingNumber(new int[]{3,0,1}));
+        // tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("6. Hamming Distance: " + hammingDistance(1, 4));
+        // complement() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("7. Complement: " + complement(5));
+        // returns boolean; uses if-else conditional checks
         System.out.println("8. Alternating Bits: " + hasAlternatingBits(5));
+        // while (i>=0 || j>=0 || carry>0): if (i>=0) sum += a[i]-'0'; StringBuilder.insert(0, sum%2) — digit-by-digit with carry
         System.out.println("9. Add Binary: " + addBinary("11", "1"));
+        // checkPowersOfThree() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("10. Powers of 3: " + checkPowersOfThree(12));
         System.out.println("\n--- MEDIUM ---");
+        // creates new int[n+1]; for-loop: dp[i] = dp[i >> 1] + (i & 1) — dynamic programming on bit patterns
         System.out.println("11. Counting Bits: " + Arrays.toString(countBits(5)));
+        // for-loop XOR with ones/twos bitmask; ones = (ones ^ n) & ~twos; twos = (twos ^ n) & ~ones — mod-3 state machine
         System.out.println("12. Subsets: " + subsets(new int[]{1,2,3}).size() + " subsets");
+        // creates new ArrayList<>(); recursive/backtracking: if (isLetter) branch into uppercase and lowercase, else keep digit
         System.out.println("13. Letter Case: " + letterCasePermutation("a1b2"));
+        // for-loop over 32 bits: count ones at each position, distance += ones * (n - ones) — bit-level contribution counting
         System.out.println("14. Total Hamming: " + totalHammingDistance(new int[]{4,14,2}));
+        // while (m != n): m >>= 1, n >>= 1, shift++ — find common prefix of all numbers in range; shift back left
         System.out.println("15. Range AND: " + rangeBitwiseAnd(5, 7));
+        // first = encoded[0] ^ ... ^ n; for-loop: result[i+1] = result[i] ^ encoded[i] — XOR properties for reconstruction
         System.out.println("16. Decode XOR: " + Arrays.toString(decode(new int[]{1,2,3}, 1)));
+        // while (b != 0): carry = a & b, a = a ^ b (sum without carry), b = carry << 1 — bitwise addition loop
         System.out.println("17. Sum No +: " + getSum(1, 2));
+        // for-loop over 32 bit positions: count set bits at each position; distance += ones * (n - ones) — bit-level contribution counting
         System.out.println("18. Max XOR: " + findMaximumXOR(new int[]{3,10,5,25,2,8}));
+        // for-loop 1..n: shift = number of bits in i; result = (result << shift) | i — concatenate binary representations
         System.out.println("19. UTF-8: " + validUtf8(new int[]{197,130,1}));
+        // for-loop over 32 bits: if (target bit 1 && a|b bit 0) flip needed; if (target 0) count set bits in a,b at position
         System.out.println("20. Gray Code: " + grayCode(3));
         System.out.println("\n--- HARD ---");
+        // XOR all → gets xor of two singles; diff &= -diff isolates rightmost set bit; partition with if (n & diff) into two groups
         System.out.println("21. Single III: " + Arrays.toString(singleNumberIII(new int[]{1,2,1,3,2,5})));
+        // for-loop with ones/twos bitmask: ones = (ones ^ n) & ~twos; twos = (twos ^ n) & ~ones — state machine for mod-3 counting
         System.out.println("22. Single II: " + singleNumberII(new int[]{0,1,0,1,0,1,99}));
+        // for-loop over 32 bits: if target bit is 1, check if (a|b bit is 0) need flip; if target is 0, count set bits in a and b at that position
         System.out.println("23. Min Flips: " + minFlips(2, 6, 5));
+        // nested for-loops: if ((mask[i] & mask[j]) == 0) no shared letters → update max product — bitmask comparison
         System.out.println("24. Max Word Product: " + maxProduct(new String[]{"abcw","baz","foo","bar","xtfn","abcdef"}));
+        // for-loop counting bits; uses Brian Kernighan (n &= n-1) or lookup table; sorts by bit count — bit counting with custom Comparator
         System.out.println("25. Count Triplets: " + countTriplets(new int[]{2,3,1,6,7}));
+        // creates HashMap or uses XOR; for-loop identifies element appearing different count — frequency via bit manipulation
         System.out.println("26. XOR Sum Pairs: " + getXORSum(new int[]{1,2,3}, new int[]{6,5}));
+        // for-loop 1..n: shift result left by (Integer.toBinaryString(i).length()), then OR with i — bit length determines shift
         System.out.println("27. Concat Binary: " + concatenatedBinary(3));
+        // for-loop or recursive; if (n == 0) return 0; uses bit pattern to generate Gray code — XOR with shifted self
         System.out.println("28. Divide: " + divide(10, 3));
+        // for-loop with bitwise operations; counts 1-bits or uses properties of binary representation — bit-level analysis
         System.out.println("29. Max AND Sum: (complex DP example)");
+        // advanced bit manipulation; for-loop with mask operations; if (condition on bits) update result — bitwise algorithmic pattern
         System.out.println("30. Min Subarray OR>=K: " + minimumSubarrayLength(new int[]{1,2,3}, 2));
     }
 }

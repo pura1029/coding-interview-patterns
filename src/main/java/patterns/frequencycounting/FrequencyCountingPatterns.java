@@ -360,38 +360,69 @@ public class FrequencyCountingPatterns {
     public static void main(String[] args) {
         System.out.println("=== FREQUENCY COUNTING PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // creates new int[26] freq array; for-loop increments for s, decrements for t; if (any count != 0) false — frequency balance check
         System.out.println("1. Anagram: " + isAnagram("anagram", "nagaram"));
+        // creates new int[26] freq; two for-loops: first counts, second with if (count[c] == 1) return index — first occurrence check
         System.out.println("2. First Uniq: " + firstUniqChar("leetcode"));
+        // new int[]{...} → creates array literal
         System.out.println("3. Contains Dup: " + containsDuplicate(new int[]{1,2,3,1}));
+        // Boyer-Moore: for-loop with if (count == 0) candidate = n; if (n == candidate) count++, else count-- — majority wins
         System.out.println("4. Majority: " + majorityElement(new int[]{2,2,1,1,1,2,2}));
+        // creates new int[26] freq from magazine; for-loop with if (count[c] <= 0) false — frequency availability check
         System.out.println("5. Ransom Note: " + canConstruct("aa", "aab"));
+        // for-loop or binary search with if-else to locate target
         System.out.println("6. Find Diff: " + findTheDifference("abcd", "abcde"));
+        // for-loop with if (condition) count/accumulate
         System.out.println("7. Jewels: " + numJewelsInStones("aA", "aAAbbbb"));
+        // split(" ") creates String[]; creates two HashMap<>() (char→word, word→char); for-loop with if (existing mapping != current) false
         System.out.println("8. Word Pattern: " + wordPattern("abba", "dog cat cat dog"));
+        // creates two HashMap<>() (s→t, t→s) mappings; for-loop with if (map.containsKey && mapped != current) false — bidirectional consistency check
         System.out.println("9. Isomorphic: " + isIsomorphic("egg", "add"));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("10. Missing #: " + missingNumber(new int[]{3,0,1}));
         System.out.println("\n--- MEDIUM ---");
+        // creates HashMap<String,List>(); for-loop: sort each word (or char count key), map.computeIfAbsent(key, k -> new ArrayList<>()).add(word)
         System.out.println("11. Group Anagrams: " + groupAnagrams(new String[]{"eat","tea","tan","ate","nat","bat"}));
+        // creates HashMap<>() counts; new PriorityQueue<>(Comparator) min-heap of size k; for-loop with if (pq.size() > k) poll — keeps top k
         System.out.println("12. Top K Freq: " + Arrays.toString(topKFrequent(new int[]{1,1,1,2,2,3}, 2)));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("13. Longest Consec: " + longestConsecutive(new int[]{100,4,200,1,3,2}));
+        // creates HashMap<>() char→count; creates new PriorityQueue<>() sorted by freq; while (poll) for-loop appends char count times
         System.out.println("14. Freq Sort: " + frequencySort("tree"));
+        // creates HashMap<>() or int[]; for-loop counts chars; expands from center or uses DP; if (palindrome) count++ — center expansion frequency
         System.out.println("15. Find Dups: " + findDuplicates(new int[]{4,3,2,7,8,2,3,1}));
+        // creates new int[26] freq from s; for-loop over order appends char freq times, then remaining — priority-based character ordering
         System.out.println("16. Custom Sort: " + customSortString("cba", "abcd"));
+        // creates HashMap<>() url mapping; encode assigns sequential short key "http://tiny/" + id++, stores long→short mapping
         System.out.println("17. Encode/Decode: " + decode(encode("https://example.com")));
+        // creates HashSet<>() seen + HashSet<>() repeated; for-loop with 10-char substring window; if (seen.contains) add to repeated — fixed window dedup
         System.out.println("18. SubArr Sum=K: " + subarraySum(new int[]{1,1,1}, 2));
+        // tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("19. Min Steps Anagram: " + minSteps("bab", "aba"));
+        // closeStrings() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("20. Close Strings: " + closeStrings("abc", "bca"));
         System.out.println("\n--- HARD ---");
+        // creates HashMap<>() word→count; PriorityQueue<>() with Comparator (freq then lexicographic); polls k words — dual-criteria ordering
         System.out.println("21. Min Window: " + minWindow("ADOBECODEBANC", "ABC"));
+        // tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("22. K Distinct: " + lengthOfLongestSubstringKDistinct("eceba", 2));
+        // new int[]{...} → creates array literal
         System.out.println("23. First Missing +: " + firstMissingPositive(new int[]{3,4,-1,1}));
+        // new int[]{...} → creates array literal
         System.out.println("24. Majority II: " + majorityElementII(new int[]{3,2,3}));
+        // new String[]{...} → creates string array; for-loop or binary search with if-else to locate target
         System.out.println("25. Concat Words: " + findSubstring("barfoothefoobarman", new String[]{"foo","bar"}));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("26. Count Smaller: " + countSmaller(new int[]{5,2,6,1}));
+        // new String[]{...} → creates string array
         System.out.println("27. Sufficient Team: " + Arrays.toString(smallestSufficientTeam(new String[]{"java","nodejs","reactjs"}, Arrays.asList(Arrays.asList("java"), Arrays.asList("nodejs"), Arrays.asList("nodejs","reactjs")))));
+        // new AllOne() → creates object
         AllOne ao = new AllOne(); ao.inc("a"); ao.inc("b"); ao.inc("b");
+        // AllOne max: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("28. AllOne max: " + ao.getMaxKey());
+        // rearrangeString() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("29. Rearrange K=3: " + rearrangeString("aabbcc", 3));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("30. Max Points: " + maxPoints(new int[][]{{1,1},{2,2},{3,3}}));
     }
 }

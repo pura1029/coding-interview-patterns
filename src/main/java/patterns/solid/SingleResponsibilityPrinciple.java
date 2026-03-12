@@ -84,15 +84,22 @@ public class SingleResponsibilityPrinciple {
         System.out.println("=== Single Responsibility Principle (SRP) ===\n");
 
         System.out.println("--- BAD: God class doing everything ---");
+        // new UserGodClass() → single class handles auth, profile, email — violates SRP; any change (email provider, auth logic) forces modifying this one class
         UserGodClass godUser = new UserGodClass("Alice", "alice@example.com", "secret123");
+        // authenticate() uses if (password.equals(stored)) — auth logic mixed with profile and email in same class
         System.out.println("Auth: " + godUser.authenticate("secret123"));
         System.out.println("Profile: " + godUser.getProfileInfo());
         godUser.sendEmail("Welcome", "Hello Alice!");
 
         System.out.println("\n--- GOOD: Separated responsibilities ---");
+        // new User("Alice", "alice@email.com") → simple data object with single responsibility (hold user data); no business logic here
+        // new User() → data holder only; new UserAuth() → auth logic only; new EmailService() → email only — each class has single reason to change
         User user = new User("Alice", "alice@example.com", "secret123");
+        // new UserAuth() → separate class: authenticate uses if (user.getPassword().equals(input)) — isolated responsibility
         UserAuth auth = new UserAuth();
+        // new UserProfile() → creates object
         UserProfile profile = new UserProfile();
+        // new EmailService() → separate class for sending emails; changing email provider only affects this class
         EmailService emailService = new EmailService();
 
         System.out.println("Auth: " + auth.authenticate(user, "secret123"));

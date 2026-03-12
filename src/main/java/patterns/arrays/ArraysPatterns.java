@@ -793,45 +793,112 @@ public class ArraysPatterns {
     public static void main(String[] args) {
         System.out.println("=== ARRAYS (30 Examples) ===\n");
 
+        // --- EASY (1-10) ---
         System.out.println("--- EASY ---");
+
+        // new int[]{2, 7, 11, 15} → creates int array literal; twoSum uses HashMap internally (if-else checks containsKey)
         System.out.println("1. Two Sum: " + Arrays.toString(twoSum(new int[]{2, 7, 11, 15}, 9)));
+
+        // new int[]{...} → price history array; maxProfit uses for-loop with if to track min price and max profit
         System.out.println("2. Max Profit: " + maxProfit(new int[]{7, 1, 5, 3, 6, 4}));
+
+        // containsDuplicate creates new HashSet<>() internally; if set.add() returns false → duplicate found
         System.out.println("3. Contains Dup: " + containsDuplicate(new int[]{1, 2, 3, 1}));
+
+        // m4 → pre-allocated array with trailing zeros for merge; merge uses while-loop with if-else to compare and place elements
         int[] m4 = {1, 2, 3, 0, 0, 0}; merge(m4, 3, new int[]{2, 5, 6}, 3);
         System.out.println("4. Merge Sorted: " + Arrays.toString(m4));
+
+        // new int[]{...} → input with negatives; maxSubArray uses Kadane's: for-loop with Math.max (ternary-like conditional)
         System.out.println("5. Max Subarray: " + maxSubArray(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}));
+
+        // removeDuplicates modifies array in-place; for-loop with if (nums[i] != nums[j]) to skip duplicates
         System.out.println("6. Remove Dups: " + removeDuplicates(new int[]{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}));
+
+        // singleNumber uses for-loop with XOR (^=); no conditionals needed — XOR cancels paired numbers
         System.out.println("7. Single Number: " + singleNumber(new int[]{4, 1, 2, 1, 2}));
+
+        // mz → array modified in-place; moveZeroes uses for-loop with if (nums[i] != 0) to swap non-zeros forward
         int[] mz = {0, 1, 0, 3, 12}; moveZeroes(mz);
+        // Move Zeroes: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("8. Move Zeroes: " + Arrays.toString(mz));
+
+        // new int[]{9,9,9} → edge case (all 9s → carry propagation); plusOne uses for-loop with if (digit < 10) to return early
         System.out.println("9. Plus One: " + Arrays.toString(plusOne(new int[]{9, 9, 9})));
+
+        // missingNumber uses XOR or sum formula; for-loop iterates n elements to find the missing one in [0..n]
         System.out.println("10. Missing Number: " + missingNumber(new int[]{3, 0, 1}));
 
+        // --- MEDIUM (11-20) ---
         System.out.println("\n--- MEDIUM ---");
+
+        // new int[]{...} → unsorted array; threeSum sorts + uses while-loop with two pointers, if-else to skip duplicates
         System.out.println("11. Three Sum: " + threeSum(new int[]{-1, 0, 1, 2, -1, -4}));
+
+        // new int[]{...} → heights of vertical lines; maxArea uses while (left < right) with if-else to move shorter pointer
         System.out.println("12. Max Area: " + maxArea(new int[]{1, 8, 6, 2, 5, 4, 8, 3, 7}));
+
+        // productExceptSelf creates new int[] result internally; two for-loops (left pass, right pass) — no division needed
         System.out.println("13. Product Except Self: " + Arrays.toString(productExceptSelf(new int[]{1, 2, 3, 4})));
+
+        // r14 → array to rotate; rotate uses three reverse calls with for-loop; k %= length handles k > array length
         int[] r14 = {1, 2, 3, 4, 5, 6, 7}; rotate(r14, 3);
+        // Rotate: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("14. Rotate: " + Arrays.toString(r14));
+
+        // c15 → Dutch National Flag; sortColors uses while-loop with if/else-if/else for 3-way partition (0s, 1s, 2s)
         int[] c15 = {2, 0, 2, 1, 1, 0}; sortColors(c15);
+        // Sort Colors: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("15. Sort Colors: " + Arrays.toString(c15));
+
+        // np → permutation array; nextPermutation uses for-loops + while with if conditions to find swap point and reverse suffix
         int[] np = {1, 2, 3}; nextPermutation(np);
+        // Next Perm: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("16. Next Perm: " + Arrays.toString(np));
+
+        // subarraySum creates new HashMap<>() for prefix sums; for-loop with if (map.containsKey) counts valid subarrays
         System.out.println("17. Subarray Sum K: " + subarraySum(new int[]{1, 1, 1}, 2));
+
+        // new int[][]{{...}} → 2D array (matrix); spiralOrder uses while-loop with 4 for-loops (right, down, left, up) + boundary if-checks
         System.out.println("18. Spiral Matrix: " + spiralOrder(new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}));
+
+        // findDuplicates creates new ArrayList<>(); for-loop uses index-marking trick: if (nums[idx] < 0) → already seen
         System.out.println("19. Find Dups: " + findDuplicates(new int[]{4, 3, 2, 7, 8, 2, 3, 1}));
+
+        // findKthLargest may use PriorityQueue (new PriorityQueue<>()) or Quickselect; partitions with if-else comparisons
         System.out.println("20. Kth Largest: " + findKthLargest(new int[]{3, 2, 1, 5, 6, 4}, 2));
 
+        // --- HARD (21-30) ---
         System.out.println("\n--- HARD ---");
+
+        // new int[]{...} → elevation map; trap uses two-pointer while-loop with if-else (left max vs right max) to accumulate water
         System.out.println("21. Trap Water: " + trap(new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}));
+
+        // firstMissingPositive uses cyclic sort: while-loop with if to place each number at its correct index
         System.out.println("22. First Missing +: " + firstMissingPositive(new int[]{3, 4, -1, 1}));
+
+        // new int[]{1,3}, new int[]{2} → two sorted arrays; binary search with if-else to partition arrays for median
         System.out.println("23. Median 2 Arrays: " + findMedianSortedArrays(new int[]{1, 3}, new int[]{2}));
+
+        // longestConsecutive creates new HashSet<>(); for-loop with if (!set.contains(n-1)) starts counting consecutive streak via while
         System.out.println("24. Longest Consec: " + longestConsecutive(new int[]{100, 4, 200, 1, 3, 2}));
+
+        // new int[]{...} → histogram heights; uses new ArrayDeque<>() (monotonic stack) with while-loop for area calculation
         System.out.println("25. Largest Rect: " + largestRectangleArea(new int[]{2, 1, 5, 6, 2, 3}));
+
+        // maxSlidingWindow creates new ArrayDeque<>() (deque); for-loop with while to maintain decreasing deque, if to remove expired
         System.out.println("26. Sliding Max: " + Arrays.toString(maxSlidingWindow(new int[]{1, 3, -1, -3, 5, 3, 6, 7}, 3)));
+
+        // new int[]{...} → array with negatives; maxProduct uses for-loop tracking max/min products, swaps on negative (if check)
         System.out.println("27. Max Product: " + maxProduct(new int[]{2, 3, -2, 4}));
+
+        // countSmaller creates new ArrayList<>(); uses merge sort with index tracking, if-else during merge for counting inversions
         System.out.println("28. Count Smaller: " + countSmaller(new int[]{5, 2, 6, 1}));
+
+        // findUnsortedSubarray uses for-loops from both ends with if conditions to find left/right boundaries of unsorted region
         System.out.println("29. Unsorted Sub: " + findUnsortedSubarray(new int[]{2, 6, 4, 8, 10, 9, 15}));
+
+        // new int[]{1,0,2} → rating array; candy creates new int[] for candies, two for-loops with if to satisfy left/right neighbors
         System.out.println("30. Candy: " + candy(new int[]{1, 0, 2}));
     }
 }

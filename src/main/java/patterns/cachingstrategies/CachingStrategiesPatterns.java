@@ -847,44 +847,54 @@ public class CachingStrategiesPatterns {
         System.out.println("--- EASY ---");
         // 1. Simple Cache
         SimpleCache<String, Integer> sc = new SimpleCache<>(); sc.put("a", 1); sc.put("b", 2);
+        // SimpleCache uses HashMap internally; get/put/contains delegate to map.get/put/containsKey — simplest cache with no eviction policy
         System.out.println("1. Simple Cache: get(a)=" + sc.get("a") + " size=" + sc.size());
 
         // 2. FIFO Cache
         FIFOCache<String, Integer> fifo = new FIFOCache<>(3);
         fifo.put("a", 1); fifo.put("b", 2); fifo.put("c", 3); fifo.put("d", 4);
+        // FIFOCache uses LinkedHashMap with insertion order; put: if (size >= capacity) remove iterator().next() — evicts oldest entry first
         System.out.println("2. FIFO Cache: " + fifo + " (a evicted)");
 
         // 3. LRU Cache
         LRUCache<Integer, String> lru = new LRUCache<>(3);
         lru.put(1, "one"); lru.put(2, "two"); lru.put(3, "three"); lru.get(1); lru.put(4, "four");
+        // LRU uses LinkedHashMap(accessOrder=true); removeEldestEntry: if (size > capacity) evict least recently used — access moves entry to tail
         System.out.println("3. LRU Cache: " + lru + " (2 evicted, 1 was accessed)");
 
         // 4. Random Eviction
         RandomEvictionCache<String, Integer> rec = new RandomEvictionCache<>(3);
         rec.put("a", 1); rec.put("b", 2); rec.put("c", 3); rec.put("d", 4);
+        // RandomEviction uses HashMap + ArrayList of keys; put: if (full) pick random index via Random.nextInt(), remove that key — probabilistic eviction
         System.out.println("4. Random Eviction: " + rec);
 
         // 5. Write-Through
         WriteThroughCache wtc = new WriteThroughCache(); wtc.put("user:1", "Alice");
+        // WriteThroughCache put writes to BOTH cache HashMap AND database HashMap synchronously — cache always stays fresh, higher write latency
         System.out.println("5. Write-Through: cache=" + wtc.inCache("user:1") + " db=" + wtc.getFromDB("user:1"));
 
         // 6. Cache-Aside
         Map<String, String> db = new HashMap<>(); db.put("k1", "v1"); db.put("k2", "v2");
+        // new CacheAside(db) → wraps existing HashMap as database; get: if (cache.containsKey) return hit, else load from db, cache.put — lazy loading
         CacheAside ca = new CacheAside(db);
+        // CacheAside get: if (cache.containsKey) return cached value (hit); else load from db, cache.put, return — lazy loading on miss
         System.out.println("6. Cache-Aside: " + ca.get("k1") + " → " + ca.get("k1"));
 
         // 7. TTL Cache
         TTLCache<String, String> ttl = new TTLCache<>(50);
         ttl.put("temp", "data");
+        // TTLCache get: if (currentTimeMillis - insertTime > ttlMs) expire and return null; else return cached value — time-based conditional expiry
         System.out.println("7. TTL Cache: " + ttl.get("temp") + " (alive before expiry)");
 
         // 8. Instrumented Cache
         InstrumentedCache<String, Integer> ic = new InstrumentedCache<>(); ic.put("x", 10);
         ic.get("x"); ic.get("x"); ic.get("y");
+        // InstrumentedCache get: if (map.containsKey) hits++ and return value; else misses++ and return null — metrics tracking via conditional counters
         System.out.println("8. Hit/Miss: " + ic.stats());
 
         // 9. Memoizer
         Memoizer<Integer, Integer> memo = new Memoizer<>(x -> x * x);
+        // Memoizer compute: cache.computeIfAbsent(key, function) — caches function results; if (cached) return, else compute, store, return
         System.out.println("9. Memoizer: square(5)=" + memo.compute(5) + " cache=" + memo.cacheSize());
 
         // 10. Fibonacci Memo
@@ -894,108 +904,131 @@ public class CachingStrategiesPatterns {
         // 11. LFU Cache
         LFUCache lfu = new LFUCache(3);
         lfu.put(1, 10); lfu.put(2, 20); lfu.put(3, 30); lfu.get(1); lfu.get(1); lfu.get(2); lfu.put(4, 40);
+        // LFU get/put: tracks access frequency per key; evict key with minimum frequency; if (freq tie) evict oldest — frequency-based eviction
         System.out.println("11. LFU Cache: get(3)=" + lfu.get(3) + " (evicted, least freq)");
 
         // 12. Write-Back
         WriteBackCache wb = new WriteBackCache(); wb.put("x", "100"); wb.put("y", "200");
+        // WriteBackCache put: writes to cache only + adds to HashSet<> dirtyKeys; flush: for-each dirty key write to db — deferred persistence
         System.out.println("12. Write-Back: dirty=" + wb.dirtyCount() + " db(x)=" + wb.getFromDB("x"));
         wb.flush();
         System.out.println("    After flush: db(x)=" + wb.getFromDB("x"));
 
         // 13. Write-Around
         WriteAroundCache wa = new WriteAroundCache(); wa.put("k", "val");
+        // WriteAroundCache put: writes to db only, cache.remove(key); get: if (cache miss) load from db, cache.put — avoids caching rarely-read writes
         System.out.println("13. Write-Around: " + wa.get("k") + " → " + wa.get("k"));
 
         // 14. Read-Through
         Map<String, String> dataSource = new HashMap<>(); dataSource.put("id:1", "Alice"); dataSource.put("id:2", "Bob");
+        // new ReadThroughCache<>(10, dataSource::get) → LRU map + Function loader; get: if (cache hit) return, else loader.apply(key) auto-loads from backend
         ReadThroughCache<String, String> rtc = new ReadThroughCache<>(10, dataSource::get);
+        // ReadThroughCache get: if (cache.containsKey) return hit; else loader.apply(key) auto-loads from backend, cache stores result — transparent loading
         System.out.println("14. Read-Through: " + rtc.get("id:1") + " cached=" + rtc.cacheSize());
 
         // 15. Two-Level Cache
         TwoLevelCache<String, String> twoLevel = new TwoLevelCache<>(2, 5);
         twoLevel.put("a", "1"); twoLevel.put("b", "2"); twoLevel.put("c", "3");
+        // TwoLevelCache get: if (L1 hit) return fast; else if (L2 hit) promote to L1, return; else miss — hierarchical cache with promotion
         System.out.println("15. Two-Level: L1 get(a)=" + twoLevel.get("a") + " (promoted from L2 if evicted)");
 
         // 16. LRU Manual DLL
         LRUCacheManual lruManual = new LRUCacheManual(3);
         lruManual.put(1, 10); lruManual.put(2, 20); lruManual.put(3, 30); lruManual.get(1); lruManual.put(4, 40);
+        // LRUCacheManual: HashMap + hand-rolled doubly-linked list; get/put: removeNode + addToHead for O(1) access-order; if (size > cap) removeTail
         System.out.println("16. LRU Manual: " + lruManual);
 
         // 17. Bloom Filter
         BloomFilter bf = new BloomFilter(1000, 3);
         bf.add("hello"); bf.add("world");
+        // BloomFilter: boolean[] bits + k hash functions; add sets k bit positions; mightContain: if (ALL k bits set) possibly yes, if (any 0) definitely no
         System.out.println("17. Bloom Filter: hello=" + bf.mightContain("hello") + " xyz=" + bf.mightContain("xyz"));
 
         // 18. Refresh-Ahead
         RefreshAheadCache<String, String> rac = new RefreshAheadCache<>(5000, k -> "fresh-" + k);
+        // RefreshAheadCache get: if (age > threshold) proactively reload from backend; if (cache miss) load and store — preemptive refresh before expiry
         System.out.println("18. Refresh-Ahead: " + rac.get("key1"));
 
         // 19. Consistent Hashing
         ConsistentHashRing ring = new ConsistentHashRing(100);
         ring.addNode("server-A"); ring.addNode("server-B"); ring.addNode("server-C");
+        // ConsistentHashRing: TreeMap<Integer,String> with virtual nodes; getNode: ring.ceilingKey(hash(key)) finds nearest clockwise server node
         System.out.println("19. Consistent Hash: user:1→" + ring.getNode("user:1") + " user:2→" + ring.getNode("user:2"));
 
         // 20. Bounded Buffer
         BoundedBuffer<String> buf = new BoundedBuffer<>(3);
         buf.offer("task1"); buf.offer("task2"); buf.offer("task3");
+        // BoundedBuffer: synchronized LinkedList<>() queue; offer: if (size >= capacity) return false; poll: if (empty) return null — thread-safe bounded FIFO
         System.out.println("20. Bounded Buffer: full=" + buf.isFull() + " poll=" + buf.poll() + " size=" + buf.size());
 
         System.out.println("\n--- HARD ---");
         // 21. LFU Optimal
         LFUCacheOptimal lfuOpt = new LFUCacheOptimal(2);
         lfuOpt.put(1, 1); lfuOpt.put(2, 2); lfuOpt.get(1); lfuOpt.put(3, 3);
+        // LFUCacheOptimal: O(1) with HashMap + LinkedHashSet per frequency bucket; put: if (full) evict minFreq bucket.iterator.next() — optimal LFU
         System.out.println("21. LFU Optimal: get(2)=" + lfuOpt.get(2) + " get(3)=" + lfuOpt.get(3));
 
         // 22. LRU-K
         LRUKCache lruk = new LRUKCache(3, 2);
         lruk.put(1, 10); lruk.put(2, 20); lruk.put(3, 30);
         lruk.get(1); lruk.get(1); lruk.get(2); lruk.get(2); lruk.put(4, 40);
+        // LRU-K: evicts key with oldest Kth access timestamp; LinkedList<Long> tracks access history per key; if (accesses < K) scan-resistant
         System.out.println("22. LRU-K: get(3)=" + lruk.get(3) + " (evicted, fewest K accesses)");
 
         // 23. Thread-Safe LRU
         ConcurrentLRUCache<String, String> clru = new ConcurrentLRUCache<>(3);
         clru.put("a", "1"); clru.put("b", "2"); clru.put("c", "3"); clru.put("d", "4");
+        // ConcurrentLRUCache: Collections.synchronizedMap wrapping access-order LinkedHashMap — thread-safe via synchronized wrapper
         System.out.println("23. Concurrent LRU: size=" + clru.size());
 
         // 24. TTL + LRU
         TTLLRUCache ttlLru = new TTLLRUCache(3, 60000);
         ttlLru.put(1, 10); ttlLru.put(2, 20); ttlLru.put(3, 30);
+        // TTLLRUCache: combines TTL expiry + LRU eviction; get: if (expired) remove, return -1; put: evictExpired() then if (full) remove LRU eldest
         System.out.println("24. TTL+LRU: get(1)=" + ttlLru.get(1));
 
         // 25. CDN Simulator
         CDNSimulator cdn = new CDNSimulator(5, "US", "EU", "ASIA");
         cdn.publishToOrigin("page.html", "<html>Hello</html>");
+        // CDNSimulator: HashMap<region, LRU cache> per edge; fetch: if (edge cache hit) return; else load from origin HashMap, cache at edge node
         System.out.println("25. CDN: " + cdn.fetch("US", "page.html"));
         System.out.println("    CDN: " + cdn.fetch("US", "page.html"));
 
         // 26. Query Cache
         QueryCache qc = new QueryCache(100);
         qc.cacheResult("SELECT * FROM users", "[{id:1}]", "users");
+        // QueryCache: LRU map + HashMap<table, Set<query>> for invalidation; invalidateByTable: remove all cached queries touching that table
         System.out.println("26. Query Cache: " + qc.getResult("SELECT * FROM users"));
         System.out.println("    Invalidated: " + qc.invalidateByTable("users") + " queries");
 
         // 27. Rate Limiter
         TokenBucketRateLimiter rl = new TokenBucketRateLimiter(5, 2);
+        // new String[]{...} → creates string array
         StringBuilder rlResult = new StringBuilder();
         for (int i = 0; i < 7; i++) rlResult.append(rl.tryAcquire() ? "OK " : "DENIED ");
+        // TokenBucketRateLimiter: tryAcquire refills tokens based on elapsed time; if (tokens >= 1) tokens--, return true — token bucket rate limiting
         System.out.println("27. Rate Limiter: " + rlResult.toString().trim());
 
         // 28. Cuckoo Hash
         CuckooHash ck = new CuckooHash(101);
         ck.insert(42); ck.insert(99); ck.insert(7);
+        // CuckooHash: two int[] tables; insert: if (table1[h1] empty) place; else displace + try table2[h2]; while-loop up to MAX_KICKS — O(1) lookup
         System.out.println("28. Cuckoo Hash: 42=" + ck.lookup(42) + " 13=" + ck.lookup(13));
 
         // 29. Partitioned Cache
         PartitionedCache pc = new PartitionedCache(4);
         for (int i = 0; i < 20; i++) pc.put("key" + i, "val" + i);
+        // PartitionedCache: ArrayList of N HashMaps; put/get: partition = Math.abs(key.hashCode()) % numPartitions — hash-based sharding across segments
         System.out.println("29. Partitioned: " + pc.stats());
 
         // 30. Auto-Warming
         Map<String, String> warmDb = new HashMap<>();
         for (int i = 0; i < 10; i++) warmDb.put("k" + i, "v" + i);
+        // new AutoWarmingCache<>(5, 2, loader) → LRU map + frequency counter; warmUp: stream filter (freq >= threshold), sorted, limit(capacity), forEach load
         AutoWarmingCache<String, String> awc = new AutoWarmingCache<>(5, 2, warmDb::get);
         for (int i = 0; i < 3; i++) { awc.get("k0"); awc.get("k1"); }
         awc.warmUp();
+        // AutoWarmingCache warmUp: stream filter (freq >= threshold), sorted by frequency desc, limit(capacity), forEach load into cache — proactive warming
         System.out.println("30. Auto-Warming: cacheSize=" + awc.cacheSize());
     }
 }

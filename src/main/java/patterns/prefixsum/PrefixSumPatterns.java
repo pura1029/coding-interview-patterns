@@ -793,43 +793,75 @@ public class PrefixSumPatterns {
 
         // EASY
         System.out.println("--- EASY ---");
+        // new RangeSumQuery(new int[]{...}) → creates object with prefix sum array in constructor; sumRange returns prefix[right+1] - prefix[left]
         RangeSumQuery rsq = new RangeSumQuery(new int[]{-2, 0, 3, -5, 2, -1});
+        // Range Sum Query: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("1. Range Sum Query: sumRange(0,2) = " + rsq.sumRange(0, 2));
+        // new int[]{...} → input; creates new int[] result; for-loop: result[i] = result[i-1] + nums[i] — running sum accumulation
         System.out.println("2. Running Sum: " + Arrays.toString(runningSum(new int[]{1, 2, 3, 4})));
+        // computes total sum first via for-loop; second for-loop with if (leftSum == total - leftSum - nums[i]) return index — balance check
         System.out.println("3. Pivot Index: " + pivotIndex(new int[]{1, 7, 3, 6, 5, 6}));
+        // creates new int[] prefix sum; nested for-loops with odd-length stride; sum = prefix[j+1] - prefix[i] — prefix sum range query
         System.out.println("4. Sum Odd Length Subarrays: " + sumOddLengthSubarrays(new int[]{1, 4, 2, 5, 3}));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("5. Good Pairs: " + numGoodPairs(new int[]{1, 2, 3, 1, 1, 3}));
+        // new int[]{...} → creates array literal
         System.out.println("6. Left Right Diff: " + Arrays.toString(leftRightDifference(new int[]{10, 4, 8, 3})));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("7. Positive Prefix Sums: " + countPositivePrefixSums(new int[]{1, -2, 3, -1, 5}));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("8. Max After Range Increments: " + maxAfterRangeIncrements(5, new int[][]{{0, 2}, {1, 4}, {2, 3}}));
+        // for-loop accumulates prefix sum; Math.min tracks minimum prefix; return 1 - minPrefix if negative, else 1 — ensures sum >= 1
         System.out.println("9. Min Start Value: " + minStartValue(new int[]{-3, 2, -3, 4, 2}));
+        // new int[]{...} → creates array literal
         System.out.println("10. K Length Apart: " + kLengthApart(new int[]{1, 0, 0, 0, 1, 0, 0, 1}, 2));
 
         // MEDIUM
         System.out.println("\n--- MEDIUM ---");
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("11. Subarray Sum=K: " + subarraySumEqualsK(new int[]{1, 1, 1}, 2));
+        // new int[]{...} → creates array literal; for-loop or binary search with if-else to locate target; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("12. Contiguous Array: " + findMaxLength(new int[]{0, 1, 0, 1, 0, 1, 1}));
+        // creates new int[] result; two for-loops: left pass multiplies prefix, right pass multiplies suffix — no division needed
         System.out.println("13. Product Except Self: " + Arrays.toString(productExceptSelf(new int[]{1, 2, 3, 4})));
+        // new int[]{...} → creates array literal
         System.out.println("14. Subarrays Div by K: " + subarraysDivByK(new int[]{4, 5, 0, -2, -3, 1}, 5));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("15. Bounded Max Subarrays: " + numSubarrayBoundedMax(new int[]{2, 1, 4, 3}, 2, 3));
+        // creates new HashMap<>(); for-loop with prefix sum; if (map.containsKey(sum-goal)) add count — same as subarraySum pattern
         System.out.println("16. Binary Subarrays Sum: " + numSubarraysWithSum(new int[]{1, 0, 1, 0, 1}, 2));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("17. Max SubArray Len=K: " + maxSubArrayLen(new int[]{1, -1, 5, -2, 3}, 3));
+        // new int[]{...} → creates array literal
         System.out.println("18. Range Addition: " + Arrays.toString(rangeAddition(5, new int[][]{{1, 3, 2}, {2, 4, 3}, {0, 2, -2}})));
+        // creates new HashMap<Integer,Integer>(); for-loop with if (map.containsKey(sum%k) && i - map.get >= 2) — modular prefix sum
         System.out.println("19. Continuous Subarray Sum: " + checkSubarraySum(new int[]{23, 2, 4, 6, 7}, 6));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("20. Nice Subarrays: " + numberOfSubarrays(new int[]{1, 1, 2, 1, 1}, 3));
 
         // HARD
         System.out.println("\n--- HARD ---");
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("21. Max Sum After Removal: " + maxSumAfterRemoval(new int[]{1, -2, 0, 3}));
+        // new RangeSum2D() → creates object; new int[]{...} → creates array literal
         RangeSum2D rs2d = new RangeSum2D(new int[][]{{3, 0, 1, 4, 2}, {5, 6, 3, 2, 1}, {1, 2, 0, 1, 5}, {4, 1, 0, 1, 7}, {1, 0, 3, 0, 5}});
+        // 2D Range Sum: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("22. 2D Range Sum: sumRegion(2,1,4,3) = " + rs2d.sumRegion(2, 1, 4, 3));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("23. Subarray Sum=K (Long): " + subarraySumEqualsKLong(new int[]{1, 1, 1, 1, 1}, 2));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("24. Max Sum 3 Subarrays: " + Arrays.toString(maxSumOfThreeSubarrays(new int[]{1, 2, 1, 2, 6, 7, 5, 1}, 2)));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("25. Shortest Subarray Sum>=K: " + shortestSubarrayWithSumK(new int[]{2, -1, 2}, 3));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("26. Count Range Sum: " + countRangeSum(new int[]{-2, 5, -1}, -2, 2));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("27. Max Non-Overlapping: " + maxNonOverlapping(new int[]{-1, 3, 5, 1, 4, 2, -9}, 6));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("28. Min Subarray (div by p): " + minSubarray(new int[]{3, 1, 4, 2}, 6));
+        // 2D prefix sum: nested for-loops over row pairs; within each pair: HashMap prefix sum for column sums with if (map.containsKey(sum-target))
         System.out.println("29. Submatrix Sum Target: " + numSubmatrixSumTarget(new int[][]{{0, 1, 0}, {1, 1, 1}, {0, 1, 0}}, 0));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("30. Min Ops Reduce X: " + minOperations(new int[]{1, 1, 4, 2, 3}, 5));
     }
 }

@@ -322,32 +322,56 @@ public class BacktrackingPatterns {
         System.out.println("=== BACKTRACKING PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
         System.out.println("1-2: Basic generation");
+        // readBinaryWatch() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("3. Binary Watch: " + readBinaryWatch(1).size()+" results");
+        // creates ArrayList<>(); recursive: for-loop from start, add num to current, recurse(i+1), remove last — include/exclude each element
         System.out.println("4. Subsets: " + subsets(new int[]{1,2,3}));
+        // creates ArrayList<>(); recursive: if (current.size == n) add copy; for-loop with if (!current.contains(num)) add, recurse, remove — try each unused
         System.out.println("5. Permutations: " + permute(new int[]{1,2,3}).size()+" permutations");
+        // combine() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("6. Combine(4,2): " + combine(4,2));
+        // recursive: if (target == 0) add copy; for-loop from start: if (candidates[i] <= target) add, recurse(i, target-candidates[i]), remove — allow reuse
         System.out.println("7. CombSum: " + combinationSum(new int[]{2,3,6,7},7));
+        // Path Sum II: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("8. Path Sum II: done");
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("9. Max OR Subsets: " + countMaxOrSubsets(new int[]{3,1}));
+        // recursive: for each col, if (isSafe) place queen, recurse(row+1), remove — isSafe checks col+diagonals with set/array lookups
         System.out.println("10. Can Win: done");
         System.out.println("\n--- MEDIUM ---");
+        // recursive: if (length == 2*n) add string; if (open < n) add "(", recurse; if (close < open) add ")", recurse — conditional branching
         System.out.println("11. Gen Parens: " + generateParenthesis(3));
+        // String[] PHONE mapping; recursive DFS: for each char of mapped digit, append, recurse(index+1), deleteCharAt — phone keypad backtracking
         System.out.println("12. Letter Comb: " + letterCombinations("23"));
+        // recursive split: for each position parse number; try +,-,*; if (leading zero) break — expression building with operator insertion
         System.out.println("13. Word Search: " + exist(new char[][]{{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}},"ABCCED"));
+        // Arrays.sort first; recursive: for-loop with if (i > start && nums[i] == nums[i-1]) continue (skip duplicate) — sorted dedup backtracking
         System.out.println("14. Subsets II: " + subsetsWithDup(new int[]{1,2,2}));
+        // Arrays.sort; recursive: for-loop with if (i > start && nums[i] == nums[i-1]) skip; add, recurse(i+1, target-num), remove — no reuse, skip dups
         System.out.println("15. CombSum II: " + combinationSum2(new int[]{10,1,2,7,6,1,5},8));
+        // Arrays.sort; recursive with boolean[] used: if (used[i]) skip; if (i>0 && nums[i]==nums[i-1] && !used[i-1]) skip — duplicate permutation pruning
         System.out.println("16. Permute II: " + permuteUnique(new int[]{1,1,2}).size());
+        // recursive: for (i from start to sqrt(n)): if (n%i==0) add pair, recurse(n/i, i) — factor decomposition backtracking
         System.out.println("17. Palindrome Part: " + partition("aab"));
+        // restoreIpAddresses() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("18. Restore IP: " + restoreIpAddresses("25525511135"));
+        // for-loop with if (condition) count/accumulate
         System.out.println("19. Arrangement: " + countArrangement(4));
+        // for-loop with if (condition) count/accumulate
         System.out.println("20. CombSum III: " + combinationSum3(3,7));
         System.out.println("\n--- HARD ---");
+        // recursive row-by-row: for each col, if (isSafe) place queen, recurse(row+1), remove — isSafe checks column, diagonals with for-loop/set lookups
         System.out.println("21. N-Queens(4): " + solveNQueens(4).size()+" solutions");
+        // Sudoku: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("22. Sudoku: done");
         System.out.println("23-24. Word Search II / Expression Operators");
+        // reuses solveNQueens, returns .size() — counts all valid N-Queens placements
         System.out.println("25. Total N-Queens(8): " + totalNQueens(8));
+        // Arrays.sort; recursive with boolean[] used: if (k==0) true; if (curSum == target) recurse(k-1); for-loop with if (used[i] || sum+nums[i] > target) skip
         System.out.println("26. Partition K: " + canPartitionKSubsets(new int[]{4,3,2,3,5,2,1},4));
+        // BFS with LinkedList<>() queue + HashSet<>() visited; try removing each '('/')'; if (isValid) add to result + stop expanding — level-by-level BFS
         System.out.println("27. Remove Invalid: " + removeInvalidParentheses("()())()"));
+        // recursive: for (i from start to sqrt(n)): if (n%i == 0) add [i, n/i], recurse(n/i, i) — factor decomposition backtracking
         System.out.println("28. Factors: " + getFactors(12));
         System.out.println("29-30: Advanced backtracking");
     }

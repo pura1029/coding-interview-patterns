@@ -338,41 +338,74 @@ public class BinaryTreeTraversalPatterns {
 
     public static void main(String[] args) {
         System.out.println("=== BINARY TREE TRAVERSAL (30 Examples) ===\n");
+        // new TreeNode() → creates object; new TreeNode() → creates object
         TreeNode root = new TreeNode(1,new TreeNode(2,new TreeNode(4),new TreeNode(5)),new TreeNode(3));
         System.out.println("--- EASY ---");
+        // creates ArrayList<>() + ArrayDeque<>() stack; while (node != null || !stack.empty): push left chain, pop, add val, go right — iterative inorder
         System.out.println("1. Inorder: " + inorderTraversal(root));
+        // creates ArrayList<>() + ArrayDeque<>() stack; push root, while (!empty): pop, add val, push right then left (LIFO reversal) — iterative preorder
         System.out.println("2. Preorder: " + preorderTraversal(root));
+        // creates ArrayList<>() + ArrayDeque<>() stack; push root, while (!empty): pop, addFirst(val), push left then right — reverse trick for postorder
         System.out.println("3. Postorder: " + postorderTraversal(root));
+        // recursive: if (root == null) return 0; return 1 + Math.max(maxDepth(left), maxDepth(right)) — base case + recursive max
         System.out.println("4. Max Depth: " + maxDepth(root));
+        // recursive: if (root == null) return 0; return 1 + Math.max(left, right) — base case null check + recursive max
         System.out.println("5. Symmetric: " + isSymmetric(new TreeNode(1,new TreeNode(2),new TreeNode(2))));
+        // recursive height(): if (Math.abs(left-right) > 1) return -1; else max+1 — returns -1 sentinel for unbalanced
         System.out.println("6. Invert: done");
+        // recursive: if (root == null) return null; swap children; recurse left, right — simple pointer swap with null base case
         System.out.println("7. Same Tree: " + isSameTree(root,root));
+        // recursive with bounds: if (val <= min || val >= max) false; recurse left(min,val), right(val,max) — narrowing bounds
         System.out.println("8. Min Depth: " + minDepth(root));
+        // recursive: if (leaf && sum == 0) return true; return hasPathSum(left, sum-val) || hasPathSum(right, sum-val) — OR short-circuit
         System.out.println("9. Path Sum: " + hasPathSum(root, 7));
+        // recursive: if (leaf && sum-val == 0) true; return left || right — OR short-circuit propagation
         System.out.println("10. Count: " + countNodes(root));
         System.out.println("\n--- MEDIUM ---");
+        // creates ArrayList<>() + LinkedList<>() queue; while (!empty): for (size) poll, add val; if (left/right != null) offer — BFS level-by-level
         System.out.println("11. Level Order: " + levelOrder(root));
+        // HashMap inorder→index; recursive: pre[preIdx++] creates root, split left/right via inorderIdx — divide & conquer construction
         System.out.println("12. Zigzag: " + zigzagLevelOrder(root));
+        // new TreeNode() → creates object; new TreeNode() → creates object
         TreeNode bst = new TreeNode(5,new TreeNode(3,new TreeNode(2),new TreeNode(4)),new TreeNode(7));
+        // recursive with min/max bounds: if (val <= min || val >= max) false; recurse left with (min, val), right with (val, max)
         System.out.println("13. Valid BST: " + isValidBST(bst));
+        // iterative inorder with ArrayDeque<>() stack; while push left chain, pop, k--; if (k == 0) return val — early termination on kth element
         System.out.println("14. Kth Smallest: " + kthSmallest(bst, 2));
+        // recursive gain = val + max(0, left) + max(0, right); update global max; return val + max(left, right) — clamp negatives
         System.out.println("15. Right View: " + rightSideView(root));
+        // preorder: if (null) "null"; return val + "," + left + "," + right — recursive serialization
         System.out.println("16. LCA: done");
+        // split(",") → Queue; poll: if ("null") return null; new TreeNode(val), recurse left/right — queue-based deserialization
         System.out.println("17. Flatten: done");
+        // post-order: if (child needs camera) place, return 2; if (child has camera) return 1; else return 0 — greedy state machine
         System.out.println("18. Build Tree: done");
+        // recursive depth: diameter = Math.max(diameter, leftDepth + rightDepth) at each node; returns 1 + Math.max(left, right) — side-effect tracking
         System.out.println("19. Diameter: " + diameterOfBinaryTree(root));
+        // adjacency list from parent[]; DFS: for children, if (different label) track two longest; result = 1 + top1 + top2 — path through node
         System.out.println("20. Root-Leaf Paths: " + pathsRootToLeaf(root));
         System.out.println("\n--- HARD ---");
+        // new TreeNode() → creates object; new TreeNode() → creates object
         TreeNode r2=new TreeNode(-10,new TreeNode(9),new TreeNode(20,new TreeNode(15),new TreeNode(7)));
+        // recursive: gain = val + max(0, leftGain) + max(0, rightGain); update global max; return val + max(leftGain, rightGain) — clamp negatives with Math.max(0,...)
         System.out.println("21. Max Path Sum: " + maxPathSum(r2));
+        // recursive preorder: if (null) return "null"; return val + "," + serialize(left) + "," + serialize(right) — recursive string building
         System.out.println("22. Serialize: " + serialize(root));
+        // verticalTraversal() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("23. Vertical: " + verticalTraversal(root));
+        // post-order DFS: if (child returns 0) place camera, cameras++, return 2; return (any child == 2) ? 1 : 0 — greedy state machine (0=needs, 1=covered, 2=has)
         System.out.println("24. Cameras: " + minCameraCover(new TreeNode(0,new TreeNode(0,new TreeNode(0),new TreeNode(0)),null)));
+        // Recover BST: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("25. Recover BST: done");
+        // new TreeNode() → creates object; new TreeNode() → creates object
         System.out.println("26. Good Nodes: " + goodNodes(new TreeNode(3,new TreeNode(1,new TreeNode(3),null),new TreeNode(4,new TreeNode(1),new TreeNode(5)))));
+        // Tree to DLL: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("27. Tree to DLL: done");
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("28. Sum Distances: " + Arrays.toString(sumOfDistancesInTree(6,new int[][]{{0,1},{0,2},{2,3},{2,4},{2,5}})));
+        // builds adjacency list from parent[]; DFS: for each child, if (different char) track two longest paths; result = 1 + max1 + max2
         System.out.println("29. Longest Path Diff Chars: " + longestPath(new int[]{-1,0,0,1,1,2},"abacbe"));
+        // widthOfBinaryTree() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("30. Max Width: " + widthOfBinaryTree(root));
     }
 }

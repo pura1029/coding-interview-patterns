@@ -89,6 +89,7 @@ public class SingletonPattern {
         System.out.println("=== Singleton Pattern ===\n");
 
         System.out.println("--- Eager Singleton ---");
+        // EagerSingleton.getInstance() → returns the SAME instance every time; instance created at class load (static final field) — no if-check needed
         EagerSingleton s1 = EagerSingleton.getInstance();
         EagerSingleton s2 = EagerSingleton.getInstance();
         s1.serve("Login");
@@ -96,6 +97,7 @@ public class SingletonPattern {
         System.out.println("  Same instance? " + (s1 == s2));
 
         System.out.println("\n--- Lazy Singleton (Double-Check Locking) ---");
+        // LazySingleton.getInstance() → uses synchronized + if (instance == null) create once; double-checked locking avoids synchronization on every call
         LazySingleton l1 = LazySingleton.getInstance();
         LazySingleton l2 = LazySingleton.getInstance();
         l1.serve("Search");
@@ -103,6 +105,7 @@ public class SingletonPattern {
         System.out.println("  Same instance? " + (l1 == l2));
 
         System.out.println("\n--- Enum Singleton (Best Practice) ---");
+        // DatabaseConnection.INSTANCE → enum singleton; JVM guarantees single instance; no if-check, no synchronization — simplest, thread-safe, serialization-safe
         DatabaseConnection.INSTANCE.executeQuery("SELECT * FROM users");
         DatabaseConnection.INSTANCE.executeQuery("INSERT INTO orders ...");
     }

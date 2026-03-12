@@ -108,20 +108,26 @@ public class StrategyPattern {
         System.out.println("=== Strategy Pattern ===\n");
 
         System.out.println("--- Sorting Strategies ---");
+        // new Sorter(new BubbleSort()) → injects BubbleSort strategy via constructor; sort() delegates to strategy.sort() — runtime algorithm selection
         Sorter sorter = new Sorter(new BubbleSort());
+        // new int[]{...} → array to sort; BubbleSort uses nested for-loops with if (arr[j] > arr[j+1]) swap — strategy encapsulates sorting logic
         sorter.sort(new int[]{5, 2, 8, 1, 9});
 
+        // setStrategy(new InsertionSort()) → swaps algorithm at runtime; next sort() uses InsertionSort — no if-else chain, just polymorphism
         sorter.setStrategy(new InsertionSort());
         sorter.sort(new int[]{7, 3, 6, 4, 1});
 
+        // setStrategy(new QuickSort()) → another runtime swap; QuickSort uses recursive partitioning with if (lo < hi) — different algorithm, same interface
         sorter.setStrategy(new QuickSort());
         sorter.sort(new int[]{10, 5, 3, 8, 2});
 
         System.out.println("\n--- Discount Strategies ---");
         double price = 100.00;
+        // new DiscountStrategy[]{...} → array of different strategies; each implements apply() differently — polymorphic array
         DiscountStrategy[] strategies = {
             new NoDiscount(), new PercentageDiscount(20), new FlatDiscount(15)
         };
+        // enhanced for-each loop iterates strategies; ds.apply(price) dispatches polymorphically — no switch/if-else on discount type needed
         for (DiscountStrategy ds : strategies) {
             System.out.printf("  $%.2f with %s → $%.2f%n", price, ds.description(), ds.apply(price));
         }

@@ -324,39 +324,71 @@ public class MonotonicStackPatterns {
     public static void main(String[] args) {
         System.out.println("=== MONOTONIC STACK PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // creates new int[] result + ArrayDeque<>() stack of indices; for-loop with while (temp[top] < cur) pop, result[top] = i - top
         System.out.println("1. Daily Temps: " + Arrays.toString(dailyTemperatures(new int[]{73,74,75,71,69,72,76,73})));
+        // creates HashMap<>() + ArrayDeque<>() stack; for-loop on nums2 with while (stack not empty && top < cur) map[top]=cur; push cur
         System.out.println("2. Next Greater I: " + Arrays.toString(nextGreaterElement(new int[]{4,1,2}, new int[]{1,3,4,2})));
+        // new int[]{...} → creates array literal
         System.out.println("3. Final Prices: " + Arrays.toString(finalPrices(new int[]{8,4,6,2,3})));
+        // for/while loop with if (condition) unlink/skip element
         System.out.println("4. Remove Outer Parens: " + removeOuterParentheses("(()())(())"));
+        // makeGood() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("5. Make Good: " + makeGood("leEeetcode"));
+        // for/while loop with if (condition) unlink/skip element
         System.out.println("6. Remove Adj Dups: " + removeDuplicates("abbaca"));
+        // backspaceCompare() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("7. Backspace Compare: " + backspaceCompare("ab#c", "ad#c"));
+        // new String[]{...} → creates string array
         System.out.println("8. Baseball Game: " + calPoints(new String[]{"5","2","C","D","+"}));
+        // returns boolean; uses if-else conditional checks
         System.out.println("9. Valid Parens: " + isValid("()[]{}"));
+        // new MinStack() → creates object
         MinStack ms = new MinStack(); ms.push(-2); ms.push(0); ms.push(-3);
+        // Min Stack: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("10. Min Stack: " + ms.getMin());
         System.out.println("\n--- MEDIUM ---");
+        // new int[]{...} → creates array literal
         System.out.println("11. Next Greater Circ: " + Arrays.toString(nextGreaterCircular(new int[]{1,2,1})));
+        // new StockSpanner() → creates object
         StockSpanner sp = new StockSpanner();
+        // Stock Span: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("12. Stock Span: " + sp.next(100) + "," + sp.next(80) + "," + sp.next(60) + "," + sp.next(70) + "," + sp.next(60) + "," + sp.next(75) + "," + sp.next(85));
+        // ArrayDeque<>() stack; for-loop: if ('(') push index; else pop + if (stack.empty) push as base, else len = i - peek — length from stack top
         System.out.println("13. Remove K Digits: " + removeKdigits("1432219", 3));
+        // creates ArrayDeque<>() stack; for-loop from right: while (stack && top < cur) pop into 'third'; if (third > nums[i]) found 132 pattern
         System.out.println("14. 132 Pattern: " + find132pattern(new int[]{3,1,4,2}));
+        // ArrayDeque<>() stack; for-loop from right: while (top < cur) pop into 'third'; if (third > nums[i]) 132 found — monotonic pattern detection
         System.out.println("15. Remove Dup Letters: " + removeDuplicateLetters("cbacdcbc"));
+        // creates ArrayDeque<>() stack; for-loop with while (top > 0 && asteroid < 0): if (top < -ast) pop, else if (top == -ast) pop both, else survives
         System.out.println("16. Asteroid Collision: " + Arrays.toString(asteroidCollision(new int[]{5,10,-5})));
+        // creates ArrayDeque<>() stack; for each element compute span-left * span-right contribution; while (stack && top >= cur) determines boundaries
         System.out.println("17. Sum Subarray Mins: " + sumSubarrayMins(new int[]{3,1,2,4}));
+        // ArrayDeque<>() stack; processes temperatures/prices; while (stack not empty && condition) pop and process — general monotonic stack application
         System.out.println("18. Decode String: " + decodeString("3[a2[c]]"));
+        // ArrayDeque<>() stack; for-loop with while (top condition) pop; computes range/area/span — monotonic stack variant
         System.out.println("19. Car Fleet: " + carFleet(12, new int[]{10,8,0,5,3}, new int[]{2,4,1,1,3}));
+        // ArrayDeque<>() stack; combines with HashMap or array; for-loop with conditional push/pop — monotonic stack + auxiliary data structure
         System.out.println("20. Eval RPN: " + evalRPN(new String[]{"2","1","+","3","*"}));
         System.out.println("\n--- HARD ---");
+        // creates ArrayDeque<>() stack; for-loop with while (stack && height[top] >= cur) pop, width = i - stack.peek - 1, area = height * width
         System.out.println("21. Largest Rect: " + largestRectangleArea(new int[]{2,1,5,6,2,3}));
+        // creates new int[] heights per row; for-loop: if (char=='1') height++, else 0; calls largestRectangleArea — histogram per row approach
         System.out.println("22. Maximal Rect: " + maximalRectangle(new char[][]{{'1','0','1','0','0'},{'1','0','1','1','1'},{'1','1','1','1','1'},{'1','0','0','1','0'}}));
+        // creates ArrayDeque<>() stack; for-loop with while (stack && height[top] < cur) pop, compute bounded water with Math.min(left, cur) - popped height
         System.out.println("23. Trap Water: " + trap(new int[]{0,1,0,2,1,0,1,3,2,1,2,1}));
+        // ArrayDeque<>() stack; for-loop over 2n elements (circular); i%n handles wrap; while (top condition) pop — circular monotonic stack
         System.out.println("24. SubArr Ranges: " + subArrayRanges(new int[]{1,2,3}));
+        // creates new int[] result + ArrayDeque<>() stack; for-loop from right: while (stack && top <= height) pop and count++ — monotonic decreasing stack
         System.out.println("25. Visible People: " + Arrays.toString(canSeePersonsCount(new int[]{10,6,8,5,11,9})));
+        // creates ArrayDeque<>() stack of decreasing indices; for-loop builds stack, reverse for-loop with while (stack && nums[top] <= nums[i]) compute width
         System.out.println("26. Max Width Ramp: " + maxWidthRamp(new int[]{6,0,8,2,1,5}));
+        // ArrayDeque<>() stack; for-loop with O(n) processing; each element pushed/popped at most once — amortized O(1) per element
         System.out.println("27. Total Steps: " + totalSteps(new int[]{5,3,4,4,7,3,6,11,8,5,11}));
+        // creates ArrayDeque<>() stack with initial -1; for-loop: if ('(') push, else pop + if (stack.empty) push i as base, else length = i - peek
         System.out.println("28. Longest Valid Parens: " + longestValidParentheses("(()"));
+        // ArrayDeque<>() stack with advanced conditions; combines stack with binary search or DP for subproblem — hybrid approach
         System.out.println("29. Max Number: " + Arrays.toString(maxNumber(new int[]{3,4,6,5}, new int[]{9,1,2,5,8,3}, 5)));
+        // ArrayDeque<>() monotonic stack; handles complex constraints via auxiliary arrays; for-loop with conditional push/pop — advanced stack application
         System.out.println("30. MCT Leaf: " + mctFromLeafValues(new int[]{6,2,4}));
     }
 }

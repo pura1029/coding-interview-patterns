@@ -113,17 +113,21 @@ public class StatePattern {
         System.out.println("=== State Pattern ===\n");
 
         System.out.println("--- Order #1: Happy path ---");
+        // new Order("001") → creates object with initial state (e.g., new PendingState()); state field holds current State object — state pattern entry
         Order order1 = new Order("001");
         System.out.println("  " + order1.getStatus());
+        // next() → delegates to currentState.next(order); each state class decides transition: if (Pending) → Processing, if (Processing) → Shipped, etc.
         order1.next();
         order1.next();
         order1.next();
         order1.next();
 
         System.out.println("\n--- Order #2: Cancellation ---");
+        // new Order("002") → starts in PendingState; prev() from Pending might cancel; each state's prev() has its own if-else transition logic
         Order order2 = new Order("002");
         System.out.println("  " + order2.getStatus());
         order2.next();
+        // prev() → currentState.prev(order): if (ProcessingState) go back to Pending — each state handles forward/backward transitions independently
         order2.prev();
         order2.next();
 

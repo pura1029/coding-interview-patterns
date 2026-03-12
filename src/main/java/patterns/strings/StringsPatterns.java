@@ -877,40 +877,71 @@ public class StringsPatterns {
         System.out.println("=== STRINGS (30 Examples) ===\n");
 
         System.out.println("--- EASY ---");
+        // isAnagram creates new int[26] frequency array; for-loop counts chars, second for-loop checks if all counts are zero
         System.out.println("1. Valid Anagram: " + isAnagram("anagram", "nagaram"));
+        // "hello".toCharArray() → creates new char[] from String; reverseString uses two-pointer while-loop with swap
         char[] s2 = "hello".toCharArray(); reverseString(s2);
+        // new String[]{...} → creates string array
         System.out.println("2. Reverse: " + new String(s2));
+        // isPalindrome uses while (left < right) with if to skip non-alphanumeric chars, if-else for case-insensitive compare
         System.out.println("3. Palindrome: " + isPalindrome("A man, a plan, a canal: Panama"));
+        // new String[]{...} → array of strings; for-loops with if (charAt mismatch) return early with substring
         System.out.println("4. LCP: " + longestCommonPrefix(new String[]{"flower", "flow", "flight"}));
+        // firstUniqChar creates new int[26] or HashMap; for-loop counts, second for-loop with if (count==1) finds first unique
         System.out.println("5. First Unique: " + firstUniqChar("leetcode"));
+        // canConstruct creates new int[26] freq array; for-loop builds counts, second for-loop with if (count<0) returns false
         System.out.println("6. Ransom Note: " + canConstruct("aa", "aab"));
+        // isSubsequence uses two-pointer for-loop with if (s.charAt==t.charAt) to advance subsequence pointer
         System.out.println("7. Is Subseq: " + isSubsequence("ace", "abcde"));
+        // isValidParentheses creates new ArrayDeque<>() (stack); for-loop with if-else checks matching brackets, returns stack.isEmpty()
         System.out.println("8. Valid Parens: " + isValidParentheses("()[]{}"));
+        // strStr uses for-loop with substring comparison or KMP; if (match found) returns index, else continues
         System.out.println("9. strStr: " + strStr("hello", "ll"));
+        // countAndSay uses for-loop (1 to n) building each sequence; inner while-loop counts consecutive chars, StringBuilder appends count+char
         System.out.println("10. Count&Say: " + countAndSay(5));
 
         System.out.println("\n--- MEDIUM ---");
+        // new String[]{...} → word array; groupAnagrams creates new HashMap<String,List>(); for-loop sorts each word as key, groups in map
         System.out.println("11. Group Anagrams: " + groupAnagrams(new String[]{"eat", "tea", "tan", "ate", "nat", "bat"}));
+        // creates new HashSet<>() or int[128]; while/for sliding window with if (contains) shrinks left, tracks max length
         System.out.println("12. Longest No Repeat: " + lengthOfLongestSubstring("abcabcbb"));
+        // myAtoi uses while-loop to skip whitespace, if-else for sign detection (+/-), while with Character.isDigit() for number parsing
         System.out.println("13. Atoi: " + myAtoi("   -42"));
+        // longestPalindrome uses nested for-loops expanding from center; while (left>=0 && right<len && chars equal) expands outward
         System.out.println("14. Longest Palindrome: " + longestPalindrome("babad"));
+        // creates new ArrayList<>(); recursive backtracking with if (open < n) add "(", if (close < open) add ")" — base case: if (cur.length == 2*n)
         System.out.println("15. Gen Parens: " + generateParenthesis(3));
+        // creates new ArrayList<>(); uses String[] PHONE mapping; recursive DFS with for-loop over mapped chars, base case if (index == digits.length)
         System.out.println("16. Letter Combos: " + letterCombinations("23"));
+        // multiply creates new int[] positions array; nested for-loops multiply digit-by-digit with carry; if (carry) propagate, StringBuilder builds result
         System.out.println("17. Multiply: " + multiply("123", "456"));
+        // convert creates new StringBuilder[] (one per row); for-loop with direction flag (if at boundary → reverse direction), ternary-like toggle
         System.out.println("18. Zigzag: " + convert("PAYPALISHIRING", 3));
+        // numDecodings uses DP: for-loop with if (char != '0') for single digit, if (two-digit 10-26) adds dp[i-2] — classic conditional branching
         System.out.println("19. Decode Ways: " + numDecodings("226"));
+        // Arrays.asList() → creates List from varargs; creates new HashSet<>(wordDict); DP for-loop with nested for + if (dp[j] && set.contains)
         System.out.println("20. Word Break: " + wordBreak("leetcode", Arrays.asList("leet", "code")));
 
         System.out.println("\n--- HARD ---");
+        // minWindow creates new int[128] or HashMap for char counts; while-loop expands right, inner while shrinks left when valid, if updates min
         System.out.println("21. Min Window: " + minWindow("ADOBECODEBANC", "ABC"));
+        // new String[]{...} → word array; creates HashMap of word counts; for-loop with sliding window, inner while with if-else for word matching
         System.out.println("22. Concat Words: " + findSubstring("barfoothefoobarman", new String[]{"foo", "bar"}));
+        // new String[]{...} → word list; creates new ArrayList<>(); for-loop with while to fill lines, if-else for left/middle/last line justification
         System.out.println("23. Text Justify: " + fullJustify(new String[]{"This", "is", "an", "example", "of", "text", "justification."}, 16));
+        // creates new ArrayDeque<>() (stack); for-loop with if (char=='(') push, else pop + if (stack.empty) update base, else compute length
         System.out.println("24. Valid Parens Len: " + longestValidParentheses("(()"));
+        // isMatch uses 2D boolean[][] dp; nested for-loops with if-else: if (p[j]=='*') match zero or more, else if (p[j]=='.' || chars match)
         System.out.println("25. Regex Match: " + isMatch("aab", "c*a*b"));
+        // isWildcardMatch uses 2D boolean[][] dp; nested for-loops with if (p=='*') inherit dp values, else if (p=='?' || chars match)
         System.out.println("26. Wildcard: " + isWildcardMatch("adceb", "*a*b"));
+        // minDistance creates new int[][] dp table; nested for-loops with if (chars equal) diagonal, else 1 + Math.min of insert/delete/replace
         System.out.println("27. Edit Distance: " + minDistance("horse", "ros"));
+        // new String[]{...} → words; creates HashMap<String,Integer>; for-loop checks reversed substrings with if (map.containsKey && isPalindrome)
         System.out.println("28. Palindrome Pairs: " + palindromePairs(new String[]{"abcd", "dcba", "lls", "s", "sssll"}));
+        // uses two-pointer while-loop; inner while to find matching char, if (not found) swap adjacent, else swap toward position
         System.out.println("29. Min Palindrome Moves: " + minMovesToPalindrome("aabb"));
+        // creates new int[][] dp; nested for-loops with if (s[i]==t[j]) dp[i][j] = dp[i-1][j-1] + dp[i-1][j], else dp[i][j] = dp[i-1][j]
         System.out.println("30. Distinct Subseq: " + numDistinct("rabbbit", "rabbit"));
     }
 }

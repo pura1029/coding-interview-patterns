@@ -118,12 +118,16 @@ public class TemplateMethodPattern {
     public static void main(String[] args) {
         System.out.println("=== Template Method Pattern ===\n");
 
+        // new CSVProcessor() → concrete subclass extending DataProcessor; overrides parse(), validate(), transform() — template stays fixed, steps vary
         DataProcessor csv = new CSVProcessor();
+        // process() → template method: calls parse() → validate() → transform() → save() in fixed order; subclass only overrides specific steps
         csv.process("Alice,30,Engineer");
 
+        // new JSONProcessor() → different subclass; parse() splits JSON, validate() checks schema — same template, different implementations
         DataProcessor json = new JSONProcessor();
         json.process("{\"name\": \"Bob\", \"age\": 25}");
 
+        // new XMLProcessor() → another subclass; parse() uses XML parsing — adding new formats doesn't change the template method's control flow
         DataProcessor xml = new XMLProcessor();
         xml.process("<user><name>Carol</name></user>");
 

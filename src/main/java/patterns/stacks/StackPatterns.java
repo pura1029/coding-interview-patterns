@@ -842,45 +842,113 @@ public class StackPatterns {
     public static void main(String[] args) {
         System.out.println("=== STACKS (30 Examples) ===\n");
 
+        // --- EASY (1-10) ---
         System.out.println("--- EASY ---");
+
+        // isValid creates new ArrayDeque<>() as stack; for-loop with if-else: if opening bracket → push, else if (stack.empty || mismatch) → false
         System.out.println("1. Valid Parens: " + isValid("()[]{}"));
+
+        // new MyStack() → creates object with two LinkedList<>() queues internally; push uses while-loop to reorder, simulating LIFO
         MyStack ms = new MyStack(); ms.push(1); ms.push(2);
+        // Stack via Queues: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("2. Stack via Queues: top=" + ms.top());
+
+        // new MinStack() → creates object with two ArrayDeque<>() stacks (data + min tracker); push uses if (val <= currentMin) to maintain min stack
         MinStack minSt = new MinStack(); minSt.push(-2); minSt.push(0); minSt.push(-3);
+        // Min Stack: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("3. Min Stack: min=" + minSt.getMin());
+
+        // new String[]{...} → operation tokens; calPoints creates new ArrayList<>(); for-loop with if-else on "+", "C", "D" operations
         System.out.println("4. Baseball: " + calPoints(new String[]{"5", "2", "C", "D", "+"}));
+
+        // new int[]{...} → two arrays; creates HashMap<>() + ArrayDeque<>(); for-loop with while (stack && top < cur) maps next greater
         System.out.println("5. Next Greater I: " + Arrays.toString(nextGreaterElement(new int[]{4, 1, 2}, new int[]{1, 3, 4, 2})));
+
+        // backspaceCompare uses two-pointer from end; while-loop with if (char=='#') skip counter++, else if (skip>0) skip-- — no extra space
         System.out.println("6. Backspace: " + backspaceCompare("ab#c", "ad#c"));
+
+        // creates new StringBuilder() as stack; for-loop with if (sb.length()>0 && last==current) deleteCharAt, else append
         System.out.println("7. Remove Adj Dups: " + removeDuplicates("abbaca"));
+
+        // for-loop with if (char=='(') depth++, else if (char==')') depth--; Math.max tracks max nesting depth
         System.out.println("8. Max Depth: " + maxDepth("(1+(2*3)+((8)/4))+1"));
+
+        // creates new StringBuilder(); for-loop with if (same letter different case) delete last, else append — stack behavior
         System.out.println("9. Make Good: " + makeGood("leEeetcode"));
+
+        // new String[]{...} → log operations; for-loop with if ("../") depth--, else if ("./") skip, else depth++ — conditional branching
         System.out.println("10. Crawler Log: " + minOperations(new String[]{"d1/", "d2/", "../", "d21/", "./"}));
 
+        // --- MEDIUM (11-20) ---
         System.out.println("\n--- MEDIUM ---");
+
+        // new String[]{...} → RPN tokens; creates new ArrayDeque<>() stack; for-loop with switch/if-else: if operator → pop two and compute, else push number
         System.out.println("11. RPN: " + evalRPN(new String[]{"2", "1", "+", "3", "*"}));
+
+        // new int[]{...} → temperatures; creates new ArrayDeque<>() monotonic stack; for-loop with while (top < current) pop and record days
         System.out.println("12. Daily Temps: " + Arrays.toString(dailyTemperatures(new int[]{73, 74, 75, 71, 69, 72, 76, 73})));
+
+        // creates ArrayDeque<>() for count + StringBuilder stacks; for-loop with if (isDigit) / else if '[' / else if ']' / else append
         System.out.println("13. Decode String: " + decodeString("3[a]2[bc]"));
+
+        // creates new ArrayDeque<>() stack; split("/") + for-loop with if ("..") pop, else if (non-empty && non-".") push — path normalization
         System.out.println("14. Simplify Path: " + simplifyPath("/home//foo/"));
+
+        // creates new StringBuilder() as monotonic stack; for-loop with while (k>0 && last > current) deleteCharAt — greedy removal
         System.out.println("15. Remove K Digits: " + removeKdigits("1432219", 3));
+
+        // new int[]{...} → asteroid sizes; creates new ArrayDeque<>(); for-loop with while (collision): if (top < -asteroid) pop, else if (equal) pop both
         System.out.println("16. Asteroids: " + Arrays.toString(asteroidCollision(new int[]{5, 10, -5})));
+
+        // Flatten Nested: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("17. Flatten Nested: (demo skipped)");
+
+        // new StockSpanner() → creates object with ArrayDeque<>() of [price, span] pairs; next() uses while (top <= price) pop and accumulate span
         StockSpanner sp = new StockSpanner();
+        // Stock Span: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("18. Stock Span: " + sp.next(100) + " " + sp.next(80) + " " + sp.next(60) + " " + sp.next(70) + " " + sp.next(60) + " " + sp.next(75) + " " + sp.next(85));
+
+        // new int[]{...} → positions and speeds; creates new ArrayDeque<>() stack; for-loop (sorted by position) with while (car catches fleet ahead) pop
         System.out.println("19. Car Fleet: " + carFleet(12, new int[]{10, 8, 0, 5, 3}, new int[]{2, 4, 1, 1, 3}));
+
+        // new int[]{...} → push/pop sequences; creates new ArrayDeque<>(); for-loop pushes, inner while (top == popped[j]) pops — validates ordering
         System.out.println("20. Validate Stack Seq: " + validateStackSequences(new int[]{1, 2, 3, 4, 5}, new int[]{4, 5, 3, 2, 1}));
 
+        // --- HARD (21-30) ---
         System.out.println("\n--- HARD ---");
+
+        // new int[]{...} → histogram; creates new ArrayDeque<>() monotonic stack; for-loop with while (top >= cur) pop and compute area via width calculation
         System.out.println("21. Largest Rect: " + largestRectangleArea(new int[]{2, 1, 5, 6, 2, 3}));
+
+        // new char[][]{{...}} → 2D binary matrix; for-loop builds histogram row by row with if (char=='1') height++, else 0; calls largestRectangleArea per row
         System.out.println("22. Maximal Rect: " + maximalRectangle(new char[][]{{'1', '0', '1', '0', '0'}, {'1', '0', '1', '1', '1'}, {'1', '1', '1', '1', '1'}, {'1', '0', '0', '1', '0'}}));
+
+        // creates new ArrayDeque<>() for operator stack; for-loop with if (digit) accumulate, else if '(' push, else if ')' evaluate until '(', else if operator evaluate
         System.out.println("23. Basic Calc: " + calculate("(1+(4+5+2)-3)+(6+8)"));
+
+        // new int[]{...} → elevation; creates new ArrayDeque<>() stack; for-loop with while (stack not empty && cur > top) pop and compute trapped water by height diff
         System.out.println("24. Trap Water: " + trap(new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1}));
+
+        // creates new ArrayDeque<>() stack; for-loop with if ('(') push index, else pop + if (stack.empty) push current as base, else compute length from top
         System.out.println("25. Valid Parens Len: " + longestValidParentheses("(()"));
+
+        // new FreqStack() → creates HashMap<Integer,Integer> freq + HashMap<Integer,ArrayDeque<>> group; push increments freq, pop uses if (maxFreq group empty) maxFreq--
         FreqStack fs = new FreqStack(); fs.push(5); fs.push(7); fs.push(5); fs.push(7); fs.push(4); fs.push(5);
+        // Freq Stack pop: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("26. Freq Stack pop: " + fs.pop() + " " + fs.pop());
+
+        // new int[]{...} → heights; creates new ArrayDeque<>() monotonic stack; for-loop with while (top <= cur) pop and count visible; if (stack not empty) add 1 more
         System.out.println("27. Visible People: " + Arrays.toString(canSeePersonsCount(new int[]{10, 6, 8, 5, 11, 9})));
+
+        // new int[]{...} → array; creates new ArrayDeque<>() monotonic stack; for-loop with while (top >= cur) pop; uses previous-less-element for contribution formula
         System.out.println("28. Sum Subarray Min: " + sumSubarrayMins(new int[]{3, 1, 2, 4}));
+
+        // creates new int[26] count + boolean[26] inStack arrays; for-loop with if (already in stack) skip, while (stack.top > cur && count[top] > 0) pop — greedy ordering
         System.out.println("29. Remove Dup Letters: " + removeDuplicateLetters("bcabc"));
+
+        // new MaxStack() → creates two ArrayDeque<>() stacks (data + max tracker); push uses if (val >= currentMax) push to max stack; popMax iterates to find and remove
         MaxStack maxSt = new MaxStack(); maxSt.push(5); maxSt.push(1); maxSt.push(5);
+        // Max Stack peekMax: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("30. Max Stack peekMax: " + maxSt.peekMax() + " popMax: " + maxSt.popMax());
     }
 }

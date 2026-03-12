@@ -84,8 +84,10 @@ public class InterfaceSegregationPrinciple {
         System.out.println("=== Interface Segregation Principle (ISP) ===\n");
 
         System.out.println("--- BAD: SimplePrinter forced to implement scan/fax ---");
+        // new BadSimplePrinter() → implements fat IMachine interface (print, scan, fax); scan/fax throw UnsupportedOperationException — forced empty implementations
         BadSimplePrinter badPrinter = new BadSimplePrinter();
         badPrinter.print("Report.pdf");
+        // try-catch: badPrinter.scan() throws because SimplePrinter can't scan — ISP violation forces unusable method stubs
         try {
             badPrinter.scan("Photo.jpg");
         } catch (UnsupportedOperationException e) {
@@ -93,14 +95,17 @@ public class InterfaceSegregationPrinciple {
         }
 
         System.out.println("\n--- GOOD: Each class implements only what it supports ---");
+        // new SimplePrinter() → implements only Printable interface; no scan/fax methods exist — client isn't forced to depend on unused methods
         SimplePrinter simplePrinter = new SimplePrinter();
         simplePrinter.print("Report.pdf");
 
+        // new AllInOnePrinter() → implements Printable, Scannable, AND Faxable — supports all capabilities voluntarily
         AllInOnePrinter allInOne = new AllInOnePrinter();
         allInOne.print("Report.pdf");
         allInOne.scan("Photo.jpg");
         allInOne.fax("Contract.pdf");
 
+        // new ModernPrinter() → implements Printable + Scannable only, NOT Faxable — picks exactly the interfaces it needs
         ModernPrinter modern = new ModernPrinter();
         modern.print("Resume.pdf");
         modern.scan("ID.jpg");

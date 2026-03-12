@@ -196,23 +196,36 @@ public class ShortestPathPatterns {
     public static void main(String[] args) {
         System.out.println("=== SHORTEST PATH PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // creates new int[] dist filled with MAX + PriorityQueue<>(); while (pq): if (dist > known) skip; for each neighbor: if (newDist < dist[v]) update, offer
         System.out.println("1. Dijkstra: " + Arrays.toString(dijkstra(4,new int[][]{{0,1,4},{0,2,1},{2,1,2},{1,3,1},{2,3,5}},0)));
+        // new int[]{...} → creates array literal; returns boolean; uses if-else conditional checks; DFS/BFS with if (visited/bounds) check, recursive or queue-based
         System.out.println("2. Valid Path: " + validPath(3,new int[][]{{0,1},{1,2},{2,0}},0,2));
+        // Dijkstra on grid: PriorityQueue<>() with [row, col, cost]; 4-dir expansion: if (newCost < dist[nr][nc]) update, offer — grid shortest path
         System.out.println("3. Min Cost Path: " + minCostPath(new int[][]{{1,3,1},{1,5,1},{4,2,1}}));
+        // new int[]{...} → creates array literal; for-loop or binary search with if-else to locate target
         System.out.println("4. Find Center: " + findCenter(new int[][]{{1,2},{2,3},{4,2}}));
         System.out.println("5-10: Foundation path problems");
+        // BFS/Bellman-Ford with stops limit; for (k+1) rounds: for flights: if (prev[src]+cost < cur[dst]) update — bounded shortest path
         System.out.println("8. Min Path Sum: " + minPathSum(new int[][]{{1,3,1},{1,5,1},{4,2,1}}));
+        // Dijkstra PriorityQueue; poll min elevation; 4-dir: offer max(curElev, grid[nr][nc]); if (reached end) return — bottleneck path
         System.out.println("10. Unique Paths: " + uniquePaths(3,7));
         System.out.println("\n--- MEDIUM ---");
+        // Dijkstra/BFS variant; PriorityQueue with modified weight/cost; for neighbors: if (better path) update — modified shortest path
         System.out.println("11. Cheapest Flights: " + cheapestFlights(3,new int[][]{{0,1,100},{1,2,100},{0,2,500}},0,2,1));
+        // Dijkstra with PriorityQueue<>(); builds adjacency list from int[][] times; while (pq): if (visited) skip; mark visited, update neighbors
         System.out.println("12. Network Delay: " + networkDelayTime(new int[][]{{2,1,1},{2,3,1},{3,4,1}},4,2));
+        // Dijkstra with state (node, visited bitmask); PriorityQueue; if (all visited) return cost — TSP-like shortest path
         System.out.println("13. Min Connect: " + minCostConnectPoints(new int[][]{{0,0},{2,2},{3,10},{5,2},{7,0}}));
+        // creates new int[] dist filled with MAX; for-loop (V-1 times): for each edge: if (dist[u] + weight < dist[v]) relax — triple-nested relaxation
         System.out.println("14. Bellman-Ford: " + Arrays.toString(bellmanFord(5,new int[][]{{0,1,6},{0,3,7},{1,2,5},{1,3,8},{1,4,-4},{2,1,-2},{3,2,-3},{3,4,9},{4,0,2},{4,2,7}},0)));
         System.out.println("15-20: Weighted graph problems");
+        // Prim's or Kruskal's MST; PriorityQueue or sort edges; while: if (!connected) add edge — minimum spanning tree construction
         System.out.println("19. Min Effort: " + minEffortPath(new int[][]{{1,2,2},{3,8,2},{5,3,5}}));
+        // advanced shortest path; combines Dijkstra with DP or bitmask; if (state allows transition) explore — complex shortest path variant
         System.out.println("20. Find City: " + findTheCity(4,new int[][]{{0,1,3},{1,2,1},{1,3,4},{2,3,1}},4));
         System.out.println("\n--- HARD ---");
         System.out.println("21-30: Advanced shortest path problems");
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("27. Swim in Water: " + swimInWater(new int[][]{{0,2},{1,3}}));
     }
 }

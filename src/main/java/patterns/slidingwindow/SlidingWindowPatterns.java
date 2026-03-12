@@ -683,39 +683,69 @@ public class SlidingWindowPatterns {
         System.out.println("=== SLIDING WINDOW PATTERN (30 Examples) ===\n");
 
         System.out.println("--- EASY ---");
+        // new int[]{...} → input array; for-loop initializes window sum, second for-loop slides: add right, subtract left, if (sum > max) update
         System.out.println("1. Max Sum K: " + maxSumSubarray(new int[]{2, 1, 5, 1, 3, 2}, 3));
+        // creates new double[] result; for-loop slides window: sum += nums[i] - nums[i-k], result[i-k+1] = sum / k — fixed-size window
         System.out.println("2. Avg Subarrays: " + Arrays.toString(averagesOfSubarrays(new int[]{1, 3, 2, 6, -1, 4, 1, 8, 2}, 5)));
+        // for-loop with if (isVowel) to count; sliding window adds entering char, removes leaving char, Math.max tracks best
         System.out.println("3. Max Vowels: " + maxVowels("abciiidef", 3));
+        // for-loop counts 'W' in first k chars; slides with if (entering=='W') count++, if (leaving=='W') count-- — fixed window
         System.out.println("4. Min Recolors: " + minimumRecolors("WBBWWBBWBW", 7));
+        // creates new HashSet<>(); for-loop with if (set.contains(nums[i])) return true, if (set.size() > k) remove oldest — sliding window set
         System.out.println("5. Contains Dup II: " + containsNearbyDuplicate(new int[]{1, 2, 3, 1}, 3));
+        // for-loop sliding window; if (sum / k >= threshold) count++ — fixed-size window with conditional counting
         System.out.println("6. Subarrays Avg>=Th: " + numOfSubarrays(new int[]{2, 2, 2, 2, 5, 5, 5, 8}, 3, 4));
+        // for-loop sliding window; if (sum < lower) points--, else if (sum > upper) points++ — three-way conditional scoring
         System.out.println("7. Diet Plan: " + dietPlanPerformance(new int[]{1, 2, 3, 4, 5}, 1, 3, 3));
+        // creates new int[] result; for-loop with if (k > 0) sum next k, else if (k < 0) sum prev |k|, else 0 — direction-based conditional
         System.out.println("8. Decrypt: " + Arrays.toString(decrypt(new int[]{5, 7, 1, 4}, 3)));
+        // creates new ArrayList<>(); nested for-loops with if (Math.abs(i-j) <= k && nums[j] == key) add i — distance + value check
         System.out.println("9. K-Distant: " + findKDistantIndices(new int[]{3, 4, 9, 1, 3, 9, 5}, 9, 1));
+        // for-loop sums always-satisfied; sliding window of size k with if (grumpy[i]==1) add to bonus window; Math.max tracks best window
         System.out.println("10. Grumpy Owner: " + maxSatisfied(new int[]{1, 0, 1, 2, 1, 1, 7, 5}, new int[]{0, 1, 0, 1, 0, 1, 0, 1}, 3));
 
         System.out.println("\n--- MEDIUM ---");
+        // creates new HashSet<>() or int[128]; while (set.contains) remove left pointer; for-loop expands right, Math.max tracks length
         System.out.println("11. Longest No Repeat: " + longestWithoutRepeats("abcabcbb"));
+        // creates new int[26] freq array; for-loop expands right, while (window - maxFreq > k) shrink left — if-condition controls window validity
         System.out.println("12. Char Replacement: " + characterReplacement("AABABBA", 1));
+        // creates new HashMap<>(); for-loop with while (map.size() > 2) shrink left — at most 2 distinct keys in window
         System.out.println("13. Total Fruit: " + totalFruit(new int[]{1, 2, 1, 2, 3}));
+        // for-loop with if (nums[i]==0) zeroCount++; while (zeroCount > k) shrink left with if (nums[left]==0) zeroCount-- — conditional window control
         System.out.println("14. Longest Ones: " + longestOnes(new int[]{1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0}, 2));
+        // creates new int[26] for both strings; sliding window for-loop with if (Arrays.equals(windowCount, targetCount)) return true
         System.out.println("15. Permutation In String: " + checkInclusion("ab", "eidbaooo"));
+        // creates new int[26] count arrays; sliding window for-loop; if (all counts match) add start index to new ArrayList<>()
         System.out.println("16. Find Anagrams: " + findAnagrams("cbaebabacd", "abc"));
+        // creates new HashMap<>(); for-loop with while (map.size() > k) remove left — variable-size window with map-based condition
         System.out.println("17. K Distinct: " + lengthOfLongestSubstringKDistinct("eceba", 2));
+        // for-loop expands right accumulating sum; while (sum >= target) shrink left, update min length — dynamic window with while-condition
         System.out.println("18. Min Size Subarray: " + minSubArrayLen(7, new int[]{2, 3, 1, 2, 4, 3}));
+        // two-pointer; for-loop with while (product >= k && left <= right) divide and shrink; count += right - left + 1
         System.out.println("19. Product < K: " + numSubarrayProductLessThanK(new int[]{10, 5, 2, 6}, 100));
+        // creates new int[] result filled with -1; for-loop builds prefix sum; if (i >= 2*k) compute average from prefix sums
         System.out.println("20. K Radius Avg: " + Arrays.toString(getAverages(new int[]{7, 4, 3, 9, 1, 8, 5, 2, 6}, 3)));
 
         System.out.println("\n--- HARD ---");
+        // creates new int[128] need/have counts; for-loop expands right; while (have >= need count) shrink left, if (smaller window) update
         System.out.println("21. Min Window Sub: " + minWindowSubstring("ADOBECODEBANC", "ABC"));
+        // creates new ArrayDeque<>() (monotonic deque); for-loop with while (deque.peekLast < cur) pollLast; if (front out of window) pollFirst
         System.out.println("22. Sliding Max: " + Arrays.toString(maxSlidingWindow(new int[]{1, 3, -1, -3, 5, 3, 6, 7}, 3)));
+        // new String[]{...} → words; creates HashMap of word frequencies; for-loop with inner for counting word matches, if (all match) add index
         System.out.println("23. Concat Words: " + findSubstring("barfoothefoobarman", new String[]{"foo", "bar"}));
+        // creates new HashMap<>(); for-loop with while (map.size() > 2) shrink left — equivalent to totalFruit with k=2
         System.out.println("24. Two Distinct: " + lengthOfLongestSubstringTwoDistinct("eceba"));
+        // for-loop tracking minInWindow/maxInWindow; while (max - min out of bounds) shrink left — conditional window maintenance
         System.out.println("25. Fixed Bounds: " + countSubarrays(new int[]{1, 3, 5, 2, 7, 5}, 1, 5));
+        // two-pointer: for-loop finds end of subsequence, then while-loop backtracks to find shortest start; if (shorter) update result
         System.out.println("26. Min Window Subseq: " + minWindowSubsequence("abcdebdde", "bde"));
+        // new int[][]{{...}} → 2D points; creates new ArrayDeque<>() deque; for-loop with while (xi - xj > k) poll; if (value > max) update
         System.out.println("27. Max Equation: " + findMaxValueOfEquation(new int[][]{{1, 3}, {2, 0}, {5, 10}, {6, -10}}, 1));
+        // calls atMost(k) - atMost(k-1); each uses HashMap + for-loop with while (map.size() > target) shrink — sliding window difference trick
         System.out.println("28. K Distinct Ints: " + subarraysWithKDistinct(new int[]{1, 2, 1, 2, 3}, 2));
+        // creates new int[] or uses ArrayDeque<>() tracking flip positions; for-loop with if (flips % 2 == nums[i]) need flip, if (i+k > n) return -1
         System.out.println("29. Min K Bit Flips: " + minKBitFlips(new int[]{0, 0, 0, 1, 0, 1, 1, 0}, 3));
+        // for each possible unique count (1..26): sliding window with if (uniqueInWindow matches target && all chars have freq >= k) update max
         System.out.println("30. Longest K Repeat: " + longestSubstringKRepeating("aaabb", 3));
     }
 }

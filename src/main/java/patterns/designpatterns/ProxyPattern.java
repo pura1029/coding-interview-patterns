@@ -86,20 +86,25 @@ public class ProxyPattern {
         System.out.println("=== Proxy Pattern ===\n");
 
         System.out.println("--- Virtual Proxy (Lazy Loading) ---");
+        // new LazyDatabaseProxy() → proxy holds null reference to real DB; query() uses if (realDb == null) realDb = new RealDatabase() — lazy initialization
         Database lazy = new LazyDatabaseProxy();
         System.out.println("  Proxy created — no real DB yet");
+        // First query: if (realDb == null) creates expensive RealDatabase; second query: reuses cached realDb — conditional creation once
         lazy.query("SELECT * FROM users");
         lazy.query("SELECT * FROM orders");
 
         System.out.println("\n--- Protection Proxy (Access Control) ---");
+        // new SecureDatabaseProxy("ADMIN") → proxy with role field; query: if (role == "ADMIN") allow all, else if (query starts with "DROP") deny — access control via if-else
         Database adminDb = new SecureDatabaseProxy("ADMIN");
         adminDb.query("DROP TABLE temp");
 
+        // new SecureDatabaseProxy("USER") → restricted role; if (query.contains("DROP") && role != "ADMIN") throw/block — conditional permission check
         Database userDb = new SecureDatabaseProxy("USER");
         userDb.query("SELECT * FROM products");
         userDb.query("DROP TABLE users");
 
         System.out.println("\n--- Logging Proxy ---");
+        // new LoggingDatabaseProxy(new LazyDatabaseProxy()) → stacked proxies: logging wraps lazy; query() logs then delegates to inner.query() — decorator-like chaining
         Database logged = new LoggingDatabaseProxy(new LazyDatabaseProxy());
         logged.query("SELECT COUNT(*) FROM orders");
     }

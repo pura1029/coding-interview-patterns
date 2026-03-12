@@ -919,51 +919,93 @@ public class QueuePatterns {
         System.out.println("=== QUEUES (30 Examples) ===\n");
 
         System.out.println("--- EASY ---");
+        // new MyQueue() → creates object with two ArrayDeque<>() stacks; push adds to inStack, pop uses if (outStack.empty) while-loop to transfer
         MyQueue mq = new MyQueue(); mq.push(1); mq.push(2);
+        // Queue via Stacks: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("1. Queue via Stacks: peek=" + mq.peek() + " pop=" + mq.pop());
+        // new RecentCounter() → creates object with LinkedList<>() queue; ping uses while (queue.peek < t-3000) poll to remove expired timestamps
         RecentCounter rc = new RecentCounter(); rc.ping(1); rc.ping(100); rc.ping(3001);
+        // Recent Calls: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("2. Recent Calls: " + rc.ping(3002));
+        // new MovingAverage(3) → creates object with LinkedList<>() queue of fixed window; next uses if (queue.size == windowSize) poll oldest
         MovingAverage ma = new MovingAverage(3); ma.next(1); ma.next(10);
+        // Moving Avg: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("3. Moving Avg: " + ma.next(3));
+        // new int[]{...} → student prefs + sandwich types; while-loop with if (front student wants top sandwich) serve, else rotate to back
         System.out.println("4. Students Eat: " + countStudents(new int[]{1, 1, 0, 0}, new int[]{0, 1, 0, 1}));
+        // new int[]{...} → ticket counts; for-loop with if (i <= k) add Math.min(tickets[i], tickets[k]), else Math.min(tickets[i], tickets[k]-1)
         System.out.println("5. Ticket Time: " + timeRequiredToBuy(new int[]{2, 3, 2}, 2));
+        // new MyStack() → creates object with two LinkedList<>() queues; push reorders via while-loop to simulate LIFO using FIFO queues
         MyStack ms = new MyStack(); ms.push(1); ms.push(2);
+        // Stack via Queues: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("6. Stack via Queues: top=" + ms.top());
+        // new FirstUnique(new int[]{...}) → creates object with LinkedHashMap<>() for insertion-order tracking; if (count==1) return first unique
         FirstUnique fu = new FirstUnique(new int[]{2, 3, 5});
+        // First Unique: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("7. First Unique: " + fu.showFirstUnique());
+        // new LinkedList<>(Arrays.asList(...)) → creates Queue from List; reverseFirstK uses ArrayDeque<>() stack to reverse first k elements
         Queue<Integer> rq = new LinkedList<>(Arrays.asList(1, 2, 3, 4, 5));
+        // while-loop with pointer swap or recursion with base case
         System.out.println("8. Reverse First 3: " + reverseFirstK(rq, 3));
+        // creates new LinkedList<>() queue; starts with "1", for-loop: poll front, add front+"0" and front+"1" — BFS generates binary numbers
         System.out.println("9. Gen Binary: " + Arrays.toString(generateBinary(5)));
+        // new char[][]{{...}} → 2D grid; creates LinkedList<>() queue for BFS; for-loop with if (cell=='1') BFS flood-fill marking visited cells
         System.out.println("10. Num Islands: " + numIslands(new char[][]{{'1','1','0'},{'1','1','0'},{'0','0','1'}}));
 
         System.out.println("\n--- MEDIUM ---");
+        // new MyCircularQueue(3) → creates object with new int[k]; enQueue/deQueue use if (isFull/isEmpty) guards with modular arithmetic (rear+1)%k
         MyCircularQueue cq = new MyCircularQueue(3); cq.enQueue(1); cq.enQueue(2); cq.enQueue(3);
+        // Circular Queue: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("11. Circular Queue: front=" + cq.Front() + " rear=" + cq.Rear() + " full=" + cq.isFull());
+        // new MyCircularDeque(3) → creates object with new int[k+1]; insertFront/Last use modular arithmetic; if (isFull) reject operation
         MyCircularDeque cd = new MyCircularDeque(3); cd.insertLast(1); cd.insertLast(2); cd.insertFront(3);
+        // Circular Deque: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("12. Circular Deque: front=" + cd.getFront() + " rear=" + cd.getRear());
+        // new int[][]{{...}} → grid; creates LinkedList<>() queue for multi-source BFS; for-loop finds all rotten (==2), BFS spreads with if (fresh) rot
         System.out.println("13. Rotting Oranges: " + orangesRotting(new int[][]{{2,1,1},{1,1,0},{0,1,1}}));
+        // new int[][] → grid with Integer.MAX_VALUE, -1, 0; wallsAndGates uses BFS from gates (0); if (cell > dist+1) update — multi-source BFS
         int[][] rooms = {{Integer.MAX_VALUE,-1,0,Integer.MAX_VALUE},{Integer.MAX_VALUE,Integer.MAX_VALUE,Integer.MAX_VALUE,-1},{Integer.MAX_VALUE,-1,Integer.MAX_VALUE,-1},{0,-1,Integer.MAX_VALUE,Integer.MAX_VALUE}};
+        // Walls&Gates: uses internal conditional logic (if/else, for/while) for computation
         wallsAndGates(rooms); System.out.println("14. Walls&Gates: " + Arrays.deepToString(rooms));
+        // new String[]{...} → deadends; creates HashSet<>() of deadends + LinkedList<>() BFS queue; for-loop tries all 8 moves with if (!visited) explore
         System.out.println("15. Open Lock: " + openLock(new String[]{"0201","0101","0102","1212","2002"}, "0202"));
+        // new int[][]{{...}} → binary grid; BFS with LinkedList<>() queue; if (grid[0][0]==1) return -1; explores 8 directions with if (valid && ==0)
         System.out.println("16. Shortest Path: " + shortestPathBinaryMatrix(new int[][]{{0,0,0},{1,1,0},{1,1,0}}));
+        // new char[]{...} → tasks; creates new int[26] freq array; sorts or uses PriorityQueue; if (idle slots remain) add idle time — greedy scheduling
         System.out.println("17. Task Scheduler: " + leastInterval(new char[]{'A','A','A','B','B','B'}, 2));
+        // new int[]{...} → values; creates new ArrayDeque<>() monotonic deque; for-loop with while (back < cur) pollLast, if (front out of window) pollFirst
         System.out.println("18. Sliding Max: " + Arrays.toString(maxSlidingWindow(new int[]{1,3,-1,-3,5,3,6,7}, 3)));
+        // new int[][]{{...}} → sorted matrix; creates new PriorityQueue<>() min-heap with Comparator; while (k-- > 0) poll min and if (hasNext) offer next
         System.out.println("19. Kth Smallest: " + kthSmallest(new int[][]{{1,5,9},{10,11,13},{12,13,15}}, 8));
+        // new HitCounter() → creates object with LinkedList<>() or int[300] circular buffer; hit adds timestamp, getHits uses while to remove expired
         HitCounter hc = new HitCounter(); hc.hit(1); hc.hit(2); hc.hit(3);
+        // Hit Counter: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("20. Hit Counter: " + hc.getHits(4));
 
         System.out.println("\n--- HARD ---");
+        // new char[]{...} → tasks; creates new PriorityQueue<>() max-heap + LinkedList<>() cooldown queue; while (!empty) poll max, if (cooldown done) re-offer
         System.out.println("21. Task Sched Heap: " + leastIntervalHeap(new char[]{'A','A','A','B','B','B'}, 2));
+        // new int[]{...} → array with negatives; creates new ArrayDeque<>() monotonic deque on prefix sums; while (prefix[i]-prefix[front] >= k) update min
         System.out.println("22. Shortest Sub>=K: " + shortestSubarray(new int[]{2,-1,2}, 3));
+        // new int[]{...} → values; creates HashMap<>() grouping indices by value + LinkedList<>() BFS; if (index == n-1) return steps — BFS shortest path
         System.out.println("23. Jump Game IV: " + minJumps(new int[]{100,-23,-23,404,100,23,23,23,3,404}));
+        // new int[]{...} → values; creates two TreeMap<>() or PriorityQueue<>() (max-heap + min-heap); rebalance with if (size diff > 1) — dual-heap median
         System.out.println("24. Sliding Median: " + Arrays.toString(medianSlidingWindow(new int[]{1,3,-1,-3,5,3,6,7}, 3)));
+        // Arrays.asList() → word list; creates HashSet<>() + LinkedList<>() BFS queue; for-loop tries all 26 chars at each position with if (wordSet.contains)
         System.out.println("25. Word Ladder: " + ladderLength("hit", "cog", Arrays.asList("hot","dot","dog","lot","log","cog")));
+        // new String[]{...} → grid; BFS with state = (row, col, keysBitmask); creates LinkedList<>() queue; if (allKeysCollected) return steps — bitmask BFS
         System.out.println("26. All Keys: " + shortestPathAllKeys(new String[]{"@.a..","###.#","b.A.B"}));
+        // uses ArrayDeque<>() stack; for-loop with if ('(') push, else if (stack not empty) pop (free match), else count cost — greedy + stack approach
         System.out.println("27. Min Cost Parens: " + minCostValidParens("(())))("));
+        // new int[]{...} → server weights + tasks; creates new PriorityQueue<>() for free/busy servers with Comparator; if (free server available) assign, else wait
         System.out.println("28. Assign Tasks: " + Arrays.toString(assignTasks(new int[]{3,3,2}, new int[]{1,2,3,2,1,2})));
+        // new SnakeGame(3,2,new int[][]{{...}}) → creates object with LinkedList<>() for snake body + HashSet<>() for positions; move uses if-else for direction
         SnakeGame sg = new SnakeGame(3, 2, new int[][]{{1,2},{0,1}});
+        // Snake: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("29. Snake: " + sg.move("R") + " " + sg.move("D") + " " + sg.move("R"));
+        // new FreqStack() → creates HashMap<>() freq + HashMap<Integer,ArrayDeque<>()> groups; push/pop use if (freq > maxFreq) update maxFreq
         FreqStack fq = new FreqStack(); fq.push(5); fq.push(7); fq.push(5); fq.push(7); fq.push(4); fq.push(5);
+        // Freq Stack: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("30. Freq Stack: " + fq.pop() + " " + fq.pop());
     }
 }

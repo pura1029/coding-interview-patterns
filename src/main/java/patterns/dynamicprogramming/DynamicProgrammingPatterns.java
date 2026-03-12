@@ -303,37 +303,67 @@ public class DynamicProgrammingPatterns {
     public static void main(String[] args) {
         System.out.println("=== DYNAMIC PROGRAMMING PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // dp[i] = dp[i-1] + dp[i-2]; for-loop — Fibonacci-like recurrence with base cases dp[0]=dp[1]=1
         System.out.println("1. Climb Stairs: " + climbStairs(5));
+        // dp[i] = dp[i-1] + dp[i-2]; for-loop from 2 to n — classic DP with two variables or array
         System.out.println("2. Fibonacci: " + fib(10));
+        // dp[i] = cost[i] + Math.min(dp[i-1], dp[i-2]); for-loop — choose cheaper of one or two steps back
         System.out.println("3. Min Cost Stairs: " + minCostClimbingStairs(new int[]{10,15,20}));
+        // Kadane's: for-loop with dp[i] = Math.max(nums[i], dp[i-1] + nums[i]) — extend or start fresh, track global max
         System.out.println("4. Max Subarray: " + maxSubArray(new int[]{-2,1,-3,4,-1,2,1,-5,4}));
+        // dp[i] = Math.max(dp[i-1], dp[i-2] + nums[i]); for-loop — include current or skip, classic rob recurrence
         System.out.println("5. House Robber: " + rob(new int[]{1,2,3,1}));
+        // for-loop with if (prices[i] - prices[i-1] > 0) profit += diff — accumulate all positive differences (buy-sell multiple times)
         System.out.println("6. Max Profit: " + maxProfit(new int[]{7,1,5,3,6,4}));
+        // for-loop with if (condition) count/accumulate
         System.out.println("7. Counting Bits: " + Arrays.toString(countBits(5)));
+        // returns boolean; uses if-else conditional checks
         System.out.println("8. Is Subseq: " + isSubsequence("ace","abcde"));
+        // tribonacci() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("9. Tribonacci: " + tribonacci(7));
+        // recursive backtracking with if (base case) add result
         System.out.println("10. Pascal: " + generate(5));
         System.out.println("\n--- MEDIUM ---");
+        // creates new int[n] dp filled with 1; nested for-loops: if (nums[i] > nums[j]) dp[i] = Math.max(dp[i], dp[j]+1) — O(n²) LIS
         System.out.println("11. LIS: " + lengthOfLIS(new int[]{10,9,2,5,3,7,101,18}));
+        // creates new int[amount+1] dp filled with MAX; for-each coin: for-loop with if (dp[i-coin] != MAX) dp[i] = Math.min(dp[i], dp[i-coin]+1)
         System.out.println("12. Coin Change: " + coinChange(new int[]{1,5,11},15));
+        // new int[]{...} → creates array literal; new int[]{...} → creates array literal
         System.out.println("13. Knapsack: " + knapsack(50,new int[]{10,20,30},new int[]{60,100,120}));
+        // creates new int[m+1][n+1] dp; nested for-loops: if (chars equal) dp[i][j] = dp[i-1][j-1]+1, else Math.max(dp[i-1][j], dp[i][j-1])
         System.out.println("14. LCS: " + longestCommonSubsequence("abcde","ace"));
+        // DFS/BFS with if (visited/bounds) check, recursive or queue-based
         System.out.println("15. Unique Paths: " + uniquePaths(3,7));
+        // creates HashSet<>(wordDict); boolean[] dp; for-loop i with inner for-loop j: if (dp[j] && set.contains(s.substring(j,i))) dp[i]=true
         System.out.println("16. Word Break: " + wordBreak("leetcode",Arrays.asList("leet","code")));
+        // 0/1 knapsack: for each item reverse for-loop: if (w >= weight) dp[w] = max(dp[w], dp[w-weight]+val) — include or exclude
         System.out.println("17. Robber II: " + robII(new int[]{2,3,2}));
+        // creates new int[n+1] dp; for-loop: if (s[i] != '0') dp[i] += dp[i-1]; if (two-digit 10-26) dp[i] += dp[i-2] — conditional branching
         System.out.println("18. Decode Ways: " + numDecodings("226"));
+        // calculates total sum; if (sum%2 != 0) false; creates boolean[] dp; for-loop with reverse inner for: dp[j] = dp[j] || dp[j-num]
         System.out.println("19. Partition Sum: " + canPartition(new int[]{1,5,11,5}));
+        // 2D dp[k+1][n]: for each transaction, track maxDiff; dp[t][i] = max(dp[t][i-1], price+maxDiff) — state machine DP
         System.out.println("20. Longest Palin: " + longestPalindrome("babad"));
         System.out.println("\n--- HARD ---");
+        // creates new int[m+1][n+1] dp; nested for-loops: if (chars equal) dp[i][j] = dp[i-1][j-1], else 1 + min(insert, delete, replace)
         System.out.println("21. Edit Distance: " + minDistance("horse","ros"));
+        // dp array; for each coin: for (amount): dp[i] = min(dp[i], dp[i-coin]+1); if (dp[amount] > amount) return -1 — unbounded knapsack
         System.out.println("22. Regex Match: " + isMatch("aa","a*"));
+        // 2D dp or 1D optimized; nested for-loops with if (chars match) transfer from diagonal — sequence alignment DP
         System.out.println("23. Longest Inc Path: " + longestIncreasingPath(new int[][]{{9,9,4},{6,6,8},{2,1,1}}));
+        // dp with bitmask or interval DP; for-loop with if (subset condition) transition — exponential state space DP
         System.out.println("24. Burst Balloons: " + maxCoins(new int[]{3,1,5,8}));
+        // dp on tree/graph; DFS post-order: dp[node] = max(include + grandchildren, exclude + children) — tree DP with selection
         System.out.println("25. Min Cut Stick: " + minCost(7,new int[]{1,3,4,5}));
+        // interval DP: for each length, for each start: dp[i][j] = min over splits(dp[i][k] + dp[k][j] + cost) — optimal partition
         System.out.println("26. Wildcard: " + isWildcardMatch("adceb","*a*b"));
+        // dp with string: for-loop with for (j): if (dp[j] && dict.contains(s[j..i])) dp[i] = true — word segmentation
         System.out.println("27. Interleave: " + isInterleave("aabcc","dbbca","aadbbcbcac"));
+        // 2D dp matrix; nested for-loops: if (match or '*') dp[i][j] = dp[i-1][j-1], else try skip/match — pattern matching DP
         System.out.println("28. Distinct Subseq: " + numDistinct("rabbbit","rabbit"));
+        // dp with sorted array; for-loop: dp[i] = max(dp[j]+1) for all j < i where arr[j] < arr[i] — longest increasing subsequence
         System.out.println("29. Job Scheduling: " + jobScheduling(new int[]{1,2,3,3},new int[]{3,4,5,6},new int[]{50,10,40,70}));
+        // comprehensive DP; multi-dimensional state; for-loops with conditional transitions; Math.max/min aggregation — advanced DP
         System.out.println("30. Palin Part II: " + minCut("aab"));
     }
 }

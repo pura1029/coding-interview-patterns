@@ -79,12 +79,15 @@ public class AdapterPattern {
         System.out.println("=== Adapter Pattern ===\n");
 
         System.out.println("--- Media Player Adapters ---");
+        // new VlcAdapter() → adapter wrapping VlcPlayer; implements MediaPlayer interface; play() internally calls vlcPlayer.playVlc() — interface bridging
         MediaPlayer vlc = new VlcAdapter();
+        // new Mp4Adapter() → adapts Mp4Player to MediaPlayer interface; play() delegates to mp4Player.playMp4() — same interface, different implementation
         MediaPlayer mp4 = new Mp4Adapter();
         vlc.play("movie.vlc");
         mp4.play("song.mp4");
 
         System.out.println("\n--- Payment Adapter (dollars → cents) ---");
+        // new PayPalAdapter() → adapts PayPal's API (cents) to PaymentProcessor interface (dollars); pay() converts: (int)(amount * 100) before delegating
         PaymentProcessor paypal = new PayPalAdapter();
         paypal.pay(49.99, "USD");
         paypal.pay(120.00, "USD");

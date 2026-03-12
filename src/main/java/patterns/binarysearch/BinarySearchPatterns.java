@@ -308,37 +308,67 @@ public class BinarySearchPatterns {
     public static void main(String[] args) {
         System.out.println("=== BINARY SEARCH PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // new int[]{...} → creates array literal; for-loop or binary search with if-else to locate target
         System.out.println("1. Search: " + search(new int[]{-1,0,3,5,9,12}, 9));
+        // firstBadVersion() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("2. First Bad: " + firstBadVersion(5, 4));
+        // while (lo <= hi): if (nums[mid] == target) return mid, else if (< target) lo=mid+1, else hi=mid-1; return lo as insert position
         System.out.println("3. Insert Pos: " + searchInsert(new int[]{1,3,5,6}, 5));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("4. Count Neg: " + countNegatives(new int[][]{{4,3,2,-1},{3,2,1,-1},{1,1,-1,-2},{-1,-1,-2,-3}}));
+        // mySqrt() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("5. Sqrt: " + mySqrt(8));
+        // for-loop with if (condition) count/accumulate
         System.out.println("6. Guess: " + guessNumber(10, 6));
+        // returns boolean; uses if-else conditional checks
         System.out.println("7. Perfect Sq: " + isPerfectSquare(16));
+        // arrangeCoins() processes input; uses for/while loop with conditional checks for result computation
         System.out.println("8. Coins: " + arrangeCoins(8));
+        // Double: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("9. Double: (check exists)");
+        // new int[]{...} → creates array literal; new int[]{...} → creates array literal
         System.out.println("10. Intersect: " + Arrays.toString(intersection(new int[]{1,2,2,1}, new int[]{2,2})));
         System.out.println("\n--- MEDIUM ---");
+        // calls findFirst + findLast, each uses while (lo <= hi): findFirst if (nums[mid] >= target) hi=mid-1, findLast if (nums[mid] <= target) lo=mid+1
         System.out.println("11. Range: " + Arrays.toString(searchRange(new int[]{5,7,7,8,8,10}, 8)));
+        // while (lo <= hi): determine sorted half with if (nums[lo] <= nums[mid]), then if target in that half adjust bounds — two-level if-else
         System.out.println("12. Rotated: " + searchRotated(new int[]{4,5,6,7,0,1,2}, 0));
+        // while (lo < hi): if (nums[mid] > nums[hi]) lo=mid+1, else hi=mid — same as minRotatedSorted with duplicates handling
         System.out.println("13. Find Min: " + findMin(new int[]{3,4,5,1,2}));
+        // new int[]{...} → creates array literal; for-loop or binary search with if-else to locate target
         System.out.println("14. Peak: " + findPeakElement(new int[]{1,2,3,1}));
+        // new int[][]{{...}} → 2D sorted matrix; treats as 1D: while (lo <= hi), row=mid/cols, col=mid%cols, if (val == target) return true
         System.out.println("15. 2D Matrix: " + searchMatrix(new int[][]{{1,3,5,7},{10,11,16,20},{23,30,34,60}}, 3));
+        // binary search on answer: while (lo < hi), for-loop counts hours at speed mid; if (hours <= h) hi=mid, else lo=mid+1
         System.out.println("16. Koko: " + minEatingSpeed(new int[]{3,6,7,11}, 8));
+        // binary search on capacity: while (lo <= hi), for-loop simulates loading; if (days <= d) hi=mid-1, else lo=mid+1 — search on answer
         System.out.println("17. Ship: " + shipWithinDays(new int[]{1,2,3,4,5,6,7,8,9,10}, 5));
+        // binary search on answer; while (lo < hi): for-loop counts feasible with mid; if (feasible >= k) hi=mid, else lo=mid+1 — kth smallest pair distance
         System.out.println("18. Single: " + singleNonDuplicate(new int[]{1,1,2,3,3,4,4,8,8}));
+        // binary search on difficulty threshold; for-loop checks if (can achieve); while (lo <= hi) narrows answer — search on answer pattern
         System.out.println("19. TimeMap: (key-value store)");
+        // binary search + greedy validation; while (lo <= hi): simulate with for-loop; if (valid) update answer — parametric search
         System.out.println("20. Min Days: " + minDays(new int[]{1,10,3,10,2}, 3, 1));
         System.out.println("\n--- HARD ---");
+        // two sorted arrays; binary search on shorter array: while (lo <= hi), partitions both arrays, if (conditions met) compute median, else adjust
         System.out.println("21. Median: " + findMedianSortedArrays(new int[]{1,3}, new int[]{2}));
+        // binary search on max sum: while (lo <= hi), greedy for-loop splits; if (pieces <= m) hi=mid-1, else lo=mid+1 — minimize the maximum
         System.out.println("22. Split Arr: " + splitArray(new int[]{7,2,5,10,8}, 2));
+        // binary search on answer (max min distance); while (lo <= hi): greedy for-loop places elements; if (placed >= m) lo=mid+1 — aggressive cows pattern
         System.out.println("23. Mountain: " + findInMountainArray(new int[]{1,2,3,4,5,3,1}, 3));
+        // binary search on time; while (lo <= hi): for-loop sums floor(time/speed); if (total >= n) hi=mid-1 — search on answer
         System.out.println("24. Kth Mul: " + findKthNumber(3, 3, 5));
+        // binary search + sliding window; for each window: binary search finds threshold; if (operations <= k) window is valid — combined techniques
         System.out.println("25. Max Min Dist: " + maxMinDistance(new int[]{1,2,8,4,9}, 3));
+        // binary search on result; while (lo <= hi): for-loop validates with greedy; if (feasible) update best — minimization via binary search
         System.out.println("26. Nth Magical: " + nthMagicalNumber(4, 2, 3));
+        // nested binary search or merge sort approach; for each element: binary search counts smaller elements in remaining — O(n log n) inversion count
         System.out.println("27. Envelopes: " + maxEnvelopes(new int[][]{{5,4},{6,4},{6,7},{2,3}}));
+        // binary search + matrix staircase; while (lo < hi): for-loop counts elements <= mid per row; if (count <= k) lo=mid+1 — sorted matrix search
         System.out.println("28. Min Speed: " + minSpeedOnTime(new int[]{1,3,2}, 6));
+        // binary search on answer range; while (lo <= hi): simulation/validation with for-loop; if (valid) narrow range — search on answer
         System.out.println("29. Count Smaller: " + countSmaller(new int[]{5,2,6,1}));
+        // binary search on answer; while (lo <= hi): greedy validation with for-loop; if (condition met) update bounds — parametric binary search
         System.out.println("30. Max Runtime: " + maxRunTime(2, new int[]{3,3,3}));
     }
 }

@@ -284,40 +284,73 @@ public class OverlappingIntervalsPatterns {
     public static void main(String[] args) {
         System.out.println("=== OVERLAPPING INTERVALS PATTERN (30 Examples) ===\n");
         System.out.println("--- EASY ---");
+        // new int[][]{{...}} → intervals; Arrays.sort by start; for-loop: if (overlaps) extend end via Math.max, else add new interval to result list
         System.out.println("1. Merge: " + iStr(merge(new int[][]{{1,3},{2,6},{8,10},{15,18}})));
+        // Arrays.sort by start; for-loop with if (intervals[i][0] < intervals[i-1][1]) return false — overlap detection
         System.out.println("2. Can Attend: " + canAttendMeetings(new int[][]{{0,30},{5,10},{15,20}}));
+        // new int[]{...} → creates array literal; new int[]{...} → creates array literal; returns boolean; uses if-else conditional checks
         System.out.println("3. Has Overlap: " + hasOverlap(new int[]{1,5}, new int[]{3,7}));
+        // Arrays.sort by start (asc), then end (desc); for-loop with if (end > maxEnd) count++, update maxEnd — skip covered intervals
         System.out.println("4. Remove Covered: " + removeCoveredIntervals(new int[][]{{1,4},{3,6},{2,8}}));
+        // for-loop with while (nums[end+1] == nums[end]+1) extend; if (start == end) add single, else add "start->end" — conditional range formatting
         System.out.println("5. Summary Ranges: " + summaryRanges(new int[]{0,1,2,4,5,7}));
+        // tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("6. Min Alt Ops: " + minOperationsAlt("0100"));
+        // new int[]{...} → creates array literal; returns boolean; uses if-else conditional checks
         System.out.println("7. Place Flowers: " + canPlaceFlowers(new int[]{1,0,0,0,1}, 1));
+        // Days Between: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("8. Days Between: simplified");
+        // new int[]{...} → creates array literal
         System.out.println("9. Interval Lens: " + Arrays.toString(intervalLengths(new int[][]{{1,4},{2,7}})));
+        // new String[]{...} → creates string array; new String[]{...} → creates string array
         System.out.println("10. Event Conflict: " + haveConflict(new String[]{"01:15","02:00"}, new String[]{"02:00","03:00"}));
         System.out.println("\n--- MEDIUM ---");
+        // new int[][]{{...}} → sorted intervals + newInterval; for-loop: if (end < new.start) add before, else if (start > new.end) add after, else merge
         System.out.println("11. Insert: " + iStr(insert(new int[][]{{1,3},{6,9}}, new int[]{2,5})));
+        // Arrays.sort by end; for-loop with if (start < prevEnd) remove++ (greedy), else update prevEnd — minimum removals
         System.out.println("12. Erase Overlap: " + eraseOverlapIntervals(new int[][]{{1,2},{2,3},{3,4},{1,3}}));
+        // two arrays; while (i < m && j < n): compute overlap = [max(start), min(end)]; if (overlap valid) add; advance the one ending earlier
         System.out.println("13. Intersection: " + iStr(intervalIntersection(new int[][]{{0,2},{5,10}}, new int[][]{{1,5},{8,12}})));
+        // new int[]{...} → creates array literal; for-loop or binary search with if-else to locate target; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("14. Min Arrows: " + findMinArrowShots(new int[][]{{10,16},{2,8},{1,6},{7,12}}));
+        // new int[]{...} → creates array literal
         System.out.println("15. Car Pooling: " + carPooling(new int[][]{{2,1,5},{3,3,7}}, 4));
+        // TreeMap or sweep line; for-loop processes intervals; if (overlapping) merge — interval management technique
         MyCalendar mc = new MyCalendar(); System.out.println("16. Calendar: " + mc.book(10,20) + "," + mc.book(15,25));
+        // sort by start/end; for-loop with if (gap between intervals) add free time — gap detection between merged intervals
         System.out.println("17. Bold Tag: " + addBoldTag("abcxyz123", new String[]{"abc","123"}));
+        // sort + sweep line; for-loop tracks active intervals; if (start > lastEnd) gap, else overlap — interval analysis
         System.out.println("18. Min Groups: " + minGroups(new int[][]{{5,10},{6,8},{1,5},{2,3},{1,10}}));
+        // sort by start; for-loop with if (completely covered by previous) skip — greedy interval inclusion
         System.out.println("19. Min Interval: " + Arrays.toString(minInterval(new int[][]{{1,4},{2,4},{3,6},{4,4}}, new int[]{2,3,4,5})));
+        // TreeMap ceiling/floor; for each interval: find right interval with smallest start >= end — binary search via TreeMap
         System.out.println("20. Max Events: " + maxEvents(new int[][]{{1,2},{2,3},{3,4}}));
         System.out.println("\n--- HARD ---");
+        // Arrays.sort by start; PriorityQueue<>() min-heap of end times; for-loop: if (pq.peek() <= start) poll (reuse room), offer end — greedy
         System.out.println("21. Min Rooms: " + minMeetingRooms(new int[][]{{0,30},{5,10},{15,20}}));
+        // new int[] array; Arrays.asList creates List
         List<List<int[]>> sched = Arrays.asList(Arrays.asList(new int[]{1,2}, new int[]{5,6}), Arrays.asList(new int[]{1,3}), Arrays.asList(new int[]{4,10}));
+        // Free Time: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("22. Free Time: " + sched.size() + " employees");
+        // new int[]{...} → creates array literal
         System.out.println("23. Skyline: " + getSkyline(new int[][]{{2,9,10},{3,7,15},{5,12,12},{15,20,10},{19,24,8}}).size() + " points");
+        // new SummaryRanges() → TreeMap<Integer,int[]>(); addNum uses floorKey/ceilingKey with if (adjacent) merge intervals
         SummaryRanges sr = new SummaryRanges(); sr.addNum(1); sr.addNum(3); sr.addNum(7); sr.addNum(2);
+        // Summary Ranges DS: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("24. Summary Ranges DS: done");
+        // new MyCalendarThree() → creates object
         MyCalendarThree mc3 = new MyCalendarThree(); mc3.book(10,20); mc3.book(50,60); mc3.book(10,40);
+        // Calendar III: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("25. Calendar III: " + mc3.book(5,15));
+        // Range Module: uses internal conditional logic (if/else, for/while) for computation
         System.out.println("26. Range Module: done");
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("27. Min Taps: " + minTaps(5, new int[]{3,4,1,1,0,0}));
+        // new int[]{...} → creates array literal; for-loop with if (condition) count/accumulate
         System.out.println("28. Count Ways: " + countWays(new int[][]{{6,10},{5,15}}));
+        // new int[]{...} → creates array literal; tracks optimal with Math.max/Math.min in for/while loop
         System.out.println("29. Max CPU: " + maxCPULoad(new int[][]{{1,4,3},{2,5,4},{7,9,6}}));
+        // for-loop with if (condition) count/accumulate
         System.out.println("30. Points on Cars: " + numberOfPoints(Arrays.asList(Arrays.asList(3,6), Arrays.asList(1,5), Arrays.asList(4,7))));
     }
 }
