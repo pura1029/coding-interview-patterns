@@ -13,7 +13,15 @@ import java.util.*;
 public class TwoPointersPatterns {
 
     // ======================= EASY 1 =======================
-    /** Two Sum II – Sorted Array. Opposite-end pointers converge. */
+    /**
+     * Two Sum II – Sorted Array
+     *
+     * <p><b>Approach:</b> Two Sum II – Sorted Array. Opposite-end pointers converge.
+     *
+     * @param numbers the numbers parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static int[] twoSumSorted(int[] numbers, int target) {
         int l = 0, r = numbers.length - 1;
         while (l < r) {
@@ -26,7 +34,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 2 =======================
-    /** Valid Palindrome. Compare chars from both ends. */
+    /**
+     * Valid Palindrome
+     *
+     * <p><b>Approach:</b> Valid Palindrome. Compare chars from both ends.
+     *
+     * @param s the s parameter
+     * @return the computed result
+     */
     public static boolean isPalindrome(String s) {
         int l = 0, r = s.length() - 1;
         while (l < r) {
@@ -39,7 +54,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 3 =======================
-    /** Remove Duplicates from Sorted Array. Slow pointer tracks unique position. */
+    /**
+     * Remove Duplicates from Sorted Array
+     *
+     * <p><b>Approach:</b> Remove Duplicates from Sorted Array. Slow pointer tracks unique position.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static int removeDuplicates(int[] nums) {
         if (nums.length == 0) return 0;
         int slow = 0;
@@ -50,7 +72,13 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 4 =======================
-    /** Move Zeroes to end. Swap non-zeros to front. */
+    /**
+     * Move Zeroes to end
+     *
+     * <p><b>Approach:</b> Move Zeroes to end. Swap non-zeros to front.
+     *
+     * @param nums the nums parameter
+     */
     public static void moveZeroes(int[] nums) {
         int slow = 0;
         for (int fast = 0; fast < nums.length; fast++) {
@@ -62,7 +90,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 5 =======================
-    /** Squares of a Sorted Array. Merge from both ends. */
+    /**
+     * Squares of a Sorted Array
+     *
+     * <p><b>Approach:</b> Squares of a Sorted Array. Merge from both ends.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static int[] sortedSquares(int[] nums) {
         int n = nums.length;
         int[] result = new int[n];
@@ -78,14 +113,28 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 6 =======================
-    /** Reverse String in-place. Swap opposite ends. */
+    /**
+     * Reverse String in-place
+     *
+     * <p><b>Approach:</b> Reverse String in-place. Swap opposite ends.
+     *
+     * @param s the s parameter
+     */
     public static void reverseString(char[] s) {
         int l = 0, r = s.length - 1;
         while (l < r) { char t = s[l]; s[l++] = s[r]; s[r--] = t; }
     }
 
     // ======================= EASY 7 =======================
-    /** Is Subsequence. Two pointers on both strings. */
+    /**
+     * Is Subsequence
+     *
+     * <p><b>Approach:</b> Is Subsequence. Two pointers on both strings.
+     *
+     * @param s the s parameter
+     * @param t the t parameter
+     * @return the computed result
+     */
     public static boolean isSubsequence(String s, String t) {
         int i = 0, j = 0;
         while (i < s.length() && j < t.length()) {
@@ -96,7 +145,16 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 8 =======================
-    /** Merge Sorted Array in-place. Fill from the end. */
+    /**
+     * Merge Sorted Array in-place
+     *
+     * <p><b>Approach:</b> Merge Sorted Array in-place. Fill from the end.
+     *
+     * @param nums1 the nums1 parameter
+     * @param m the m parameter
+     * @param nums2 the nums2 parameter
+     * @param n the n parameter
+     */
     public static void merge(int[] nums1, int m, int[] nums2, int n) {
         int p = m + n - 1, p1 = m - 1, p2 = n - 1;
         while (p2 >= 0) {
@@ -106,7 +164,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 9 =======================
-    /** Intersection of Two Arrays II. Sort + two pointers. */
+    /**
+     * Intersection of Two Arrays II
+     *
+     * <p><b>Approach:</b> Intersection of Two Arrays II. Sort + two pointers.
+     *
+     * @param nums1 the nums1 parameter
+     * @param nums2 the nums2 parameter
+     * @return the computed result
+     */
     public static int[] intersect(int[] nums1, int[] nums2) {
         Arrays.sort(nums1); Arrays.sort(nums2);
         List<Integer> result = new ArrayList<>();
@@ -120,7 +186,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= EASY 10 =======================
-    /** Valid Palindrome II (can remove at most one char). Skip one char and retry. */
+    /**
+     * Valid Palindrome II (can remove at most one char)
+     *
+     * <p><b>Approach:</b> Valid Palindrome II (can remove at most one char). Skip one char and retry.
+     *
+     * @param s the s parameter
+     * @return the computed result
+     */
     public static boolean validPalindromeII(String s) {
         int l = 0, r = s.length() - 1;
         while (l < r) {
@@ -136,7 +209,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 1 =======================
-    /** Three Sum (find all triplets summing to 0). Fix one, two-pointer on rest. */
+    /**
+     * Three Sum (find all triplets summing to 0)
+     *
+     * <p><b>Approach:</b> Three Sum (find all triplets summing to 0). Fix one, two-pointer on rest.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> threeSum(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> result = new ArrayList<>();
@@ -157,7 +237,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 2 =======================
-    /** Three Sum Closest. Track minimum difference. */
+    /**
+     * Three Sum Closest
+     *
+     * <p><b>Approach:</b> Three Sum Closest. Track minimum difference.
+     *
+     * @param nums the nums parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static int threeSumClosest(int[] nums, int target) {
         Arrays.sort(nums);
         int closest = nums[0] + nums[1] + nums[2];
@@ -175,7 +263,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 3 =======================
-    /** Container With Most Water. Move shorter height inward. */
+    /**
+     * Container With Most Water
+     *
+     * <p><b>Approach:</b> Container With Most Water. Move shorter height inward.
+     *
+     * @param height the height parameter
+     * @return the computed result
+     */
     public static int maxArea(int[] height) {
         int l = 0, r = height.length - 1, max = 0;
         while (l < r) {
@@ -186,7 +281,13 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 4 =======================
-    /** Sort Colors (Dutch National Flag). Three-way partition. */
+    /**
+     * Sort Colors (Dutch National Flag)
+     *
+     * <p><b>Approach:</b> Sort Colors (Dutch National Flag). Three-way partition.
+     *
+     * @param nums the nums parameter
+     */
     public static void sortColors(int[] nums) {
         int lo = 0, mid = 0, hi = nums.length - 1;
         while (mid <= hi) {
@@ -198,7 +299,14 @@ public class TwoPointersPatterns {
     private static void swap(int[] a, int i, int j) { int t = a[i]; a[i] = a[j]; a[j] = t; }
 
     // ======================= MEDIUM 5 =======================
-    /** Partition Labels. Track last occurrence of each char. */
+    /**
+     * Partition Labels
+     *
+     * <p><b>Approach:</b> Partition Labels. Track last occurrence of each char.
+     *
+     * @param s the s parameter
+     * @return the computed result
+     */
     public static List<Integer> partitionLabels(String s) {
         int[] lastIndex = new int[26];
         for (int i = 0; i < s.length(); i++) lastIndex[s.charAt(i) - 'a'] = i;
@@ -212,7 +320,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 6 =======================
-    /** Remove Duplicates from Sorted Array II (allow at most 2). Count duplicates with slow pointer. */
+    /**
+     * Remove Duplicates from Sorted Array II (allow at most 2)
+     *
+     * <p><b>Approach:</b> Remove Duplicates from Sorted Array II (allow at most 2). Count duplicates with slow pointer.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static int removeDuplicatesII(int[] nums) {
         if (nums.length <= 2) return nums.length;
         int slow = 2;
@@ -223,7 +338,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 7 =======================
-    /** Longest Mountain in Array. Expand peak both directions. */
+    /**
+     * Longest Mountain in Array
+     *
+     * <p><b>Approach:</b> Longest Mountain in Array. Expand peak both directions.
+     *
+     * @param arr the arr parameter
+     * @return the computed result
+     */
     public static int longestMountain(int[] arr) {
         int n = arr.length, max = 0;
         for (int i = 1; i < n - 1; ) {
@@ -239,7 +361,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 8 =======================
-    /** Boats to Save People (pair heaviest with lightest). Pair lightest with heaviest. */
+    /**
+     * Boats to Save People (pair heaviest with lightest)
+     *
+     * <p><b>Approach:</b> Boats to Save People (pair heaviest with lightest). Pair lightest with heaviest.
+     *
+     * @param people the people parameter
+     * @param limit the limit parameter
+     * @return the computed result
+     */
     public static int numRescueBoats(int[] people, int limit) {
         Arrays.sort(people);
         int l = 0, r = people.length - 1, boats = 0;
@@ -252,7 +382,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 9 =======================
-    /** Four Sum (find all quadruplets summing to target). Two loops + two-pointer inner. */
+    /**
+     * Four Sum (find all quadruplets summing to target)
+     *
+     * <p><b>Approach:</b> Four Sum (find all quadruplets summing to target). Two loops + two-pointer inner.
+     *
+     * @param nums the nums parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> fourSum(int[] nums, int target) {
         Arrays.sort(nums);
         List<List<Integer>> result = new ArrayList<>();
@@ -276,7 +414,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= MEDIUM 10 =======================
-    /** Longest Word Through Deleting (longest subsequence from dict). Subsequence check per candidate. */
+    /**
+     * Longest Word Through Deleting (longest subsequence from dict)
+     *
+     * <p><b>Approach:</b> Longest Word Through Deleting (longest subsequence from dict). Subsequence check per candidate.
+     *
+     * @param s the s parameter
+     * @param dictionary the dictionary parameter
+     * @return the computed result
+     */
     public static String findLongestWord(String s, List<String> dictionary) {
         String result = "";
         for (String word : dictionary) {
@@ -291,7 +437,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 1 =======================
-    /** Trapping Rain Water. Track left/right max boundaries. */
+    /**
+     * Trapping Rain Water
+     *
+     * <p><b>Approach:</b> Trapping Rain Water. Track left/right max boundaries.
+     *
+     * @param height the height parameter
+     * @return the computed result
+     */
     public static int trapRainWater(int[] height) {
         int l = 0, r = height.length - 1, lMax = 0, rMax = 0, water = 0;
         while (l < r) {
@@ -302,7 +455,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 2 =======================
-    /** Minimum Window Sort (shortest subarray to sort to make whole array sorted). Find unsorted subarray boundaries. */
+    /**
+     * Minimum Window Sort (shortest subarray to sort to make whole array sorted)
+     *
+     * <p><b>Approach:</b> Minimum Window Sort (shortest subarray to sort to make whole array sorted). Find unsorted subarray boundaries.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static int findUnsortedSubarray(int[] nums) {
         int n = nums.length, l = -1, r = -1;
         int max = nums[0], min = nums[n - 1];
@@ -318,7 +478,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 3 =======================
-    /** Count Pairs with Absolute Difference <= Target (sorted). Sort + count valid pairs. */
+    /**
+     * Count Pairs with Absolute Difference <= Target (sorted)
+     *
+     * <p><b>Approach:</b> Count Pairs with Absolute Difference <= Target (sorted). Sort + count valid pairs.
+     *
+     * @param nums the nums parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static int countPairsWithDiff(int[] nums, int target) {
         Arrays.sort(nums);
         int count = 0, l = 0;
@@ -330,7 +498,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 4 =======================
-    /** Three Sum Smaller (count triplets with sum < target). Count all pairs below target. */
+    /**
+     * Three Sum Smaller (count triplets with sum < target)
+     *
+     * <p><b>Approach:</b> Three Sum Smaller (count triplets with sum < target). Count all pairs below target.
+     *
+     * @param nums the nums parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static int threeSumSmaller(int[] nums, int target) {
         Arrays.sort(nums);
         int count = 0;
@@ -345,7 +521,17 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 5 =======================
-    /** Backspace String Compare (O(1) space, traverse from end) */
+    /**
+     * Backspace String Compare (O(1) space, traverse from end)
+     *
+     * <p><b>Approach:</b> Backspace String Compare (O(1) space, traverse from end)
+     *
+     * @param s the s parameter
+     * @param t the t parameter
+     * @return the computed result
+     *
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean backspaceCompare(String s, String t) {
         int i = s.length() - 1, j = t.length() - 1;
         int skipS = 0, skipT = 0;
@@ -368,7 +554,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 6 =======================
-    /** Minimum Difference Between Highest and Lowest of K Scores. Sort + sliding window of size k. */
+    /**
+     * Minimum Difference Between Highest and Lowest of K Scores
+     *
+     * <p><b>Approach:</b> Minimum Difference Between Highest and Lowest of K Scores. Sort + sliding window of size k.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static int minimumDifference(int[] nums, int k) {
         Arrays.sort(nums);
         int minDiff = Integer.MAX_VALUE;
@@ -379,7 +573,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 7 =======================
-    /** Smallest Range Covering Elements from K Lists. Merge + two-pointer on sorted events. */
+    /**
+     * Smallest Range Covering Elements from K Lists
+     *
+     * <p><b>Approach:</b> Smallest Range Covering Elements from K Lists. Merge + two-pointer on sorted events.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static int[] smallestRange(List<List<Integer>> nums) {
         PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
         int max = Integer.MIN_VALUE;
@@ -401,7 +602,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 8 =======================
-    /** Number of Subsequences with Max-Min <= Target. Sort + count with powers. */
+    /**
+     * Number of Subsequences with Max-Min <= Target
+     *
+     * <p><b>Approach:</b> Number of Subsequences with Max-Min <= Target. Sort + count with powers.
+     *
+     * @param nums the nums parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static int numSubseq(int[] nums, int target) {
         int MOD = 1_000_000_007;
         Arrays.sort(nums);
@@ -418,7 +627,14 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 9 =======================
-    /** Maximum Erasure Value (longest subarray with unique elements, max sum). Sliding window unique subarray. */
+    /**
+     * Maximum Erasure Value (longest subarray with unique elements, max sum)
+     *
+     * <p><b>Approach:</b> Maximum Erasure Value (longest subarray with unique elements, max sum). Sliding window unique subarray.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static int maximumUniqueSubarray(int[] nums) {
         Set<Integer> seen = new HashSet<>();
         int l = 0, sum = 0, max = 0;
@@ -432,7 +648,15 @@ public class TwoPointersPatterns {
     }
 
     // ======================= HARD 10 =======================
-    /** Count Subarrays with Score Less Than K Score = sum * length. Find count of subarrays with score < k. */
+    /**
+     * Count Subarrays with Score Less Than K Score = sum * length
+     *
+     * <p><b>Approach:</b> Count Subarrays with Score Less Than K Score = sum * length. Find count of subarrays with score < k.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static long countSubarraysScoreLessThanK(int[] nums, long k) {
         long sum = 0, count = 0;
         int l = 0;

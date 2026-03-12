@@ -7,19 +7,32 @@ import java.util.function.Function;
 /**
  * CACHING STRATEGIES — 30 Essential Examples
  *
- * Caching improves response times and reduces backend load by storing frequently
- * accessed data closer to the consumer. Key concepts include:
- *   - Eviction policies: LRU, LFU, FIFO, LRU-K, Random, TTL-based
- *   - Write strategies: Write-through, Write-back (write-behind), Write-around
- *   - Read strategies: Cache-aside (lazy loading), Read-through
- *   - Advanced: Multi-level cache, Bloom filter, Consistent hashing, CDN simulation
+ * <p>Caching improves response times and reduces backend load by storing frequently
+ * accessed data closer to the consumer.
  *
- * 10 Easy | 10 Medium | 10 Hard
+ * <h3>Top 5 Caching Strategies:</h3>
+ * <ol>
+ *   <li><b>Read-Through</b> — Cache auto-loads from DB on miss; best for CDNs, social feeds</li>
+ *   <li><b>Write-Through</b> — Writes to cache AND DB synchronously; best for finance, inventory</li>
+ *   <li><b>Cache-Aside (Lazy Loading)</b> — App checks cache, loads from DB on miss; most common pattern</li>
+ *   <li><b>Write-Around</b> — Writes to DB only, cache populated on read; best for logging, analytics</li>
+ *   <li><b>Write-Back</b> — Writes to cache first, async flush to DB; best for counters, leaderboards</li>
+ * </ol>
+ *
+ * <h3>Eviction Policies:</h3> LRU, LFU, FIFO, LRU-K, Random, TTL-based
+ *
+ * <h3>Advanced:</h3> Multi-level cache, Bloom filter, Consistent hashing, CDN simulation
+ *
+ * <p>10 Easy | 10 Medium | 10 Hard
  */
 public class CachingStrategiesPatterns {
 
     // ======================= EASY 1: Simple HashMap Cache =======================
-    /** Basic key-value store backed by HashMap. O(1) average get/put, no eviction. */
+    /**
+     * Simple HashMap Cache
+     *
+     * <p><b>Approach:</b> Basic key-value store backed by HashMap
+     */
     static class SimpleCache<K, V> {
         private final Map<K, V> store = new HashMap<>();
         public void put(K key, V value) { store.put(key, value); }
@@ -30,7 +43,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= EASY 2: FIFO Cache (First In, First Out) =======================
-    /** Evicts oldest inserted entry using LinkedHashMap insertion order. O(1) get/put. */
+    /**
+     * FIFO Cache (First In, First Out)
+     *
+     * <p><b>Approach:</b> Evicts oldest inserted entry using LinkedHashMap insertion order
+     */
     static class FIFOCache<K, V> {
         private final int capacity;
         private final Map<K, V> map = new LinkedHashMap<>();
@@ -48,7 +65,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= EASY 3: LRU Cache (Least Recently Used) =======================
-    /** Access-order LinkedHashMap with removeEldestEntry for automatic LRU eviction. O(1) get/put. */
+    /**
+     * LRU Cache (Least Recently Used)
+     *
+     * <p><b>Approach:</b> Access-order LinkedHashMap with removeEldestEntry for automatic LRU eviction
+     */
     static class LRUCache<K, V> {
         private final int capacity;
         private final LinkedHashMap<K, V> map;
@@ -66,7 +87,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= EASY 4: Cache with Max Size (Random Eviction) =======================
-    /** Evicts a random key when at capacity using ArrayList index swap. O(1) average get/put. */
+    /**
+     * Cache with Max Size (Random Eviction)
+     *
+     * <p><b>Approach:</b> Evicts a random key when at capacity using ArrayList index swap
+     */
     static class RandomEvictionCache<K, V> {
         private final int capacity;
         private final Map<K, V> map = new HashMap<>();
@@ -89,7 +114,17 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= EASY 5: Write-Through Cache =======================
-    /** Writes synchronously to both cache and database; strong consistency, higher write latency. */
+    /**
+     * Write-Through Cache (Strategy #2)
+     *
+     * <p><b>Approach:</b> Every write updates both the cache AND the database at the same time.
+     * The write is only confirmed after both succeed, ensuring the cache always stays fresh.
+     *
+     * <p><b>Best for:</b> Systems needing strong consistency — finance apps, inventory counts,
+     * configuration systems. Amazon DAX uses this pattern for DynamoDB.
+     *
+     * <p><b>Trade-off:</b> Higher write latency (writes to 2 places) but cache is never stale.
+     */
     static class WriteThroughCache {
         private final Map<String, String> cache = new HashMap<>();
         private final Map<String, String> database = new HashMap<>();
@@ -108,7 +143,19 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= EASY 6: Cache-Aside (Lazy Loading) =======================
-    /** App checks cache first; on miss, loads from DB and populates cache. Simple but may serve stale data. */
+    /**
+     * Cache-Aside / Lazy Loading (Strategy #3)
+     *
+     * <p><b>Approach:</b> The app looks in the cache first. On a miss, it fetches from the DB
+     * and explicitly updates the cache. The most common caching pattern — application has
+     * full control over cache population and invalidation.
+     *
+     * <p><b>Best for:</b> Read-heavy workloads where slight data staleness is acceptable.
+     * Used by Facebook, Instagram, Stripe, and GitHub.
+     *
+     * <p><b>Trade-off:</b> Simple to implement, resilient to cache failure (falls back to DB),
+     * but initial reads suffer cache miss penalty and data can be briefly stale.
+     */
     static class CacheAside {
         private final Map<String, String> cache = new HashMap<>();
         private final Map<String, String> database;
@@ -123,7 +170,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= EASY 7: TTL Cache (Time-To-Live) =======================
-    /** Entries auto-expire after a configurable duration. O(1) get/put with lazy expiration check. */
+    /**
+     * TTL Cache (Time-To-Live)
+     *
+     * <p><b>Approach:</b> Entries auto-expire after a configurable duration
+     */
     static class TTLCache<K, V> {
         private final long ttlMs;
         private final Map<K, long[]> timestamps = new HashMap<>();
@@ -139,7 +190,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= EASY 8: Cache Hit/Miss Counter =======================
-    /** Wraps a cache with hit/miss counters to track and report hit rate. O(1) get/put. */
+    /**
+     * Cache Hit/Miss Counter
+     *
+     * <p><b>Approach:</b> Wraps a cache with hit/miss counters to track and report hit rate
+     */
     static class InstrumentedCache<K, V> {
         private final Map<K, V> store = new HashMap<>();
         private int hits, misses;
@@ -153,7 +208,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= EASY 9: Memoization (Function Cache) =======================
-    /** Caches function results by input using computeIfAbsent. O(1) lookup after first computation. */
+    /**
+     * Memoization (Function Cache)
+     *
+     * <p><b>Approach:</b> Caches function results by input using computeIfAbsent
+     */
     static class Memoizer<K, V> {
         private final Map<K, V> cache = new HashMap<>();
         private final Function<K, V> function;
@@ -163,7 +222,17 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= EASY 10: Fibonacci with Memoization =======================
-    /** Classic top-down DP: store computed fib values in HashMap to avoid recomputation. O(n) time, O(n) space. */
+    /**
+     * Fibonacci with Memoization
+     *
+     * <p><b>Approach:</b> Classic top-down DP: store computed fib values in HashMap to avoid recomputation
+     *
+     * @param n the n parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static long fibMemo(int n) {
         return fibHelper(n, new HashMap<>());
     }
@@ -176,7 +245,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 1: LFU Cache (Least Frequently Used) =======================
-    /** Tracks access frequency per key; evicts least frequently used (LRU tiebreaker via LinkedHashSet). O(1) ops. */
+    /**
+     * LFU Cache (Least Frequently Used)
+     *
+     * <p><b>Approach:</b> Tracks access frequency per key; evicts least frequently used (LRU tiebreaker via LinkedHashSet)
+     */
     static class LFUCache {
         private final int capacity;
         private int minFreq;
@@ -214,7 +287,19 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 2: Write-Back Cache (Write-Behind) =======================
-    /** Writes only to cache; tracks dirty keys and flushes to DB on demand. Low write latency, risk of data loss. */
+    /**
+     * Write-Back Cache / Write-Behind (Strategy #5)
+     *
+     * <p><b>Approach:</b> Writes go to the cache first, and are asynchronously persisted to the
+     * DB later. Tracks dirty keys and flushes on demand or periodically. Minimizes write latency.
+     *
+     * <p><b>Best for:</b> High-performance, write-heavy systems — like counts, view counters,
+     * analytics events, gaming leaderboards, IoT sensor data aggregation.
+     * Facebook uses this for like counts (100B+ interactions/day).
+     *
+     * <p><b>Trade-off:</b> Extremely fast writes but risk of data loss if cache crashes before
+     * flush. Requires reliable async flush mechanism.
+     */
     static class WriteBackCache {
         private final Map<String, String> cache = new HashMap<>();
         private final Map<String, String> database = new HashMap<>();
@@ -238,7 +323,19 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 3: Write-Around Cache =======================
-    /** Writes directly to DB, invalidates cache; cache populated only on read miss. Avoids cache pollution. */
+    /**
+     * Write-Around Cache (Strategy #4)
+     *
+     * <p><b>Approach:</b> Writes go straight to the DB, skipping the cache. Cache gets updated
+     * only on a subsequent read miss. Prevents the cache from being polluted with data that
+     * is written but rarely read back immediately.
+     *
+     * <p><b>Best for:</b> Write-heavy systems with rare immediate reads — logging, analytics,
+     * audit trails, batch data processing.
+     *
+     * <p><b>Trade-off:</b> Cache not polluted with rarely-read writes, but initial read after
+     * write is slow (cache miss). Requires cache-aside on the read path.
+     */
     static class WriteAroundCache {
         private final Map<String, String> cache = new HashMap<>();
         private final Map<String, String> database = new HashMap<>();
@@ -255,7 +352,19 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 4: Read-Through Cache =======================
-    /** Cache auto-loads from backend via loader function on miss; transparent to caller. O(1) cached get. */
+    /**
+     * Read-Through Cache (Strategy #1)
+     *
+     * <p><b>Approach:</b> The application checks the cache first. On a cache miss, the cache
+     * ITSELF fetches data from the DB via a loader function, stores it, and returns it.
+     * The application never talks to the database directly for reads.
+     *
+     * <p><b>Best for:</b> Read-heavy apps like CDNs, social feeds, and content delivery.
+     * Used by Hibernate L2 Cache, AWS DAX (DynamoDB Accelerator), NCache.
+     *
+     * <p><b>Trade-off:</b> Cleaner application code (no cache-miss logic), but cache must
+     * understand the backend schema. Cold start still incurs latency.
+     */
     static class ReadThroughCache<K, V> {
         private final int capacity;
         private final Map<K, V> cache;
@@ -277,7 +386,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 5: Two-Level Cache (L1 + L2) =======================
-    /** Small fast L1 backed by larger L2; L1 miss promotes from L2. Mimics CPU cache hierarchy. */
+    /**
+     * Two-Level Cache (L1 + L2)
+     *
+     * <p><b>Approach:</b> Small fast L1 backed by larger L2; L1 miss promotes from L2. Mimics CPU cache hierarchy.
+     */
     static class TwoLevelCache<K, V> {
         private final LRUCache<K, V> l1;
         private final LRUCache<K, V> l2;
@@ -293,7 +406,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 6: LRU Cache with Manual Doubly-Linked List =======================
-    /** Hand-rolled doubly-linked list + HashMap for O(1) get/put with explicit node management. */
+    /**
+     * LRU Cache with Manual Doubly-Linked List
+     *
+     * <p><b>Approach:</b> Hand-rolled doubly-linked list + HashMap for O(1) get/put with explicit node management
+     */
     static class LRUCacheManual {
         private static class Node {
             int key, val; Node prev, next;
@@ -324,7 +441,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 7: Bloom Filter (Probabilistic Cache Check) =======================
-    /** Probabilistic set membership: multiple hash functions into bit array. No false negatives. O(k) per op. */
+    /**
+     * Bloom Filter (Probabilistic Cache Check)
+     *
+     * <p><b>Approach:</b> Probabilistic set membership: multiple hash functions into bit array. No false negatives.
+     */
     static class BloomFilter {
         private final boolean[] bits;
         private final int numHashes;
@@ -335,7 +456,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 8: Cache with Refresh-Ahead =======================
-    /** Proactively refreshes entries nearing expiry via loader function. Reduces read-miss latency spikes. */
+    /**
+     * Cache with Refresh-Ahead
+     *
+     * <p><b>Approach:</b> Proactively refreshes entries nearing expiry via loader function. Reduces read-miss latency spikes.
+     */
     static class RefreshAheadCache<K, V> {
         private final Map<K, V> cache = new HashMap<>();
         private final Map<K, Long> accessTime = new HashMap<>();
@@ -363,7 +488,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 9: Consistent Hashing (Cache Distribution) =======================
-    /** Distributes keys across cache nodes using virtual nodes on a hash ring. Minimizes redistribution on scale. */
+    /**
+     * Consistent Hashing (Cache Distribution)
+     *
+     * <p><b>Approach:</b> Distributes keys across cache nodes using virtual nodes on a hash ring. Minimizes redistribution on scale.
+     */
     static class ConsistentHashRing {
         private final TreeMap<Integer, String> ring = new TreeMap<>();
         private final int virtualNodes;
@@ -383,7 +512,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= MEDIUM 10: Bounded Buffer Queue (Producer-Consumer) =======================
-    /** Fixed-capacity synchronized queue for producer-consumer pattern. Thread-safe offer/poll. */
+    /**
+     * Bounded Buffer Queue (Producer-Consumer)
+     *
+     * <p><b>Approach:</b> Fixed-capacity synchronized queue for producer-consumer pattern. Thread-safe offer/poll.
+     */
     static class BoundedBuffer<T> {
         private final Queue<T> queue = new LinkedList<>();
         private final int capacity;
@@ -399,7 +532,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 1: LFU Cache (O(1) All Operations) =======================
-    /** Optimal LFU with frequency buckets (LinkedHashSet) and minFreq tracking. O(1) get/put/evict. */
+    /**
+     * LFU Cache (O(1) All Operations)
+     *
+     * <p><b>Approach:</b> Optimal LFU with frequency buckets (LinkedHashSet) and minFreq tracking
+     */
     static class LFUCacheOptimal {
         private final int capacity;
         private int minFreq;
@@ -436,7 +573,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 2: LRU-K Cache (Evict by K-th Access) =======================
-    /** Evicts entry with oldest K-th most recent access; scan-resistant. O(n) eviction, O(1) get/put. */
+    /**
+     * LRU-K Cache (Evict by K-th Access)
+     *
+     * <p><b>Approach:</b> Evicts entry with oldest K-th most recent access; scan-resistant
+     */
     static class LRUKCache {
         private final int capacity, k;
         private final Map<Integer, Integer> cache = new HashMap<>();
@@ -470,7 +611,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 3: Thread-Safe LRU Cache =======================
-    /** Collections.synchronizedMap wrapping access-order LinkedHashMap for thread-safe LRU. O(1) ops with locking. */
+    /**
+     * Thread-Safe LRU Cache
+     *
+     * <p><b>Approach:</b> Collections. synchronizedMap wrapping access-order LinkedHashMap for thread-safe LRU.
+     */
     static class ConcurrentLRUCache<K, V> {
         private final int capacity;
         private final Map<K, V> map;
@@ -486,7 +631,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 4: Cache with TTL + LRU Eviction =======================
-    /** Combines time-based expiration with LRU eviction when capacity exceeded. Lazy + eager expiration. */
+    /**
+     * Cache with TTL + LRU Eviction
+     *
+     * <p><b>Approach:</b> Combines time-based expiration with LRU eviction when capacity exceeded. Lazy + eager expiration.
+     */
     static class TTLLRUCache {
         private final int capacity;
         private final long ttlMs;
@@ -516,7 +665,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 5: CDN Simulator (Geo-Based Caching) =======================
-    /** Per-region edge caches with origin fallback; simulates CDN cache hierarchy and invalidation. */
+    /**
+     * CDN Simulator (Geo-Based Caching)
+     *
+     * <p><b>Approach:</b> Per-region edge caches with origin fallback; simulates CDN cache hierarchy and invalidation
+     */
     static class CDNSimulator {
         private final Map<String, LRUCache<String, String>> edgeCaches = new HashMap<>();
         private final Map<String, String> origin = new HashMap<>();
@@ -537,7 +690,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 6: Database Query Cache with Invalidation =======================
-    /** Caches SQL query results; invalidates all queries touching a mutated table. O(1) lookup, O(q) invalidation. */
+    /**
+     * Database Query Cache with Invalidation
+     *
+     * <p><b>Approach:</b> Caches SQL query results; invalidates all queries touching a mutated table
+     */
     static class QueryCache {
         private final Map<String, String> cache = new LinkedHashMap<>();
         private final Map<String, Set<String>> tableToQueries = new HashMap<>();
@@ -562,7 +719,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 7: Sliding Window Rate Limiter (Token Bucket) =======================
-    /** Token bucket: tokens refill over time at a fixed rate; request consumes one token. Thread-safe. */
+    /**
+     * Sliding Window Rate Limiter (Token Bucket)
+     *
+     * <p><b>Approach:</b> Token bucket: tokens refill over time at a fixed rate; request consumes one token. Thread-safe.
+     */
     static class TokenBucketRateLimiter {
         private final int maxTokens;
         private final double refillRate;
@@ -586,7 +747,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 8: Cuckoo Hashing (Fast Cache Lookup) =======================
-    /** Two hash tables with displacement on collision; O(1) worst-case lookup, amortized O(1) insert. */
+    /**
+     * Cuckoo Hashing (Fast Cache Lookup)
+     *
+     * <p><b>Approach:</b> Two hash tables with displacement on collision; O(1) worst-case lookup, amortized O(1) insert
+     */
     static class CuckooHash {
         private final int capacity;
         private final int[] table1, table2;
@@ -616,7 +781,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 9: Distributed Cache Partitioning =======================
-    /** Shards data across N partitions by key hash; each partition is an independent HashMap. */
+    /**
+     * Distributed Cache Partitioning
+     *
+     * <p><b>Approach:</b> Shards data across N partitions by key hash; each partition is an independent HashMap
+     */
     static class PartitionedCache {
         private final int numPartitions;
         private final List<Map<String, String>> partitions;
@@ -637,7 +806,11 @@ public class CachingStrategiesPatterns {
     }
 
     // ======================= HARD 10: Auto-Warming Cache =======================
-    /** Pre-populates cache with frequently accessed keys (above threshold) using access frequency tracking. */
+    /**
+     * Auto-Warming Cache
+     *
+     * <p><b>Approach:</b> Pre-populates cache with frequently accessed keys (above threshold) using access frequency tracking
+     */
     static class AutoWarmingCache<K, V> {
         private final Map<K, V> cache;
         private final Map<K, Integer> frequency = new HashMap<>();

@@ -33,7 +33,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= EASY 1: Reverse Linked List =======================
-    /** Iteratively reverse by maintaining prev/cur/next pointers. O(n) time, O(1) space. */
+    /**
+     * Reverse Linked List
+     *
+     * <p><b>Approach:</b> Iteratively reverse by maintaining prev/cur/next pointers
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode reverseList(ListNode head) {
         ListNode prev = null, cur = head;
         while (cur != null) { ListNode next = cur.next; cur.next = prev; prev = cur; cur = next; }
@@ -41,7 +51,18 @@ public class LinkedListsPatterns {
     }
 
     // ======================= EASY 2: Merge Two Sorted Lists =======================
-    /** Dummy head; compare and link smaller node at each step. O(m+n) time, O(1) space. */
+    /**
+     * Merge Two Sorted Lists
+     *
+     * <p><b>Approach:</b> Dummy head; compare and link smaller node at each step
+     *
+     * @param l1 the l1 parameter
+     * @param l2 the l2 parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(m+n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         ListNode dummy = new ListNode(0), cur = dummy;
         while (l1 != null && l2 != null) {
@@ -53,7 +74,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= EASY 3: Linked List Cycle =======================
-    /** Floyd's tortoise and hare: slow moves 1, fast moves 2; if they meet, cycle exists. O(n) time, O(1) space. */
+    /**
+     * Linked List Cycle
+     *
+     * <p><b>Approach:</b> Floyd's tortoise and hare: slow moves 1, fast moves 2; if they meet, cycle exists
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean hasCycle(ListNode head) {
         ListNode slow = head, fast = head;
         while (fast != null && fast.next != null) { slow = slow.next; fast = fast.next.next; if (slow == fast) return true; }
@@ -61,7 +92,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= EASY 4: Middle of Linked List =======================
-    /** Slow pointer moves 1 step, fast moves 2; when fast reaches end, slow is at middle. O(n) time, O(1) space. */
+    /**
+     * Middle of Linked List
+     *
+     * <p><b>Approach:</b> Slow pointer moves 1 step, fast moves 2; when fast reaches end, slow is at middle
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode middleNode(ListNode head) {
         ListNode slow = head, fast = head;
         while (fast != null && fast.next != null) { slow = slow.next; fast = fast.next.next; }
@@ -69,7 +110,18 @@ public class LinkedListsPatterns {
     }
 
     // ======================= EASY 5: Remove Nth Node From End =======================
-    /** Two pointers with n+1 gap; when fast reaches null, slow is before the target. O(n) time, O(1) space. */
+    /**
+     * Remove Nth Node From End
+     *
+     * <p><b>Approach:</b> Two pointers with n+1 gap; when fast reaches null, slow is before the target
+     *
+     * @param head the head parameter
+     * @param n the n parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode removeNthFromEnd(ListNode head, int n) {
         ListNode dummy = new ListNode(0, head), fast = dummy, slow = dummy;
         for (int i = 0; i <= n; i++) fast = fast.next;
@@ -79,7 +131,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= EASY 6: Palindrome Linked List =======================
-    /** Find middle, reverse second half, compare both halves node by node. O(n) time, O(1) space. */
+    /**
+     * Palindrome Linked List
+     *
+     * <p><b>Approach:</b> Find middle, reverse second half, compare both halves node by node
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean isPalindrome(ListNode head) {
         ListNode slow = head, fast = head;
         while (fast != null && fast.next != null) { slow = slow.next; fast = fast.next.next; }
@@ -89,7 +151,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= EASY 7: Remove Duplicates from Sorted List =======================
-    /** Skip consecutive nodes with equal values by relinking. O(n) time, O(1) space. */
+    /**
+     * Remove Duplicates from Sorted List
+     *
+     * <p><b>Approach:</b> Skip consecutive nodes with equal values by relinking
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode deleteDuplicates(ListNode head) {
         ListNode cur = head;
         while (cur != null && cur.next != null) { if (cur.val == cur.next.val) cur.next = cur.next.next; else cur = cur.next; }
@@ -97,7 +169,18 @@ public class LinkedListsPatterns {
     }
 
     // ======================= EASY 8: Intersection of Two Linked Lists =======================
-    /** Two pointers traverse both lists; switching heads on null aligns them at intersection. O(m+n) time, O(1) space. */
+    /**
+     * Intersection of Two Linked Lists
+     *
+     * <p><b>Approach:</b> Two pointers traverse both lists; switching heads on null aligns them at intersection
+     *
+     * @param headA the headA parameter
+     * @param headB the headB parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(m+n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode getIntersectionNode(ListNode headA, ListNode headB) {
         ListNode a = headA, b = headB;
         while (a != b) { a = a == null ? headB : a.next; b = b == null ? headA : b.next; }
@@ -105,15 +188,42 @@ public class LinkedListsPatterns {
     }
 
     // ======================= EASY 9: Delete Node (given only that node) =======================
-    /** Copy next node's value into current, then skip next node. O(1) time, O(1) space. */
+    /**
+     * Delete Node (given only that node)
+     *
+     * <p><b>Approach:</b> Copy next node's value into current, then skip next node
+     *
+     * @param node the node parameter
+     *
+     * <p><b>Time:</b> O(1) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static void deleteNode(ListNode node) { node.val = node.next.val; node.next = node.next.next; }
 
     // ======================= EASY 10: Linked List Length =======================
-    /** Simple traversal counter. O(n) time, O(1) space. */
+    /**
+     * Linked List Length
+     *
+     * <p><b>Approach:</b> Simple traversal counter
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int length(ListNode head) { int n = 0; while (head != null) { n++; head = head.next; } return n; }
 
     // ======================= MEDIUM 1: Add Two Numbers =======================
-    /** Digit-by-digit addition with carry using dummy head. O(max(m,n)) time, O(max(m,n)) space. */
+    /**
+     * Add Two Numbers
+     *
+     * <p><b>Approach:</b> Digit-by-digit addition with carry using dummy head
+     *
+     * @param l1 the l1 parameter
+     * @param l2 the l2 parameter
+     * @return the computed result
+     */
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode dummy = new ListNode(0), cur = dummy;
         int carry = 0;
@@ -126,7 +236,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= MEDIUM 2: Odd Even Linked List =======================
-    /** Separate odd-indexed and even-indexed nodes into two lists, then merge. O(n) time, O(1) space. */
+    /**
+     * Odd Even Linked List
+     *
+     * <p><b>Approach:</b> Separate odd-indexed and even-indexed nodes into two lists, then merge
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode oddEvenList(ListNode head) {
         if (head == null) return null;
         ListNode odd = head, even = head.next, evenHead = even;
@@ -136,7 +256,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= MEDIUM 3: Swap Nodes in Pairs =======================
-    /** Iteratively rewire pairs using a prev pointer and dummy head. O(n) time, O(1) space. */
+    /**
+     * Swap Nodes in Pairs
+     *
+     * <p><b>Approach:</b> Iteratively rewire pairs using a prev pointer and dummy head
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode swapPairs(ListNode head) {
         ListNode dummy = new ListNode(0, head), prev = dummy;
         while (prev.next != null && prev.next.next != null) {
@@ -147,7 +277,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= MEDIUM 4: Linked List Cycle II (find start) =======================
-    /** Floyd's algorithm: after fast/slow meet, reset one to head; they meet at cycle start. O(n) time, O(1) space. */
+    /**
+     * Linked List Cycle II (find start)
+     *
+     * <p><b>Approach:</b> Floyd's algorithm: after fast/slow meet, reset one to head; they meet at cycle start
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode detectCycle(ListNode head) {
         ListNode slow = head, fast = head;
         while (fast != null && fast.next != null) { slow = slow.next; fast = fast.next.next; if (slow == fast) break; }
@@ -158,7 +298,18 @@ public class LinkedListsPatterns {
     }
 
     // ======================= MEDIUM 5: Rotate List =======================
-    /** Form a ring by connecting tail to head; break at (len - k % len) from head. O(n) time, O(1) space. */
+    /**
+     * Rotate List
+     *
+     * <p><b>Approach:</b> Form a ring by connecting tail to head; break at (len - k % len) from head
+     *
+     * @param head the head parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode rotateRight(ListNode head, int k) {
         if (head == null) return null;
         int len = 1; ListNode tail = head;
@@ -171,7 +322,18 @@ public class LinkedListsPatterns {
     }
 
     // ======================= MEDIUM 6: Partition List =======================
-    /** Two dummy lists (less and greater-or-equal), then connect them. O(n) time, O(1) space. */
+    /**
+     * Partition List
+     *
+     * <p><b>Approach:</b> Two dummy lists (less and greater-or-equal), then connect them
+     *
+     * @param head the head parameter
+     * @param x the x parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode partition(ListNode head, int x) {
         ListNode lessHead = new ListNode(0), greaterHead = new ListNode(0);
         ListNode less = lessHead, greater = greaterHead;
@@ -184,7 +346,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= MEDIUM 7: Flatten Multilevel Doubly Linked List (simplified) =======================
-    /** Simplified version: flattens by converting negative values to positive (abs). O(n) time, O(1) space. */
+    /**
+     * Flatten Multilevel Doubly Linked List (simplified)
+     *
+     * <p><b>Approach:</b> Simplified version: flattens by converting negative values to positive (abs)
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode flattenList(ListNode head) {
         ListNode cur = head;
         while (cur != null) { if (cur.val < 0) { cur.val = -cur.val; } cur = cur.next; }
@@ -192,7 +364,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= MEDIUM 8: Sort List (Merge Sort) =======================
-    /** Top-down merge sort: split at midpoint, recursively sort, then merge. O(n log n) time, O(log n) space. */
+    /**
+     * Sort List (Merge Sort)
+     *
+     * <p><b>Approach:</b> Top-down merge sort: split at midpoint, recursively sort, then merge
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n log n) time.
+     * <br><b>Space:</b> O(log n) space.
+     */
     public static ListNode sortList(ListNode head) {
         if (head == null || head.next == null) return head;
         ListNode slow = head, fast = head.next;
@@ -202,7 +384,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= MEDIUM 9: Remove Duplicates II (all copies) =======================
-    /** Dummy head; prev pointer skips entire runs of duplicate values. O(n) time, O(1) space. */
+    /**
+     * Remove Duplicates II (all copies)
+     *
+     * <p><b>Approach:</b> Dummy head; prev pointer skips entire runs of duplicate values
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode deleteDuplicatesII(ListNode head) {
         ListNode dummy = new ListNode(0, head), prev = dummy;
         while (prev.next != null && prev.next.next != null) {
@@ -215,7 +407,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= MEDIUM 10: Insertion Sort List =======================
-    /** Build a new sorted list by inserting each node at its correct position. O(n²) time, O(1) space. */
+    /**
+     * Insertion Sort List
+     *
+     * <p><b>Approach:</b> Build a new sorted list by inserting each node at its correct position
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n²) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode insertionSortList(ListNode head) {
         ListNode dummy = new ListNode(Integer.MIN_VALUE);
         while (head != null) {
@@ -227,7 +429,18 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 1: Reverse Nodes in K-Group =======================
-    /** Recursively reverse k nodes at a time; leave remainder as-is. O(n) time, O(n/k) space. */
+    /**
+     * Reverse Nodes in K-Group
+     *
+     * <p><b>Approach:</b> Recursively reverse k nodes at a time; leave remainder as-is
+     *
+     * @param head the head parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n/k) space.
+     */
     public static ListNode reverseKGroup(ListNode head, int k) {
         ListNode cur = head; int count = 0;
         while (cur != null && count < k) { cur = cur.next; count++; }
@@ -238,7 +451,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 2: Merge K Sorted Lists =======================
-    /** Min-heap of list heads; always extract smallest and push its next. O(n log k) time, O(k) space. */
+    /**
+     * Merge K Sorted Lists
+     *
+     * <p><b>Approach:</b> Min-heap of list heads; always extract smallest and push its next
+     *
+     * @param lists the lists parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n log k) time.
+     * <br><b>Space:</b> O(k) space.
+     */
     public static ListNode mergeKLists(ListNode[] lists) {
         if (lists == null || lists.length == 0) return null;
         PriorityQueue<ListNode> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a.val));
@@ -249,7 +472,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 3: Copy List with Random Pointer =======================
-    /** Interleave copied nodes, then separate original and copy lists. O(n) time, O(1) extra space. */
+    /**
+     * Copy List with Random Pointer
+     *
+     * <p><b>Approach:</b> Interleave copied nodes, then separate original and copy lists
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) extra space.
+     */
     public static ListNode copyRandomList(ListNode head) {
         if (head == null) return null;
         ListNode cur = head;
@@ -262,7 +495,11 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 4: LRU Cache =======================
-    /** Access-order LinkedHashMap with removeEldestEntry override for automatic eviction. O(1) get/put. */
+    /**
+     * LRU Cache
+     *
+     * <p><b>Approach:</b> Access-order LinkedHashMap with removeEldestEntry override for automatic eviction
+     */
     static class LRUCache {
         private final int capacity;
         private final Map<Integer, int[]> map = new LinkedHashMap<>(16, 0.75f, true) {
@@ -274,7 +511,19 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 5: Reverse Linked List II (between positions) =======================
-    /** Navigate to left position, then reverse (right-left) links in-place. O(n) time, O(1) space. */
+    /**
+     * Reverse Linked List II (between positions)
+     *
+     * <p><b>Approach:</b> Navigate to left position, then reverse (right-left) links in-place
+     *
+     * @param head the head parameter
+     * @param left the left parameter
+     * @param right the right parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode reverseBetween(ListNode head, int left, int right) {
         ListNode dummy = new ListNode(0, head), prev = dummy;
         for (int i = 0; i < left - 1; i++) prev = prev.next;
@@ -284,7 +533,16 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 6: Reorder List =======================
-    /** Find middle, reverse second half, interleave both halves. O(n) time, O(1) space. */
+    /**
+     * Reorder List
+     *
+     * <p><b>Approach:</b> Find middle, reverse second half, interleave both halves
+     *
+     * @param head the head parameter
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static void reorderList(ListNode head) {
         if (head == null || head.next == null) return;
         ListNode slow = head, fast = head;
@@ -295,7 +553,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 7: Remove Zero Sum Consecutive Nodes =======================
-    /** Two-pass prefix sum: map prefix to last node with that sum; skip zero-sum ranges. O(n) time, O(n) space. */
+    /**
+     * Remove Zero Sum Consecutive Nodes
+     *
+     * <p><b>Approach:</b> Two-pass prefix sum: map prefix to last node with that sum; skip zero-sum ranges
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static ListNode removeZeroSumSublists(ListNode head) {
         ListNode dummy = new ListNode(0, head);
         Map<Integer, ListNode> prefixMap = new HashMap<>();
@@ -307,7 +575,18 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 8: Split Linked List in Parts =======================
-    /** Compute part sizes (len/k with len%k extra nodes in first parts). O(n) time, O(k) space. */
+    /**
+     * Split Linked List in Parts
+     *
+     * <p><b>Approach:</b> Compute part sizes (len/k with len%k extra nodes in first parts)
+     *
+     * @param head the head parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(k) space.
+     */
     public static ListNode[] splitListToParts(ListNode head, int k) {
         int len = length(head);
         int partSize = len / k, extra = len % k;
@@ -323,7 +602,18 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 9: Swap Kth Node From Begin and End =======================
-    /** Find kth from start, then use two-pointer gap to find kth from end; swap values. O(n) time, O(1) space. */
+    /**
+     * Swap Kth Node From Begin and End
+     *
+     * <p><b>Approach:</b> Find kth from start, then use two-pointer gap to find kth from end; swap values
+     *
+     * @param head the head parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode swapNodes(ListNode head, int k) {
         ListNode first = head;
         for (int i = 1; i < k; i++) first = first.next;
@@ -334,7 +624,17 @@ public class LinkedListsPatterns {
     }
 
     // ======================= HARD 10: Maximum Twin Sum =======================
-    /** Find middle, reverse second half, compute max sum of twin pairs. O(n) time, O(1) space. */
+    /**
+     * Maximum Twin Sum
+     *
+     * <p><b>Approach:</b> Find middle, reverse second half, compute max sum of twin pairs
+     *
+     * @param head the head parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int pairSum(ListNode head) {
         ListNode slow = head, fast = head;
         while (fast != null && fast.next != null) { slow = slow.next; fast = fast.next.next; }

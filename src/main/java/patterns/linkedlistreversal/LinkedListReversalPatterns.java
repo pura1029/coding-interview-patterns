@@ -19,34 +19,108 @@ public class LinkedListReversalPatterns {
     private static ListNode build(int... v) { ListNode d = new ListNode(0), c = d; for (int x : v) { c.next = new ListNode(x); c = c.next; } return d.next; }
     private static String str(ListNode h) { StringBuilder sb = new StringBuilder("["); while (h != null) { sb.append(h.val); if (h.next != null) sb.append(","); h = h.next; } return sb.append("]").toString(); }
 
-    /** Reverse Linked List. Iterative prev/curr/next swap. */
+    /**
+     * Reverse Linked List
+     *
+     * <p><b>Approach:</b> Reverse Linked List. Iterative prev/curr/next swap.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static ListNode reverseList(ListNode head) { ListNode p = null, c = head; while (c != null) { ListNode n = c.next; c.next = p; p = c; c = n; } return p; }
 
-    /** Reverse Linked List (Recursive). Recurse to end, reverse on backtrack. */
+    /**
+     * Reverse Linked List (Recursive)
+     *
+     * <p><b>Approach:</b> Reverse Linked List (Recursive). Recurse to end, reverse on backtrack.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static ListNode reverseListRecursive(ListNode head) { if (head == null || head.next == null) return head; ListNode r = reverseListRecursive(head.next); head.next.next = head; head.next = null; return r; }
 
-    /** Remove Duplicates from Sorted List. Skip consecutive equal nodes. */
+    /**
+     * Remove Duplicates from Sorted List
+     *
+     * <p><b>Approach:</b> Remove Duplicates from Sorted List. Skip consecutive equal nodes.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static ListNode deleteDuplicates(ListNode head) { ListNode c = head; while (c != null && c.next != null) { if (c.val == c.next.val) c.next = c.next.next; else c = c.next; } return head; }
 
-    /** Remove Linked List Elements (remove all val). Dummy head, skip matching values. */
+    /**
+     * Remove Linked List Elements (remove all val)
+     *
+     * <p><b>Approach:</b> Remove Linked List Elements (remove all val). Dummy head, skip matching values.
+     *
+     * @param head the head parameter
+     * @param val the val parameter
+     * @return the computed result
+     */
     public static ListNode removeElements(ListNode head, int val) { ListNode d = new ListNode(0, head), c = d; while (c.next != null) { if (c.next.val == val) c.next = c.next.next; else c = c.next; } return d.next; }
 
-    /** Merge Two Sorted Lists. Compare heads, append smaller. */
+    /**
+     * Merge Two Sorted Lists
+     *
+     * <p><b>Approach:</b> Merge Two Sorted Lists. Compare heads, append smaller.
+     *
+     * @param l1 the l1 parameter
+     * @param l2 the l2 parameter
+     * @return the computed result
+     */
     public static ListNode mergeTwoLists(ListNode l1, ListNode l2) { ListNode d = new ListNode(0), c = d; while (l1 != null && l2 != null) { if (l1.val <= l2.val) { c.next = l1; l1 = l1.next; } else { c.next = l2; l2 = l2.next; } c = c.next; } c.next = l1 != null ? l1 : l2; return d.next; }
 
-    /** Convert Binary Number in LL to Integer. Shift result left, add bit. */
+    /**
+     * Convert Binary Number in LL to Integer
+     *
+     * <p><b>Approach:</b> Convert Binary Number in LL to Integer. Shift result left, add bit.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static int getDecimalValue(ListNode head) { int r = 0; while (head != null) { r = r * 2 + head.val; head = head.next; } return r; }
 
-    /** Delete Node in a Linked List (given only node). Copy next value, skip next node. */
+    /**
+     * Delete Node in a Linked List (given only node)
+     *
+     * <p><b>Approach:</b> Delete Node in a Linked List (given only node). Copy next value, skip next node.
+     *
+     * @param node the node parameter
+     */
     public static void deleteNode(ListNode node) { node.val = node.next.val; node.next = node.next.next; }
 
-    /** Linked List Length. Count nodes in traversal. */
+    /**
+     * Linked List Length
+     *
+     * <p><b>Approach:</b> Linked List Length. Count nodes in traversal.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static int getLength(ListNode head) { int n = 0; while (head != null) { n++; head = head.next; } return n; }
 
-    /** Get Kth Node from End. Two-pointer with k-gap. */
+    /**
+     * Get Kth Node from End
+     *
+     * <p><b>Approach:</b> Get Kth Node from End. Two-pointer with k-gap.
+     *
+     * @param head the head parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static ListNode kthFromEnd(ListNode head, int k) { ListNode f = head; for (int i = 0; i < k; i++) f = f.next; ListNode s = head; while (f != null) { s = s.next; f = f.next; } return s; }
 
-    /** Insert at Position. Traverse to position, rewire. */
+    /**
+     * Insert at Position
+     *
+     * <p><b>Approach:</b> Insert at Position. Traverse to position, rewire.
+     *
+     * @param head the head parameter
+     * @param val the val parameter
+     * @param pos the pos parameter
+     * @return the computed result
+     */
     public static ListNode insertAtPosition(ListNode head, int val, int pos) {
         ListNode d = new ListNode(0, head), c = d;
         for (int i = 0; i < pos && c != null; i++) c = c.next;
@@ -54,7 +128,16 @@ public class LinkedListReversalPatterns {
         return d.next;
     }
 
-    /** Reverse Linked List II (between positions). Locate start, reverse sub-list. */
+    /**
+     * Reverse Linked List II (between positions)
+     *
+     * <p><b>Approach:</b> Reverse Linked List II (between positions). Locate start, reverse sub-list.
+     *
+     * @param head the head parameter
+     * @param left the left parameter
+     * @param right the right parameter
+     * @return the computed result
+     */
     public static ListNode reverseBetween(ListNode head, int left, int right) {
         ListNode d = new ListNode(0, head), p = d;
         for (int i = 1; i < left; i++) p = p.next;
@@ -63,14 +146,28 @@ public class LinkedListReversalPatterns {
         return d.next;
     }
 
-    /** Swap Nodes in Pairs. Swap adjacent pairs iteratively. */
+    /**
+     * Swap Nodes in Pairs
+     *
+     * <p><b>Approach:</b> Swap Nodes in Pairs. Swap adjacent pairs iteratively.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static ListNode swapPairs(ListNode head) {
         ListNode d = new ListNode(0, head), p = d;
         while (p.next != null && p.next.next != null) { ListNode a = p.next, b = a.next; a.next = b.next; b.next = a; p.next = b; p = a; }
         return d.next;
     }
 
-    /** Palindrome Linked List (reverse second half). Reverse second half, compare. */
+    /**
+     * Palindrome Linked List (reverse second half)
+     *
+     * <p><b>Approach:</b> Palindrome Linked List (reverse second half). Reverse second half, compare.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static boolean isPalindrome(ListNode head) {
         ListNode s = head, f = head;
         while (f != null && f.next != null) { s = s.next; f = f.next.next; }
@@ -79,7 +176,14 @@ public class LinkedListReversalPatterns {
         return true;
     }
 
-    /** Odd Even Linked List. Separate odd/even indexed nodes. */
+    /**
+     * Odd Even Linked List
+     *
+     * <p><b>Approach:</b> Odd Even Linked List. Separate odd/even indexed nodes.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static ListNode oddEvenList(ListNode head) {
         if (head == null) return null;
         ListNode odd = head, even = head.next, evenH = even;
@@ -87,7 +191,15 @@ public class LinkedListReversalPatterns {
         odd.next = evenH; return head;
     }
 
-    /** Rotate List. Form cycle, break at new tail. */
+    /**
+     * Rotate List
+     *
+     * <p><b>Approach:</b> Rotate List. Form cycle, break at new tail.
+     *
+     * @param head the head parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static ListNode rotateRight(ListNode head, int k) {
         if (head == null || head.next == null) return head;
         int len = 1; ListNode tail = head; while (tail.next != null) { len++; tail = tail.next; }
@@ -98,14 +210,29 @@ public class LinkedListReversalPatterns {
         return head;
     }
 
-    /** Partition List. Two lists: less-than and greater-equal. */
+    /**
+     * Partition List
+     *
+     * <p><b>Approach:</b> Partition List. Two lists: less-than and greater-equal.
+     *
+     * @param head the head parameter
+     * @param x the x parameter
+     * @return the computed result
+     */
     public static ListNode partition(ListNode head, int x) {
         ListNode bd = new ListNode(0), ad = new ListNode(0), b = bd, a = ad;
         while (head != null) { if (head.val < x) { b.next = head; b = b.next; } else { a.next = head; a = a.next; } head = head.next; }
         a.next = null; b.next = ad.next; return bd.next;
     }
 
-    /** Remove Duplicates from Sorted List II. Skip all copies of duplicate values. */
+    /**
+     * Remove Duplicates from Sorted List II
+     *
+     * <p><b>Approach:</b> Remove Duplicates from Sorted List II. Skip all copies of duplicate values.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static ListNode deleteDuplicatesII(ListNode head) {
         ListNode d = new ListNode(0, head), p = d;
         while (head != null) {
@@ -115,7 +242,15 @@ public class LinkedListReversalPatterns {
         return d.next;
     }
 
-    /** Add Two Numbers. Digit-by-digit addition with carry. */
+    /**
+     * Add Two Numbers
+     *
+     * <p><b>Approach:</b> Add Two Numbers. Digit-by-digit addition with carry.
+     *
+     * @param l1 the l1 parameter
+     * @param l2 the l2 parameter
+     * @return the computed result
+     */
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode d = new ListNode(0), c = d; int carry = 0;
         while (l1 != null || l2 != null || carry > 0) {
@@ -125,7 +260,14 @@ public class LinkedListReversalPatterns {
         return d.next;
     }
 
-    /** Insertion Sort List. Insert each node into sorted portion. */
+    /**
+     * Insertion Sort List
+     *
+     * <p><b>Approach:</b> Insertion Sort List. Insert each node into sorted portion.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static ListNode insertionSortList(ListNode head) {
         ListNode d = new ListNode(Integer.MIN_VALUE);
         while (head != null) {
@@ -136,7 +278,14 @@ public class LinkedListReversalPatterns {
         return d.next;
     }
 
-    /** Next Greater Node In Linked List. Stack to find next greater value. */
+    /**
+     * Next Greater Node In Linked List
+     *
+     * <p><b>Approach:</b> Next Greater Node In Linked List. Stack to find next greater value.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static int[] nextLargerNodes(ListNode head) {
         List<Integer> vals = new ArrayList<>();
         while (head != null) { vals.add(head.val); head = head.next; }
@@ -149,7 +298,15 @@ public class LinkedListReversalPatterns {
         return result;
     }
 
-    /** Reverse Nodes in K-Group. Reverse every k nodes, handle remainder. */
+    /**
+     * Reverse Nodes in K-Group
+     *
+     * <p><b>Approach:</b> Reverse Nodes in K-Group. Reverse every k nodes, handle remainder.
+     *
+     * @param head the head parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static ListNode reverseKGroup(ListNode head, int k) {
         ListNode d = new ListNode(0, head), gp = d;
         while (true) {
@@ -160,7 +317,14 @@ public class LinkedListReversalPatterns {
         }
     }
 
-    /** Merge K Sorted Lists. Divide and conquer or min-heap. */
+    /**
+     * Merge K Sorted Lists
+     *
+     * <p><b>Approach:</b> Merge K Sorted Lists. Divide and conquer or min-heap.
+     *
+     * @param lists the lists parameter
+     * @return the computed result
+     */
     public static ListNode mergeKLists(ListNode[] lists) {
         PriorityQueue<ListNode> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a.val));
         for (ListNode l : lists) if (l != null) pq.offer(l);
@@ -169,7 +333,15 @@ public class LinkedListReversalPatterns {
         return d.next;
     }
 
-    /** Reverse Alternating K-Group. Reverse odd groups, skip even groups. */
+    /**
+     * Reverse Alternating K-Group
+     *
+     * <p><b>Approach:</b> Reverse Alternating K-Group. Reverse odd groups, skip even groups.
+     *
+     * @param head the head parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static ListNode reverseAlternateKGroup(ListNode head, int k) {
         ListNode c = head, p = null; int cnt = 0; ListNode t = head; while (t != null) { cnt++; t = t.next; }
         if (cnt < k) return head;
@@ -181,7 +353,14 @@ public class LinkedListReversalPatterns {
         return p;
     }
 
-    /** Sort List. Split at mid, merge sorted halves. */
+    /**
+     * Sort List
+     *
+     * <p><b>Approach:</b> Sort List. Split at mid, merge sorted halves.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static ListNode sortList(ListNode head) {
         if (head == null || head.next == null) return head;
         ListNode s = head, f = head.next;
@@ -190,7 +369,13 @@ public class LinkedListReversalPatterns {
         return mergeTwoLists(sortList(head), sortList(mid));
     }
 
-    /** Reorder List. Find mid, reverse second half, interleave. */
+    /**
+     * Reorder List
+     *
+     * <p><b>Approach:</b> Reorder List. Find mid, reverse second half, interleave.
+     *
+     * @param head the head parameter
+     */
     public static void reorderList(ListNode head) {
         if (head == null || head.next == null) return;
         ListNode s = head, f = head;
@@ -200,7 +385,14 @@ public class LinkedListReversalPatterns {
         while (sec != null) { ListNode t1 = first.next, t2 = sec.next; first.next = sec; sec.next = t1; first = t1; sec = t2; }
     }
 
-    /** Flatten Nested List Iterator (linked list simulation). Recursively flatten nested structure. */
+    /**
+     * Flatten Nested List Iterator (linked list simulation)
+     *
+     * <p><b>Approach:</b> Flatten Nested List Iterator (linked list simulation). Recursively flatten nested structure.
+     *
+     * @param nestedList the nestedList parameter
+     * @return the computed result
+     */
     public static List<Integer> flattenNestedList(List<Object> nestedList) {
         List<Integer> result = new ArrayList<>();
         for (Object item : nestedList) {
@@ -210,7 +402,15 @@ public class LinkedListReversalPatterns {
         return result;
     }
 
-    /** Reverse Linked List in Groups of Variable Size. Different group sizes per iteration. */
+    /**
+     * Reverse Linked List in Groups of Variable Size
+     *
+     * <p><b>Approach:</b> Reverse Linked List in Groups of Variable Size. Different group sizes per iteration.
+     *
+     * @param head the head parameter
+     * @param groups the groups parameter
+     * @return the computed result
+     */
     public static ListNode reverseInGroups(ListNode head, int[] groups) {
         ListNode d = new ListNode(0, head), prev = d;
         int gi = 0;
@@ -225,7 +425,15 @@ public class LinkedListReversalPatterns {
         return d.next;
     }
 
-    /** Swap Kth Node from Begin and End. Find kth from start and end, swap values. */
+    /**
+     * Swap Kth Node from Begin and End
+     *
+     * <p><b>Approach:</b> Swap Kth Node from Begin and End. Find kth from start and end, swap values.
+     *
+     * @param head the head parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static ListNode swapNodes(ListNode head, int k) {
         ListNode f = head; for (int i = 1; i < k; i++) f = f.next;
         ListNode first = f, second = head;
@@ -234,7 +442,14 @@ public class LinkedListReversalPatterns {
         return head;
     }
 
-    /** Remove Zero Sum Consecutive Nodes. Prefix sum to detect zero-sum segments. */
+    /**
+     * Remove Zero Sum Consecutive Nodes
+     *
+     * <p><b>Approach:</b> Remove Zero Sum Consecutive Nodes. Prefix sum to detect zero-sum segments.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static ListNode removeZeroSumSublists(ListNode head) {
         ListNode d = new ListNode(0, head);
         Map<Integer, ListNode> prefixMap = new HashMap<>();
@@ -245,7 +460,14 @@ public class LinkedListReversalPatterns {
         return d.next;
     }
 
-    /** Maximum Twin Sum of a Linked List. Reverse second half, sum with first half. */
+    /**
+     * Maximum Twin Sum of a Linked List
+     *
+     * <p><b>Approach:</b> Maximum Twin Sum of a Linked List. Reverse second half, sum with first half.
+     *
+     * @param head the head parameter
+     * @return the computed result
+     */
     public static int pairSum(ListNode head) {
         ListNode s = head, f = head;
         while (f != null && f.next != null) { s = s.next; f = f.next.next; }

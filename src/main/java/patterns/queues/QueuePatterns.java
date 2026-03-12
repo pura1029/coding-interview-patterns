@@ -13,7 +13,15 @@ import java.util.*;
 public class QueuePatterns {
 
     // ======================= EASY 1: Implement Queue using Stacks =======================
-    /** Two stacks: in-stack for push, out-stack for pop/peek; lazy transfer. Amortized O(1) per operation. */
+    /**
+     * Implement Queue using Stacks — simulate FIFO behavior with two LIFO stacks.
+     *
+     * <p><b>Approach:</b> In-stack receives pushes. Out-stack serves pops/peeks.
+     * Transfer elements lazily from in to out only when out is empty, which reverses
+     * the order to achieve FIFO.
+     *
+     * <p><b>Operations:</b> Push O(1), Pop/Peek amortized O(1), Empty O(1).
+     */
     static class MyQueue {
         Deque<Integer> in = new ArrayDeque<>(), out = new ArrayDeque<>();
         public void push(int x) { in.push(x); }
@@ -24,14 +32,29 @@ public class QueuePatterns {
     }
 
     // ======================= EASY 2: Number of Recent Calls =======================
-    /** Queue: add timestamp, evict entries older than t-3000; size = count. O(1) amortized per call. */
+    /**
+     * Number of Recent Calls — count how many requests have been made in the last 3000ms.
+     *
+     * <p><b>Approach:</b> Queue stores timestamps. On each ping, add the new timestamp
+     * and evict entries older than t − 3000 from the front. Queue size = count.
+     *
+     * <p><b>Operations:</b> O(1) amortized per ping.
+     */
     static class RecentCounter {
         Queue<Integer> q = new LinkedList<>();
         public int ping(int t) { q.add(t); while (q.peek() < t - 3000) q.poll(); return q.size(); }
     }
 
     // ======================= EASY 3: Moving Average from Data Stream =======================
-    /** Fixed-size queue with running sum; evict oldest when full. O(1) per next(). */
+    /**
+     * Moving Average from Data Stream — compute the moving average over a fixed window.
+     *
+     * <p><b>Approach:</b> Queue of fixed capacity with a running sum.
+     * When the queue is full, evict the oldest value and subtract it from the sum.
+     * Add the new value and divide sum by queue size.
+     *
+     * <p><b>Operations:</b> O(1) per next() call.
+     */
     static class MovingAverage {
         Queue<Integer> q = new LinkedList<>();
         int maxSize; double sum;
@@ -44,7 +67,22 @@ public class QueuePatterns {
     }
 
     // ======================= EASY 4: Number of Students Unable to Eat =======================
-    /** Simulate queue rotation: if front student can eat top sandwich, remove both; else rotate student. O(n²) time. */
+    /**
+     * Number of Students Unable to Eat — students in a queue pick sandwiches from a stack.
+     * If the front student doesn't want the top sandwich, they go to the back.
+     *
+     * <p><b>Approach:</b> Simulate the queue rotation. Track consecutive failed attempts;
+     * if no student can eat the current sandwich (attempts = queue size), stop.
+     *
+     * <p><b>Example:</b> students=[1,1,0,0], sandwiches=[0,1,0,1] → 0.
+     *
+     * @param students   preferences of students (0 or 1)
+     * @param sandwiches stack of sandwiches (top first)
+     * @return number of students unable to eat
+     *
+     * <p><b>Time:</b> O(n²) worst case — each student may rotate multiple times.
+     * <br><b>Space:</b> O(n) — queue of students.
+     */
     public static int countStudents(int[] students, int[] sandwiches) {
         Queue<Integer> q = new LinkedList<>();
         for (int s : students) q.add(s);
@@ -57,7 +95,22 @@ public class QueuePatterns {
     }
 
     // ======================= EASY 5: Time Needed to Buy Tickets =======================
-    /** Simulate queue: each person buys one ticket per turn; count turns until person k finishes. O(n·max) time. */
+    /**
+     * Time Needed to Buy Tickets — each person buys one ticket per turn and goes to the back.
+     * Find how many turns until person k finishes buying all their tickets.
+     *
+     * <p><b>Approach:</b> For each person before or at k, they contribute min(tickets[i], tickets[k]) turns.
+     * For each person after k, they contribute min(tickets[i], tickets[k] − 1) turns.
+     *
+     * <p><b>Example:</b> tickets=[2,3,2], k=2 → 6.
+     *
+     * @param tickets array of ticket counts each person wants
+     * @param k       index of the person to track
+     * @return total time until person k finishes
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — constant variables.
+     */
     public static int timeRequiredToBuy(int[] tickets, int k) {
         int time = 0;
         for (int i = 0; i < tickets.length; i++) {
@@ -67,7 +120,14 @@ public class QueuePatterns {
     }
 
     // ======================= EASY 6: Implement Stack using Queues =======================
-    /** Single queue: after each push, rotate so newest is at front. O(n) push, O(1) pop. */
+    /**
+     * Implement Stack using Queues — simulate LIFO behavior using a single FIFO queue.
+     *
+     * <p><b>Approach:</b> After each push, rotate all existing elements behind the new one
+     * so the newest element is always at the front.
+     *
+     * <p><b>Operations:</b> Push O(n), Pop/Top O(1), Empty O(1).
+     */
     static class MyStack {
         Queue<Integer> q = new LinkedList<>();
         public void push(int x) { q.add(x); for (int i = 1; i < q.size(); i++) q.add(q.poll()); }
@@ -77,7 +137,15 @@ public class QueuePatterns {
     }
 
     // ======================= EASY 7: First Unique Number in Stream =======================
-    /** Queue + frequency map: enqueue all, peek skipping non-unique from front. O(1) amortized per add. */
+    /**
+     * First Unique Number in Stream — maintain a stream of integers and efficiently
+     * return the first unique (non-repeated) number.
+     *
+     * <p><b>Approach:</b> Queue + frequency map. On showFirstUnique(), skip front entries
+     * whose frequency exceeds 1. The first entry with frequency 1 is the answer.
+     *
+     * <p><b>Operations:</b> add O(1), showFirstUnique amortized O(1).
+     */
     static class FirstUnique {
         Queue<Integer> q = new LinkedList<>();
         Map<Integer, Integer> freq = new HashMap<>();
@@ -90,7 +158,23 @@ public class QueuePatterns {
     }
 
     // ======================= EASY 8: Reverse First K Elements of Queue =======================
-    /** Push first k elements onto stack, then push back to queue, then rotate remaining. O(n) time. */
+    /**
+     * Reverse First K Elements of Queue — reverse the order of the first k elements
+     * while keeping the remaining elements in order.
+     *
+     * <p><b>Approach:</b> Pop the first k elements onto a stack (reverses them),
+     * push them back to the queue, then rotate the remaining (size − k) elements
+     * to the back.
+     *
+     * <p><b>Example:</b> [1,2,3,4,5], k=3 → [3,2,1,4,5].
+     *
+     * @param q the input queue
+     * @param k number of elements to reverse
+     * @return the queue with first k elements reversed
+     *
+     * <p><b>Time:</b> O(n) — three passes over elements.
+     * <br><b>Space:</b> O(k) — stack holds k elements.
+     */
     public static Queue<Integer> reverseFirstK(Queue<Integer> q, int k) {
         Deque<Integer> stack = new ArrayDeque<>();
         for (int i = 0; i < k; i++) stack.push(q.poll());
@@ -100,7 +184,21 @@ public class QueuePatterns {
     }
 
     // ======================= EASY 9: Generate Binary Numbers 1 to N =======================
-    /** BFS-style: start with "1", each iteration append "0" and "1" to generate next binary numbers. O(n) time. */
+    /**
+     * Generate Binary Numbers 1 to N — produce the binary representation of numbers 1 through n.
+     *
+     * <p><b>Approach:</b> BFS-style generation: start with "1". Each iteration,
+     * dequeue a value and enqueue it + "0" and it + "1".
+     * The first n dequeued values are the binary numbers.
+     *
+     * <p><b>Example:</b> n=5 → ["1","10","11","100","101"].
+     *
+     * @param n the count of binary numbers to generate
+     * @return array of binary string representations
+     *
+     * <p><b>Time:</b> O(n) — generate n binary strings.
+     * <br><b>Space:</b> O(n) — queue and result array.
+     */
     public static String[] generateBinary(int n) {
         String[] result = new String[n];
         Queue<String> q = new LinkedList<>();
@@ -115,7 +213,21 @@ public class QueuePatterns {
     }
 
     // ======================= EASY 10: Number of Islands (BFS approach) =======================
-    /** BFS flood fill from each unvisited '1'; count connected components. O(m·n) time. */
+    /**
+     * Number of Islands (BFS) — count the number of connected components of '1's
+     * in a 2D grid.
+     *
+     * <p><b>Approach:</b> BFS flood fill from each unvisited '1'. Mark visited cells
+     * as '0'. Each BFS traversal discovers one island.
+     *
+     * <p><b>Example:</b> [['1','1','0'],['1','1','0'],['0','0','1']] → 2.
+     *
+     * @param grid 2D character grid of '1' (land) and '0' (water)
+     * @return number of islands
+     *
+     * <p><b>Time:</b> O(m·n) — each cell visited at most once.
+     * <br><b>Space:</b> O(min(m, n)) — BFS queue size.
+     */
     public static int numIslands(char[][] grid) {
         int count = 0, m = grid.length, n = grid[0].length;
         for (int i = 0; i < m; i++) {
@@ -138,7 +250,14 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 1: Design Circular Queue =======================
-    /** Fixed array with head/tail indices using modular arithmetic. O(1) all operations. */
+    /**
+     * Design Circular Queue — implement a FIFO queue with fixed capacity using a circular array.
+     *
+     * <p><b>Approach:</b> Fixed-size array with head and tail indices using modular arithmetic.
+     * Tail advances on enqueue, head advances on dequeue. Full/empty differentiated by size counter.
+     *
+     * <p><b>Operations:</b> All O(1) time, O(k) space.
+     */
     static class MyCircularQueue {
         int[] data; int head, tail, size, capacity;
         MyCircularQueue(int k) { data = new int[k]; capacity = k; head = 0; tail = -1; size = 0; }
@@ -151,7 +270,16 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 2: Design Circular Deque =======================
-    /** Fixed array with front/rear indices using modular arithmetic. O(1) all operations. */
+    /**
+     * Design Circular Deque — implement a double-ended queue with fixed capacity
+     * using a circular array.
+     *
+     * <p><b>Approach:</b> Circular array with front and rear pointers. insertFront
+     * decrements front (mod capacity), insertLast increments rear. Supports both
+     * ends in O(1).
+     *
+     * <p><b>Operations:</b> All O(1) time, O(k) space.
+     */
     static class MyCircularDeque {
         int[] data; int front, rear, size, capacity;
         MyCircularDeque(int k) { data = new int[k]; capacity = k; front = 0; rear = k - 1; size = 0; }
@@ -166,7 +294,21 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 3: Rotting Oranges =======================
-    /** Multi-source BFS: start from all rotten oranges simultaneously; minutes = levels. O(m·n) time. */
+    /**
+     * Rotting Oranges — find the minimum time for all fresh oranges to rot via
+     * adjacent spreading.
+     *
+     * <p><b>Approach:</b> Multi-source BFS from all initially rotten oranges.
+     * Each BFS level = 1 minute. Track fresh orange count; return -1 if any remain.
+     *
+     * <p><b>Example:</b> [[2,1,1],[1,1,0],[0,1,1]] → 4.
+     *
+     * @param grid 2D grid: 0 = empty, 1 = fresh, 2 = rotten
+     * @return minutes until all oranges rot, or -1 if impossible
+     *
+     * <p><b>Time:</b> O(m·n) — each cell processed at most once.
+     * <br><b>Space:</b> O(m·n) — BFS queue.
+     */
     public static int orangesRotting(int[][] grid) {
         int m = grid.length, n = grid[0].length, fresh = 0, minutes = 0;
         Queue<int[]> q = new LinkedList<>();
@@ -188,7 +330,17 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 4: Walls and Gates =======================
-    /** Multi-source BFS from all gates (0); fill each empty room with shortest distance. O(m·n) time. */
+    /**
+     * Walls and Gates — fill each empty room with its distance to the nearest gate.
+     *
+     * <p><b>Approach:</b> Multi-source BFS starting from all gates (cells with value 0).
+     * Each level increments the distance by 1. Only fill rooms marked as INF.
+     *
+     * @param rooms 2D grid: -1 = wall, 0 = gate, INF = empty room
+     *
+     * <p><b>Time:</b> O(m·n) — each cell processed at most once.
+     * <br><b>Space:</b> O(m·n) — BFS queue.
+     */
     public static void wallsAndGates(int[][] rooms) {
         int INF = Integer.MAX_VALUE, m = rooms.length, n = rooms[0].length;
         Queue<int[]> q = new LinkedList<>();
@@ -203,7 +355,22 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 5: Open the Lock =======================
-    /** BFS from "0000"; try all 8 neighbor combinations each step; skip deadends. O(10^4) time. */
+    /**
+     * Open the Lock — find the minimum turns to reach a target lock combination
+     * from "0000", avoiding deadends.
+     *
+     * <p><b>Approach:</b> BFS from "0000". Each state has 8 neighbors (4 wheels × 2 directions).
+     * Skip deadend combinations. The BFS level = number of turns.
+     *
+     * <p><b>Example:</b> deadends=["0201","0101","0102","1212","2002"], target="0202" → 6.
+     *
+     * @param deadends combinations to avoid
+     * @param target   the target combination
+     * @return minimum turns, or -1 if impossible
+     *
+     * <p><b>Time:</b> O(10^4 · 4) — at most 10,000 states × 8 neighbors.
+     * <br><b>Space:</b> O(10^4) — visited set.
+     */
     public static int openLock(String[] deadends, String target) {
         Set<String> dead = new HashSet<>(Arrays.asList(deadends));
         if (dead.contains("0000")) return -1;
@@ -231,7 +398,21 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 6: Shortest Path in Binary Matrix =======================
-    /** BFS on 8-directional grid from (0,0) to (n-1,n-1). O(n²) time. */
+    /**
+     * Shortest Path in Binary Matrix — find the shortest path from top-left to
+     * bottom-right in an n×n grid, moving in 8 directions (including diagonals).
+     *
+     * <p><b>Approach:</b> BFS from (0,0). Explore all 8 neighbors. Track path length.
+     * The first time we reach (n-1, n-1) is the shortest path.
+     *
+     * <p><b>Example:</b> [[0,0,0],[1,1,0],[1,1,0]] → 4.
+     *
+     * @param grid binary grid: 0 = open, 1 = blocked
+     * @return length of shortest clear path, or -1 if none exists
+     *
+     * <p><b>Time:</b> O(n²) — each cell visited at most once.
+     * <br><b>Space:</b> O(n²) — BFS queue.
+     */
     public static int shortestPathBinaryMatrix(int[][] grid) {
         int n = grid.length;
         if (grid[0][0] == 1 || grid[n - 1][n - 1] == 1) return -1;
@@ -250,7 +431,22 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 7: Task Scheduler =======================
-    /** Greedy formula: total = max((maxFreq - 1) * (n + 1) + countMax, tasks.length). O(n) time. */
+    /**
+     * Task Scheduler — find the minimum intervals needed to execute all tasks
+     * with a cooldown period of n between same tasks.
+     *
+     * <p><b>Approach:</b> Greedy formula: total = max((maxFreq − 1) × (n + 1) + countMax, tasks.length).
+     * The most frequent task creates a frame; other tasks fill idle slots.
+     *
+     * <p><b>Example:</b> tasks=['A','A','A','B','B','B'], n=2 → 8.
+     *
+     * @param tasks array of task characters
+     * @param n     cooldown period between same tasks
+     * @return minimum total intervals
+     *
+     * <p><b>Time:</b> O(n) — count frequencies + formula.
+     * <br><b>Space:</b> O(1) — fixed-size frequency array (26 letters).
+     */
     public static int leastInterval(char[] tasks, int n) {
         int[] freq = new int[26];
         for (char c : tasks) freq[c - 'A']++;
@@ -263,7 +459,21 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 8: Sliding Window Maximum (Deque) =======================
-    /** Monotonic deque: maintain decreasing order; front is window max. O(n) time, O(k) space. */
+    /**
+     * Sliding Window Maximum — find the maximum value in each sliding window of size k.
+     *
+     * <p><b>Approach:</b> Monotonic decreasing deque of indices. The front always holds
+     * the window maximum. Evict front if out-of-window; evict back if smaller than current.
+     *
+     * <p><b>Example:</b> [1,3,-1,-3,5,3,6,7], k=3 → [3,3,5,5,6,7].
+     *
+     * @param nums array of integers
+     * @param k    window size
+     * @return array of window maximums
+     *
+     * <p><b>Time:</b> O(n) — each element enqueued/dequeued once.
+     * <br><b>Space:</b> O(k) — deque stores at most k indices.
+     */
     public static int[] maxSlidingWindow(int[] nums, int k) {
         Deque<Integer> dq = new ArrayDeque<>();
         int[] res = new int[nums.length - k + 1];
@@ -277,7 +487,22 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 9: Kth Smallest Element in Sorted Matrix =======================
-    /** Min-heap BFS: start from top-left, always expand smallest neighbor. O(k·log k) time. */
+    /**
+     * Kth Smallest Element in a Sorted Matrix — find the kth smallest element
+     * in a matrix where rows and columns are sorted.
+     *
+     * <p><b>Approach:</b> Min-heap BFS starting from the top-left corner. Always expand
+     * the smallest neighbor (right or down). The kth element polled is the answer.
+     *
+     * <p><b>Example:</b> [[1,5,9],[10,11,13],[12,13,15]], k=8 → 13.
+     *
+     * @param matrix n×n sorted matrix
+     * @param k      the rank (1-based) of the desired element
+     * @return the kth smallest element
+     *
+     * <p><b>Time:</b> O(k·log k) — at most k heap operations.
+     * <br><b>Space:</b> O(k + n²) — heap and visited array.
+     */
     public static int kthSmallest(int[][] matrix, int k) {
         int n = matrix.length;
         PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
@@ -296,7 +521,14 @@ public class QueuePatterns {
     }
 
     // ======================= MEDIUM 10: Design Hit Counter =======================
-    /** Queue stores timestamps; evict old entries (> 300s) on each call. O(1) amortized. */
+    /**
+     * Design Hit Counter — count the number of hits in the past 5 minutes (300 seconds).
+     *
+     * <p><b>Approach:</b> Queue stores timestamps. On getHits(), evict all entries
+     * older than (timestamp − 300). The remaining queue size = hit count.
+     *
+     * <p><b>Operations:</b> hit O(1), getHits amortized O(1).
+     */
     static class HitCounter {
         Queue<Integer> q = new LinkedList<>();
         public void hit(int timestamp) { q.add(timestamp); }
@@ -307,7 +539,23 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 1: Task Scheduler with Cooldown (Heap + Queue) =======================
-    /** Max-heap for task counts + cooldown queue; process highest-freq task each tick. O(n·log 26) time. */
+    /**
+     * Task Scheduler with Cooldown (Heap + Queue) — schedule tasks with cooldown
+     * using a max-heap for priority and a queue for cooldown tracking.
+     *
+     * <p><b>Approach:</b> Max-heap orders tasks by remaining count. Each tick,
+     * execute the highest-count task, decrement, and place in a cooldown queue.
+     * Release tasks from cooldown when their wait expires.
+     *
+     * <p><b>Example:</b> tasks=['A','A','A','B','B','B'], n=2 → 8.
+     *
+     * @param tasks array of task characters
+     * @param n     cooldown period
+     * @return total time intervals needed
+     *
+     * <p><b>Time:</b> O(n·log 26) ≈ O(n) — heap has at most 26 entries.
+     * <br><b>Space:</b> O(26) — heap and cooldown queue.
+     */
     public static int leastIntervalHeap(char[] tasks, int n) {
         int[] freq = new int[26];
         for (char c : tasks) freq[c - 'A']++;
@@ -324,7 +572,23 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 2: Shortest Subarray with Sum >= K =======================
-    /** Monotonic deque on prefix sums: remove front when sum difference >= k; remove back when not monotone. O(n) time. */
+    /**
+     * Shortest Subarray with Sum at Least K — find the shortest contiguous subarray
+     * whose sum is at least k (handles negative numbers).
+     *
+     * <p><b>Approach:</b> Monotonic deque on prefix sums. Remove from front when
+     * prefix[i] − prefix[front] ≥ k (candidate answer). Remove from back when
+     * prefix[i] ≤ prefix[back] (non-monotone — can't be useful).
+     *
+     * <p><b>Example:</b> [2,-1,2], k=3 → 3.
+     *
+     * @param nums array of integers (may contain negatives)
+     * @param k    target sum threshold
+     * @return length of shortest subarray with sum ≥ k, or -1 if none
+     *
+     * <p><b>Time:</b> O(n) — each index enqueued/dequeued once.
+     * <br><b>Space:</b> O(n) — prefix array and deque.
+     */
     public static int shortestSubarray(int[] nums, int k) {
         int n = nums.length;
         long[] prefix = new long[n + 1];
@@ -340,7 +604,21 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 3: Jump Game IV =======================
-    /** BFS with adjacency by value: group same-value indices; level-order traversal to reach end. O(n) time. */
+    /**
+     * Jump Game IV — find the minimum jumps to reach the last index. From index i,
+     * you can jump to i−1, i+1, or any index j where arr[j] == arr[i].
+     *
+     * <p><b>Approach:</b> BFS with adjacency by value. Group same-value indices.
+     * Level-order traversal; after visiting a value group, remove it to avoid revisiting.
+     *
+     * <p><b>Example:</b> [100,-23,-23,404,100,23,23,23,3,404] → 3.
+     *
+     * @param arr array of integers
+     * @return minimum jumps to reach the last index
+     *
+     * <p><b>Time:</b> O(n) — each index and value group visited at most once.
+     * <br><b>Space:</b> O(n) — visited array and value-to-index map.
+     */
     public static int minJumps(int[] arr) {
         int n = arr.length;
         if (n == 1) return 0;
@@ -375,7 +653,22 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 4: Sliding Window Median =======================
-    /** Two heaps (max-heap for lower half, min-heap for upper half) with lazy deletion. O(n·log n) time. */
+    /**
+     * Sliding Window Median — find the median of each sliding window of size k.
+     *
+     * <p><b>Approach:</b> Two heaps: max-heap for the lower half, min-heap for the upper half.
+     * Maintain balance so the median is at the top of the max-heap (odd k) or average of both tops.
+     * Remove outgoing elements and rebalance.
+     *
+     * <p><b>Example:</b> [1,3,-1,-3,5,3,6,7], k=3 → [1.0,-1.0,-1.0,3.0,5.0,6.0].
+     *
+     * @param nums array of integers
+     * @param k    window size
+     * @return array of medians for each window
+     *
+     * <p><b>Time:</b> O(n·log n) — heap operations per element.
+     * <br><b>Space:</b> O(n) — heaps store window elements.
+     */
     public static double[] medianSlidingWindow(int[] nums, int k) {
         PriorityQueue<Integer> lo = new PriorityQueue<>(Collections.reverseOrder());
         PriorityQueue<Integer> hi = new PriorityQueue<>();
@@ -396,7 +689,24 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 5: Word Ladder =======================
-    /** BFS: transform one letter at a time, level = number of transformations. O(n·L²) time. */
+    /**
+     * Word Ladder — find the shortest transformation sequence from beginWord to endWord,
+     * changing one letter at a time, using only words from the dictionary.
+     *
+     * <p><b>Approach:</b> BFS where each state is a word. For each word, try changing
+     * every character to 'a'-'z'. If the result is in the dictionary, add it to the queue.
+     * BFS level = number of transformations.
+     *
+     * <p><b>Example:</b> "hit" → "cog" via ["hot","dot","dog","lot","log","cog"] → 5.
+     *
+     * @param beginWord starting word
+     * @param endWord   target word
+     * @param wordList  dictionary of valid words
+     * @return length of shortest transformation (0 if impossible)
+     *
+     * <p><b>Time:</b> O(n·L²) where n = dictionary size, L = word length.
+     * <br><b>Space:</b> O(n·L) — dictionary set and BFS queue.
+     */
     public static int ladderLength(String beginWord, String endWord, List<String> wordList) {
         Set<String> dict = new HashSet<>(wordList);
         if (!dict.contains(endWord)) return 0;
@@ -423,7 +733,20 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 6: Shortest Path to Get All Keys =======================
-    /** BFS with bitmask state (position + keys collected). O(m·n·2^k) time. */
+    /**
+     * Shortest Path to Get All Keys — find the shortest path in a grid to collect
+     * all keys (lowercase letters), using BFS with bitmask state.
+     *
+     * <p><b>Approach:</b> BFS where state = (row, col, keysCollected).
+     * Keys are represented as a bitmask. Locked doors require the corresponding key.
+     * Return the step count when all keys are collected.
+     *
+     * @param grid the grid with '@' (start), '#' (wall), 'a'-'f' (keys), 'A'-'F' (locks)
+     * @return shortest path to collect all keys, or -1 if impossible
+     *
+     * <p><b>Time:</b> O(m·n·2^k) where k = number of keys.
+     * <br><b>Space:</b> O(m·n·2^k) — visited states.
+     */
     public static int shortestPathAllKeys(String[] grid) {
         int m = grid.length, n = grid[0].length(), allKeys = 0;
         Queue<int[]> q = new LinkedList<>();
@@ -455,7 +778,21 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 7: Minimum Cost to Make Valid Parentheses (Queue simulation) =======================
-    /** Greedy with balance counter: cost to flip unmatched open/close brackets. O(n) time, O(1) space. */
+    /**
+     * Minimum Cost to Make Valid Parentheses — find the minimum number of bracket
+     * flips to make a parentheses string valid.
+     *
+     * <p><b>Approach:</b> Greedy with a balance counter. Unmatched ')' (balance goes negative)
+     * costs one flip. Remaining unmatched '(' at the end also cost one flip each.
+     *
+     * <p><b>Example:</b> "(()))(" → 2.
+     *
+     * @param s string of parentheses
+     * @return minimum cost (flips) to make the string valid
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — two counters.
+     */
     public static int minCostValidParens(String s) {
         int openCount = 0, cost = 0;
         for (char c : s.toCharArray()) {
@@ -469,7 +806,23 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 8: Process Tasks Using Servers =======================
-    /** Two priority queues: free servers and busy servers (by availability time). O(n·log n) time. */
+    /**
+     * Process Tasks Using Servers — assign tasks to the lightest available server.
+     * If no server is free, wait until the earliest one becomes available.
+     *
+     * <p><b>Approach:</b> Two priority queues: free servers (by weight, then index)
+     * and busy servers (by availability time). Process tasks in order, releasing
+     * servers as they become free.
+     *
+     * <p><b>Example:</b> servers=[3,3,2], tasks=[1,2,3,2,1,2] → [2,2,0,2,1,2].
+     *
+     * @param servers weight of each server
+     * @param tasks   processing time of each task
+     * @return array mapping each task to the server that processes it
+     *
+     * <p><b>Time:</b> O(n·log n) — heap operations per task.
+     * <br><b>Space:</b> O(n) — heaps store all servers.
+     */
     public static int[] assignTasks(int[] servers, int[] tasks) {
         PriorityQueue<int[]> free = new PriorityQueue<>((a, b) -> a[0] != b[0] ? a[0] - b[0] : a[1] - b[1]);
         PriorityQueue<int[]> busy = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
@@ -494,7 +847,15 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 9: Design Snake Game =======================
-    /** Deque as snake body: addFirst for new head, removeLast for tail move. O(1) per move. */
+    /**
+     * Design Snake Game — simulate the classic snake game on a grid.
+     *
+     * <p><b>Approach:</b> Deque as the snake body: addFirst for the new head,
+     * removeLast for the tail. If food is eaten, the tail stays (snake grows).
+     * A HashSet tracks occupied cells for self-collision detection.
+     *
+     * <p><b>Operations:</b> O(1) per move.
+     */
     static class SnakeGame {
         int width, height, score;
         int[][] food;
@@ -526,7 +887,16 @@ public class QueuePatterns {
     }
 
     // ======================= HARD 10: Maximum Frequency Stack (Queue variant) =======================
-    /** Freq map + stacks grouped by frequency; pop from highest frequency group. O(1) push/pop. */
+    /**
+     * Maximum Frequency Stack — design a stack that pops the most frequent element.
+     * Ties broken by most recent push.
+     *
+     * <p><b>Approach:</b> Frequency map + stacks grouped by frequency level.
+     * Push increments frequency and adds to the corresponding group.
+     * Pop removes from the highest frequency group.
+     *
+     * <p><b>Operations:</b> O(1) push and pop.
+     */
     static class FreqStack {
         Map<Integer, Integer> freq = new HashMap<>();
         Map<Integer, Deque<Integer>> group = new HashMap<>();

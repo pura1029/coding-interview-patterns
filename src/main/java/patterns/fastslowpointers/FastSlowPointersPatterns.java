@@ -31,6 +31,14 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= EASY 1: Happy Number =======================
+    /**
+     * Happy Number
+     *
+     * <p><b>Approach:</b> Floyd's cycle detection on digit-square-sum sequence; slow computes once, fast computes twice
+     *
+     * <p><b>Time:</b> O(log n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean isHappy(int n) {
         int slow = n, fast = n;
         do { slow = digitSqSum(slow); fast = digitSqSum(digitSqSum(fast)); } while (slow != fast);
@@ -41,6 +49,14 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= EASY 2: Linked List Cycle Detection =======================
+    /**
+     * Linked List Cycle Detection
+     *
+     * <p><b>Approach:</b> Floyd's tortoise-hare: slow moves 1 step, fast moves 2; if they meet, cycle exists
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean hasCycle(ListNode head) {
         ListNode s = head, f = head;
         while (f != null && f.next != null) { s = s.next; f = f.next.next; if (s == f) return true; }
@@ -48,6 +64,14 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= EASY 3: Middle of the Linked List =======================
+    /**
+     * Middle of the Linked List
+     *
+     * <p><b>Approach:</b> Slow pointer moves 1 step, fast moves 2; when fast reaches end, slow is at middle
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode middleNode(ListNode head) {
         ListNode s = head, f = head;
         while (f != null && f.next != null) { s = s.next; f = f.next.next; }
@@ -55,6 +79,14 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= EASY 4: Palindrome Linked List =======================
+    /**
+     * Palindrome Linked List
+     *
+     * <p><b>Approach:</b> Find middle with fast/slow, reverse second half, compare both halves node by node
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean isPalindromeList(ListNode head) {
         ListNode slow = head, fast = head;
         while (fast != null && fast.next != null) { slow = slow.next; fast = fast.next.next; }
@@ -69,6 +101,14 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= EASY 5: Remove Nth Node From End =======================
+    /**
+     * Remove Nth Node From End
+     *
+     * <p><b>Approach:</b> Two pointers with n+1 gap; when fast reaches null, slow is before the target node
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode removeNthFromEnd(ListNode head, int n) {
         ListNode dummy = new ListNode(0, head);
         ListNode fast = dummy, slow = dummy;
@@ -79,6 +119,14 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= EASY 6: Intersection of Two Linked Lists =======================
+    /**
+     * Intersection of Two Linked Lists
+     *
+     * <p><b>Approach:</b> Two pointers traverse both lists; switching heads on null aligns them at intersection
+     *
+     * <p><b>Time:</b> O(m+n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode getIntersectionNode(ListNode headA, ListNode headB) {
         ListNode a = headA, b = headB;
         while (a != b) { a = (a == null) ? headB : a.next; b = (b == null) ? headA : b.next; }
@@ -86,6 +134,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= EASY 7: Circular Array Loop Detection =======================
+    /**
+     * Circular Array Loop Detection
+     *
+     * <p><b>Approach:</b> For each index, use Floyd's fast/slow pointers following array directions; if pointers meet with consistent direction, a cycle exists.
+     *
+     * @param nums the circular array where each element indicates step direction and count
+     * @return true if a valid cycle exists in the array
+     *
+     * <p><b>Time:</b> O(n^2) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean isCircularLoop(int[] nums) {
         // Simplified: check if following the array like a sequence leads to cycle
         int n = nums.length;
@@ -114,6 +173,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= EASY 8: Check if N and its double exist =======================
+    /**
+     * Check If N and Its Double Exist
+     *
+     * <p><b>Approach:</b> Use a HashSet to track seen values; for each element, check if 2*n or n/2 already exists in the set.
+     *
+     * @param arr the input array of integers
+     * @return true if there exist two indices i and j such that arr[i] == 2 * arr[j]
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static boolean checkIfDoubleExists(int[] arr) {
         Set<Integer> seen = new HashSet<>();
         for (int n : arr) {
@@ -124,6 +194,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= EASY 9: Power of Two (bit trick related to cycle) =======================
+    /**
+     * Power of Two
+     *
+     * <p><b>Approach:</b> A number is a power of two if it has exactly one set bit; use n & (n-1) == 0 which clears the lowest set bit.
+     *
+     * @param n the integer to check
+     * @return true if n is a positive power of two
+     *
+     * <p><b>Time:</b> O(1) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean isPowerOfTwo(int n) {
         return n > 0 && (n & (n - 1)) == 0;
     }
@@ -133,6 +214,17 @@ public class FastSlowPointersPatterns {
         TreeNode left, right;
         TreeNode() {}
     }
+    /**
+     * Count Nodes in Complete Binary Tree
+     *
+     * <p><b>Approach:</b> Compare left and right heights: if equal, tree is perfect so return 2^h - 1; otherwise recurse on both subtrees.
+     *
+     * @param root the root of the complete binary tree
+     * @return the total number of nodes in the tree
+     *
+     * <p><b>Time:</b> O(log^2 n) time.
+     * <br><b>Space:</b> O(log n) space.
+     */
     public static int countNodes(TreeNode root) {
         if (root == null) return 0;
         int leftH = 0, rightH = 0;
@@ -144,6 +236,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 1: Linked List Cycle II (Find Cycle Start) =======================
+    /**
+     * Linked List Cycle II - Find Cycle Start
+     *
+     * <p><b>Approach:</b> Floyd's algorithm: after fast/slow meet inside cycle, reset slow to head; advance both one step at a time until they meet at cycle entry.
+     *
+     * @param head the head of the linked list
+     * @return the node where the cycle begins, or null if no cycle
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode detectCycleStart(ListNode head) {
         ListNode s = head, f = head;
         while (f != null && f.next != null) {
@@ -154,6 +257,14 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 2: Reorder List (L0→Ln→L1→Ln-1→...) =======================
+    /**
+     * Reorder List
+     *
+     * <p><b>Approach:</b> Find middle, reverse second half, interleave both halves alternately
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static void reorderList(ListNode head) {
         if (head == null || head.next == null) return;
         ListNode slow = head, fast = head;
@@ -169,6 +280,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 3: Sort List (Merge Sort using slow/fast) =======================
+    /**
+     * Sort List (Merge Sort using Fast/Slow Split)
+     *
+     * <p><b>Approach:</b> Find the middle using slow/fast pointers, split the list, recursively sort both halves, and merge the sorted halves.
+     *
+     * @param head the head of the unsorted linked list
+     * @return the head of the sorted linked list
+     *
+     * <p><b>Time:</b> O(n log n) time.
+     * <br><b>Space:</b> O(log n) space.
+     */
     public static ListNode sortList(ListNode head) {
         if (head == null || head.next == null) return head;
         ListNode slow = head, fast = head.next;
@@ -189,6 +311,18 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 4: Add Two Numbers II (reverse & add) =======================
+    /**
+     * Add Two Numbers II
+     *
+     * <p><b>Approach:</b> Reverse both input lists, add corresponding digits with carry propagation, then reverse the result to get correct order.
+     *
+     * @param l1 the head of the first number list (most significant digit first)
+     * @param l2 the head of the second number list
+     * @return the head of the sum list in most-significant-digit-first order
+     *
+     * <p><b>Time:</b> O(m+n) time.
+     * <br><b>Space:</b> O(max(m,n)) space.
+     */
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         l1 = reverse(l1); l2 = reverse(l2);
         ListNode dummy = new ListNode(0);
@@ -206,6 +340,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 5: Odd Even Linked List =======================
+    /**
+     * Odd Even Linked List
+     *
+     * <p><b>Approach:</b> Separate nodes at odd and even positions into two sub-lists using pointer manipulation, then append the even list after the odd list.
+     *
+     * @param head the head of the linked list
+     * @return the head of the rearranged list with odd-indexed nodes first, then even-indexed
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode oddEvenList(ListNode head) {
         if (head == null) return null;
         ListNode odd = head, even = head.next, evenHead = even;
@@ -218,6 +363,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 6: Delete Middle Node =======================
+    /**
+     * Delete the Middle Node of a Linked List
+     *
+     * <p><b>Approach:</b> Use slow/fast pointers where fast starts two steps ahead; when fast reaches end, slow is just before the middle node to delete.
+     *
+     * @param head the head of the linked list
+     * @return the head of the list with the middle node removed
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode deleteMiddle(ListNode head) {
         if (head.next == null) return null;
         ListNode slow = head, fast = head.next.next;
@@ -227,6 +383,18 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 7: Rotate List by K =======================
+    /**
+     * Rotate List by K Places
+     *
+     * <p><b>Approach:</b> Calculate list length, form a circular list by connecting tail to head, then break at position (length - k % length).
+     *
+     * @param head the head of the linked list
+     * @param k    the number of positions to rotate right
+     * @return the head of the rotated list
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode rotateRight(ListNode head, int k) {
         if (head == null || head.next == null || k == 0) return head;
         int len = 1;
@@ -242,6 +410,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 8: Swap Nodes in Pairs =======================
+    /**
+     * Swap Nodes in Pairs
+     *
+     * <p><b>Approach:</b> Iteratively swap every two adjacent nodes using a dummy head; rewire pointers for each pair while traversing.
+     *
+     * @param head the head of the linked list
+     * @return the head of the list with adjacent nodes swapped
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode swapPairs(ListNode head) {
         ListNode dummy = new ListNode(0, head);
         ListNode prev = dummy;
@@ -254,6 +433,18 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 9: Partition List =======================
+    /**
+     * Partition List
+     *
+     * <p><b>Approach:</b> Maintain two separate lists (before and after partition value x); iterate through original list distributing nodes, then concatenate.
+     *
+     * @param head the head of the linked list
+     * @param x    the partition value
+     * @return the head of the rearranged list with all nodes < x before nodes >= x
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode partition(ListNode head, int x) {
         ListNode beforeD = new ListNode(0), afterD = new ListNode(0);
         ListNode before = beforeD, after = afterD;
@@ -268,6 +459,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= MEDIUM 10: Remove Duplicates from Sorted List II =======================
+    /**
+     * Remove Duplicates from Sorted List II
+     *
+     * <p><b>Approach:</b> Use a dummy head and prev pointer; when duplicates detected, skip all nodes with that value by advancing head past them.
+     *
+     * @param head the head of the sorted linked list
+     * @return the head of the list with all duplicate-value nodes removed entirely
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode deleteDuplicatesII(ListNode head) {
         ListNode dummy = new ListNode(0, head);
         ListNode prev = dummy;
@@ -284,6 +486,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= HARD 1: Find Duplicate Number =======================
+    /**
+     * Find the Duplicate Number
+     *
+     * <p><b>Approach:</b> Treat array values as pointers forming a linked list; apply Floyd's cycle detection to find the duplicate entry point.
+     *
+     * @param nums array of n+1 integers where each integer is between 1 and n
+     * @return the duplicate number
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int findDuplicate(int[] nums) {
         int slow = nums[0], fast = nums[0];
         do { slow = nums[slow]; fast = nums[nums[fast]]; } while (slow != fast);
@@ -293,6 +506,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= HARD 2: Linked List Cycle with Entry + Length =======================
+    /**
+     * Linked List Cycle with Entry Point and Length
+     *
+     * <p><b>Approach:</b> Detect cycle with Floyd's algorithm, compute cycle length by traversing the cycle, then find entry by resetting one pointer to head.
+     *
+     * @param head the head of the linked list
+     * @return an array [entryValue, cycleLength], or [-1, 0] if no cycle
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int[] cycleInfo(ListNode head) {
         ListNode s = head, f = head;
         while (f != null && f.next != null) {
@@ -310,6 +534,18 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= HARD 3: Split Linked List into K Parts =======================
+    /**
+     * Split Linked List into K Parts
+     *
+     * <p><b>Approach:</b> Calculate part size and extra nodes (len/k, len%k); iterate through the list, cutting it into k parts where the first extra parts get one additional node.
+     *
+     * @param head the head of the linked list
+     * @param k    the number of parts to split into
+     * @return an array of k ListNode heads (some may be null if k > length)
+     *
+     * <p><b>Time:</b> O(n+k) time.
+     * <br><b>Space:</b> O(k) space.
+     */
     public static ListNode[] splitListToParts(ListNode head, int k) {
         int len = 0;
         ListNode cur = head;
@@ -329,6 +565,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= HARD 4: Flatten Multilevel Doubly Linked List (simplified) =======================
+    /**
+     * Flatten Multilevel Doubly Linked List (Simplified)
+     *
+     * <p><b>Approach:</b> Traverse the singly-linked list to the end; this simplified version demonstrates the traversal pattern used in flattening multilevel structures.
+     *
+     * @param head the head of the linked list
+     * @return the head of the flattened list
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode flattenList(ListNode head) {
         if (head == null) return null;
         ListNode cur = head;
@@ -357,6 +604,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= HARD 6: Copy List with Random Pointer (interleave) =======================
+    /**
+     * Copy List with Random Pointer (Interleave Method)
+     *
+     * <p><b>Approach:</b> Interleave copied nodes with originals (A->A'->B->B'...), copy random pointers using the interleaved structure, then separate the two lists.
+     *
+     * @param head the head of the linked list with random pointers
+     * @return the head of the deep-copied list
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space (excluding output).
+     */
     public static ListNode copyRandomList(ListNode head) {
         if (head == null) return null;
         ListNode cur = head;
@@ -382,6 +640,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= HARD 7: Merge K Sorted Lists (divide & conquer) =======================
+    /**
+     * Merge K Sorted Lists (Divide and Conquer)
+     *
+     * <p><b>Approach:</b> Recursively divide the list array in half, merge pairs of sorted lists bottom-up using the standard two-list merge.
+     *
+     * @param lists array of sorted linked list heads
+     * @return the head of the single merged sorted list
+     *
+     * <p><b>Time:</b> O(N log k) time.
+     * <br><b>Space:</b> O(log k) space.
+     */
     public static ListNode mergeKLists(ListNode[] lists) {
         if (lists == null || lists.length == 0) return null;
         return mergeKHelper(lists, 0, lists.length - 1);
@@ -393,6 +662,18 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= HARD 8: Reverse Linked List in Alternating K-Groups =======================
+    /**
+     * Reverse Linked List in Alternating K-Groups
+     *
+     * <p><b>Approach:</b> Reverse the first k nodes, skip the next k nodes unchanged, and recursively repeat for the remainder of the list.
+     *
+     * @param head the head of the linked list
+     * @param k    the group size for alternating reversal
+     * @return the head of the modified list
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n/k) space.
+     */
     public static ListNode reverseAlternateKGroup(ListNode head, int k) {
         ListNode cur = head;
         ListNode prev = null;
@@ -429,6 +710,17 @@ public class FastSlowPointersPatterns {
     }
 
     // ======================= HARD 10: Detect and Remove Loop =======================
+    /**
+     * Detect and Remove Loop in Linked List
+     *
+     * <p><b>Approach:</b> Use Floyd's cycle detection; once cycle found, reset one pointer to head and advance both until they meet at loop start, then remove the back-edge.
+     *
+     * @param head the head of the linked list
+     * @return the head of the loop-free list
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static ListNode detectAndRemoveLoop(ListNode head) {
         ListNode s = head, f = head;
         while (f != null && f.next != null) {

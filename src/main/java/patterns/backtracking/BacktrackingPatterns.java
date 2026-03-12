@@ -9,83 +9,312 @@ import java.util.*;
  */
 public class BacktrackingPatterns {
 
-    /** Generate Parentheses (simplified n=1,2). Track open/close count. */
-    /** Letter Combinations of a Phone Number (single digit). Map digit to letters. */
-    /** Binary Watch. Count bits in hour+minute. */
+    /**
+     * Generate Parentheses (simplified n=1,2)
+     *
+     * <p><b>Approach:</b> Generate Parentheses (simplified n=1,2). Track open/close count.
+     */
+    /**
+     * Letter Combinations of a Phone Number (single digit)
+     *
+     * <p><b>Approach:</b> Letter Combinations of a Phone Number (single digit). Map digit to letters.
+     */
+    /**
+     * Binary Watch
+     *
+     * <p><b>Approach:</b> Binary Watch. Count bits in hour+minute.
+     *
+     * @param turnedOn the turnedOn parameter
+     * @return the computed result
+     */
     public static List<String> readBinaryWatch(int turnedOn) { List<String> r=new ArrayList<>(); for(int h=0;h<12;h++) for(int m=0;m<60;m++) if(Integer.bitCount(h)+Integer.bitCount(m)==turnedOn) r.add(h+":"+(m<10?"0":"")+m); return r; }
-    /** Subsets (no duplicates). Include/exclude each element. */
+    /**
+     * Subsets (no duplicates)
+     *
+     * <p><b>Approach:</b> Subsets (no duplicates). Include/exclude each element.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> subsets(int[] nums) { List<List<Integer>> r=new ArrayList<>(); btSubsets(nums,0,new ArrayList<>(),r); return r; }
     private static void btSubsets(int[] nums,int start,List<Integer> cur,List<List<Integer>> r) { r.add(new ArrayList<>(cur)); for(int i=start;i<nums.length;i++) { cur.add(nums[i]); btSubsets(nums,i+1,cur,r); cur.remove(cur.size()-1); } }
-    /** Permutations of unique array. Swap or visited-array approach. */
+    /**
+     * Permutations of unique array
+     *
+     * <p><b>Approach:</b> Permutations of unique array. Swap or visited-array approach.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> permute(int[] nums) { List<List<Integer>> r=new ArrayList<>(); btPermute(nums,new boolean[nums.length],new ArrayList<>(),r); return r; }
     private static void btPermute(int[] nums,boolean[] used,List<Integer> cur,List<List<Integer>> r) { if(cur.size()==nums.length) { r.add(new ArrayList<>(cur)); return; } for(int i=0;i<nums.length;i++) { if(used[i]) continue; used[i]=true; cur.add(nums[i]); btPermute(nums,used,cur,r); cur.remove(cur.size()-1); used[i]=false; } }
-    /** Combinations. Choose k from n with start index. */
+    /**
+     * Combinations
+     *
+     * <p><b>Approach:</b> Combinations. Choose k from n with start index.
+     *
+     * @param n the n parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> combine(int n,int k) { List<List<Integer>> r=new ArrayList<>(); btCombine(n,k,1,new ArrayList<>(),r); return r; }
     private static void btCombine(int n,int k,int start,List<Integer> cur,List<List<Integer>> r) { if(cur.size()==k) { r.add(new ArrayList<>(cur)); return; } for(int i=start;i<=n-(k-cur.size())+1;i++) { cur.add(i); btCombine(n,k,i+1,cur,r); cur.remove(cur.size()-1); } }
-    /** Combination Sum (use each unlimited times). Reuse same element, no going back. */
+    /**
+     * Combination Sum (use each unlimited times)
+     *
+     * <p><b>Approach:</b> Combination Sum (use each unlimited times). Reuse same element, no going back.
+     *
+     * @param candidates the candidates parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> combinationSum(int[] candidates,int target) { List<List<Integer>> r=new ArrayList<>(); Arrays.sort(candidates); btCombSum(candidates,target,0,new ArrayList<>(),r); return r; }
     private static void btCombSum(int[] c,int t,int start,List<Integer> cur,List<List<Integer>> r) { if(t==0) { r.add(new ArrayList<>(cur)); return; } for(int i=start;i<c.length&&c[i]<=t;i++) { cur.add(c[i]); btCombSum(c,t-c[i],i,cur,r); cur.remove(cur.size()-1); } }
-    /** Path Sum II. Collect paths matching target sum. */
+    /**
+     * Path Sum II - Root to Leaf Paths
+     *
+     * <p><b>Approach:</b> Backtracking DFS: explore root-to-leaf paths accumulating values; when leaf sum equals target, record the path.
+     *
+     * @param root   the root of the binary tree
+     * @param target the target sum
+     * @return list of all root-to-leaf paths that sum to target
+     *
+     * <p><b>Time:</b> O(n * h) time.
+     * <br><b>Space:</b> O(h) space.
+     */
     static class TreeNode { int val; TreeNode left,right; TreeNode(int v){val=v;} TreeNode(int v,TreeNode l,TreeNode r){val=v;left=l;right=r;} }
     public static List<List<Integer>> pathSum(TreeNode root,int target) { List<List<Integer>> r=new ArrayList<>(); btPathSum(root,target,new ArrayList<>(),r); return r; }
     private static void btPathSum(TreeNode n,int t,List<Integer> path,List<List<Integer>> r) { if(n==null) return; path.add(n.val); if(n.left==null&&n.right==null&&n.val==t) r.add(new ArrayList<>(path)); btPathSum(n.left,t-n.val,path,r); btPathSum(n.right,t-n.val,path,r); path.remove(path.size()-1); }
-    /** Count Number of Maximum Bitwise-OR Subsets. Track max OR, count subsets achieving it. */
+    /**
+     * Count Number of Maximum Bitwise-OR Subsets
+     *
+     * <p><b>Approach:</b> Count Number of Maximum Bitwise-OR Subsets. Track max OR, count subsets achieving it.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static int countMaxOrSubsets(int[] nums) { int max=0; for(int n:nums) max|=n; return countOR(nums,0,0,max); }
     private static int countOR(int[] nums,int i,int cur,int target) { if(i==nums.length) return cur==target?1:0; return countOR(nums,i+1,cur|nums[i],target)+countOR(nums,i+1,cur,target); }
-    /** Check if Puzzle is Solvable (simple case). Simple backtrack or greedy. */
+    /**
+     * Check if Puzzle is Solvable (simple case)
+     *
+     * <p><b>Approach:</b> Check if Puzzle is Solvable (simple case). Simple backtrack or greedy.
+     *
+     * @param nums the nums parameter
+     * @param pos the pos parameter
+     * @return the computed result
+     */
     public static boolean canWin(int[] nums,int pos) { if(pos<0||pos>=nums.length||nums[pos]<0) return false; if(nums[pos]==0) return true; nums[pos]=-nums[pos]; return canWin(nums,pos+nums[pos])||canWin(nums,pos-nums[pos]); }
 
-    /** Generate Parentheses. Track open/close, prune invalid. */
+    /**
+     * Generate Parentheses
+     *
+     * <p><b>Approach:</b> Generate Parentheses. Track open/close, prune invalid.
+     *
+     * @param n the n parameter
+     * @return the computed result
+     */
     public static List<String> generateParenthesis(int n) { List<String> r=new ArrayList<>(); btParens(n,0,0,new StringBuilder(),r); return r; }
     private static void btParens(int n,int open,int close,StringBuilder cur,List<String> r) { if(cur.length()==2*n) { r.add(cur.toString()); return; } if(open<n) { cur.append('('); btParens(n,open+1,close,cur,r); cur.deleteCharAt(cur.length()-1); } if(close<open) { cur.append(')'); btParens(n,open,close+1,cur,r); cur.deleteCharAt(cur.length()-1); } }
-    /** Letter Combinations. DFS through digit-to-char mapping. */
+    /**
+     * Letter Combinations of a Phone Number
+     *
+     * <p><b>Approach:</b> Backtracking DFS through digit-to-character mapping: at each digit position, try each possible letter and recurse.
+     *
+     * @param digits string of digits (2-9)
+     * @return all possible letter combinations the digits could represent
+     *
+     * <p><b>Time:</b> O(4^n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     private static final String[] PHONE={"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
     public static List<String> letterCombinations(String digits) { List<String> r=new ArrayList<>(); if(digits.isEmpty()) return r; btPhone(digits,0,new StringBuilder(),r); return r; }
     private static void btPhone(String d,int i,StringBuilder cur,List<String> r) { if(i==d.length()) { r.add(cur.toString()); return; } for(char c:PHONE[d.charAt(i)-'0'].toCharArray()) { cur.append(c); btPhone(d,i+1,cur,r); cur.deleteCharAt(cur.length()-1); } }
-    /** Word Search. DFS on grid with visited tracking. */
+    /**
+     * Word Search
+     *
+     * <p><b>Approach:</b> Word Search. DFS on grid with visited tracking.
+     *
+     * @param board the board parameter
+     * @param word the word parameter
+     * @return the computed result
+     */
     public static boolean exist(char[][] board,String word) { for(int i=0;i<board.length;i++) for(int j=0;j<board[0].length;j++) if(dfsWord(board,word,i,j,0)) return true; return false; }
     private static boolean dfsWord(char[][] b,String w,int r,int c,int k) { if(k==w.length()) return true; if(r<0||r>=b.length||c<0||c>=b[0].length||b[r][c]!=w.charAt(k)) return false; char t=b[r][c]; b[r][c]='#'; boolean found=dfsWord(b,w,r+1,c,k+1)||dfsWord(b,w,r-1,c,k+1)||dfsWord(b,w,r,c+1,k+1)||dfsWord(b,w,r,c-1,k+1); b[r][c]=t; return found; }
-    /** Subsets II (with duplicates). Sort + skip consecutive duplicates. */
+    /**
+     * Subsets II (with duplicates)
+     *
+     * <p><b>Approach:</b> Subsets II (with duplicates). Sort + skip consecutive duplicates.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> subsetsWithDup(int[] nums) { Arrays.sort(nums); List<List<Integer>> r=new ArrayList<>(); btSubsetsII(nums,0,new ArrayList<>(),r); return r; }
     private static void btSubsetsII(int[] nums,int start,List<Integer> cur,List<List<Integer>> r) { r.add(new ArrayList<>(cur)); for(int i=start;i<nums.length;i++) { if(i>start&&nums[i]==nums[i-1]) continue; cur.add(nums[i]); btSubsetsII(nums,i+1,cur,r); cur.remove(cur.size()-1); } }
-    /** Combination Sum II (each used once). Sort + skip duplicates at same level. */
+    /**
+     * Combination Sum II (each used once)
+     *
+     * <p><b>Approach:</b> Combination Sum II (each used once). Sort + skip duplicates at same level.
+     *
+     * @param candidates the candidates parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> combinationSum2(int[] candidates,int target) { Arrays.sort(candidates); List<List<Integer>> r=new ArrayList<>(); btCombSum2(candidates,target,0,new ArrayList<>(),r); return r; }
     private static void btCombSum2(int[] c,int t,int start,List<Integer> cur,List<List<Integer>> r) { if(t==0) { r.add(new ArrayList<>(cur)); return; } for(int i=start;i<c.length&&c[i]<=t;i++) { if(i>start&&c[i]==c[i-1]) continue; cur.add(c[i]); btCombSum2(c,t-c[i],i+1,cur,r); cur.remove(cur.size()-1); } }
-    /** Permutations II (with duplicates). Sort + skip same value at same position. */
+    /**
+     * Permutations II (with duplicates)
+     *
+     * <p><b>Approach:</b> Permutations II (with duplicates). Sort + skip same value at same position.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> permuteUnique(int[] nums) { Arrays.sort(nums); List<List<Integer>> r=new ArrayList<>(); btPermuteII(nums,new boolean[nums.length],new ArrayList<>(),r); return r; }
     private static void btPermuteII(int[] nums,boolean[] used,List<Integer> cur,List<List<Integer>> r) { if(cur.size()==nums.length) { r.add(new ArrayList<>(cur)); return; } for(int i=0;i<nums.length;i++) { if(used[i]||(i>0&&nums[i]==nums[i-1]&&!used[i-1])) continue; used[i]=true; cur.add(nums[i]); btPermuteII(nums,used,cur,r); cur.remove(cur.size()-1); used[i]=false; } }
-    /** Palindrome Partitioning. Try all cuts, check palindrome. */
+    /**
+     * Palindrome Partitioning
+     *
+     * <p><b>Approach:</b> Palindrome Partitioning. Try all cuts, check palindrome.
+     *
+     * @param s the s parameter
+     * @return the computed result
+     */
     public static List<List<String>> partition(String s) { List<List<String>> r=new ArrayList<>(); btPartition(s,0,new ArrayList<>(),r); return r; }
     private static void btPartition(String s,int start,List<String> cur,List<List<String>> r) { if(start==s.length()) { r.add(new ArrayList<>(cur)); return; } for(int end=start+1;end<=s.length();end++) { String sub=s.substring(start,end); if(isPalin(sub)) { cur.add(sub); btPartition(s,end,cur,r); cur.remove(cur.size()-1); } } }
     private static boolean isPalin(String s) { int l=0,r=s.length()-1; while(l<r) if(s.charAt(l++)!=s.charAt(r--)) return false; return true; }
-    /** Restore IP Addresses. Try 1-3 digit segments, validate. */
+    /**
+     * Restore IP Addresses
+     *
+     * <p><b>Approach:</b> Restore IP Addresses. Try 1-3 digit segments, validate.
+     *
+     * @param s the s parameter
+     * @return the computed result
+     */
     public static List<String> restoreIpAddresses(String s) { List<String> r=new ArrayList<>(); btIP(s,0,new ArrayList<>(),r); return r; }
     private static void btIP(String s,int start,List<String> parts,List<String> r) { if(parts.size()==4) { if(start==s.length()) r.add(String.join(".",parts)); return; } for(int len=1;len<=3&&start+len<=s.length();len++) { String part=s.substring(start,start+len); if((part.length()>1&&part.charAt(0)=='0')||Integer.parseInt(part)>255) continue; parts.add(part); btIP(s,start+len,parts,r); parts.remove(parts.size()-1); } }
-    /** Beautiful Arrangement. Count valid permutations by constraint. */
+    /**
+     * Beautiful Arrangement
+     *
+     * <p><b>Approach:</b> Beautiful Arrangement. Count valid permutations by constraint.
+     *
+     * @param n the n parameter
+     * @return the computed result
+     */
     public static int countArrangement(int n) { return btArrangement(n,1,new boolean[n+1]); }
     private static int btArrangement(int n,int pos,boolean[] used) { if(pos>n) return 1; int cnt=0; for(int i=1;i<=n;i++) { if(!used[i]&&(i%pos==0||pos%i==0)) { used[i]=true; cnt+=btArrangement(n,pos+1,used); used[i]=false; } } return cnt; }
-    /** Combination Sum III. Choose k numbers summing to n. */
+    /**
+     * Combination Sum III
+     *
+     * <p><b>Approach:</b> Combination Sum III. Choose k numbers summing to n.
+     *
+     * @param k the k parameter
+     * @param n the n parameter
+     * @return the computed result
+     */
     public static List<List<Integer>> combinationSum3(int k,int n) { List<List<Integer>> r=new ArrayList<>(); btCombSum3(k,n,1,new ArrayList<>(),r); return r; }
     private static void btCombSum3(int k,int n,int start,List<Integer> cur,List<List<Integer>> r) { if(cur.size()==k) { if(n==0) r.add(new ArrayList<>(cur)); return; } for(int i=start;i<=9&&i<=n;i++) { cur.add(i); btCombSum3(k,n-i,i+1,cur,r); cur.remove(cur.size()-1); } }
 
-    /** N-Queens. Place queens row by row, check constraints. */
+    /**
+     * N-Queens
+     *
+     * <p><b>Approach:</b> N-Queens. Place queens row by row, check constraints.
+     *
+     * @param n the n parameter
+     * @return the computed result
+     */
     public static List<List<String>> solveNQueens(int n) { List<List<String>> r=new ArrayList<>(); btQueens(n,0,new int[n],r); return r; }
     private static void btQueens(int n,int row,int[] cols,List<List<String>> r) { if(row==n) { List<String> board=new ArrayList<>(); for(int i=0;i<n;i++) { char[] line=new char[n]; Arrays.fill(line,'.'); line[cols[i]]='Q'; board.add(new String(line)); } r.add(board); return; } for(int c=0;c<n;c++) { boolean ok=true; for(int i=0;i<row;i++) if(cols[i]==c||Math.abs(row-i)==Math.abs(c-cols[i])) { ok=false; break; } if(ok) { cols[row]=c; btQueens(n,row+1,cols,r); } } }
-    /** Sudoku Solver. Fill cells, validate row/col/box. */
+    /**
+     * Sudoku Solver
+     *
+     * <p><b>Approach:</b> Sudoku Solver. Fill cells, validate row/col/box.
+     *
+     * @param board the board parameter
+     */
     public static void solveSudoku(char[][] board) { btSudoku(board); }
     private static boolean btSudoku(char[][] b) { for(int i=0;i<9;i++) for(int j=0;j<9;j++) if(b[i][j]=='.') { for(char c='1';c<='9';c++) { if(isValidSudoku(b,i,j,c)) { b[i][j]=c; if(btSudoku(b)) return true; b[i][j]='.'; } } return false; } return true; }
     private static boolean isValidSudoku(char[][] b,int r,int c,char v) { for(int i=0;i<9;i++) { if(b[r][i]==v||b[i][c]==v) return false; if(b[3*(r/3)+i/3][3*(c/3)+i%3]==v) return false; } return true; }
-    /** Word Search II. Trie + DFS for multiple words. */
-    /** Expression Add Operators. Insert +,-,* between digits. */
+    /**
+     * Word Search II
+     *
+     * <p><b>Approach:</b> Word Search II. Trie + DFS for multiple words.
+     */
+    /**
+     * Expression Add Operators
+     *
+     * <p><b>Approach:</b> Expression Add Operators. Insert +,-,* between digits.
+     *
+     * @param num the num parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static List<String> addOperators(String num,int target) { List<String> r=new ArrayList<>(); btOps(num,target,0,0,0,new StringBuilder(),r); return r; }
     private static void btOps(String num,int target,int pos,long prev,long cur,StringBuilder expr,List<String> r) { if(pos==num.length()) { if(cur==target) r.add(expr.toString()); return; } for(int i=pos;i<num.length();i++) { if(i>pos&&num.charAt(pos)=='0') break; long n=Long.parseLong(num.substring(pos,i+1)); int len=expr.length(); if(pos==0) { expr.append(n); btOps(num,target,i+1,n,n,expr,r); } else { expr.append('+').append(n); btOps(num,target,i+1,n,cur+n,expr,r); expr.setLength(len); expr.append('-').append(n); btOps(num,target,i+1,-n,cur-n,expr,r); expr.setLength(len); expr.append('*').append(n); btOps(num,target,i+1,prev*n,cur-prev+prev*n,expr,r); } expr.setLength(len); } }
     // HARD 5-10
+    /**
+     * N-Queens II - Count Solutions
+     *
+     * <p><b>Approach:</b> Reuse solveNQueens logic to count all valid board configurations where n queens don't attack each other.
+     *
+     * @param n the board size and number of queens
+     * @return the total number of distinct valid placements
+     *
+     * <p><b>Time:</b> O(n!) time.
+     * <br><b>Space:</b> O(n^2) space.
+     */
     public static int totalNQueens(int n) { return solveNQueens(n).size(); }
+    /**
+     * Combination Sum IV (Stub)
+     *
+     * <p><b>Approach:</b> Dynamic programming approach: dp[i] = number of combinations that sum to i, iterating through nums at each target value.
+     *
+     * @param nums   array of distinct positive integers
+     * @param target the target sum
+     * @return list placeholder (actual DP returns count of combinations)
+     *
+     * <p><b>Time:</b> O(target * n) time.
+     * <br><b>Space:</b> O(target) space.
+     */
     public static List<List<Integer>> combinationSum4(int[] nums,int target) { List<List<Integer>> r=new ArrayList<>(); return r; }
+    /**
+     * Partition to K Equal Sum Subsets
+     *
+     * <p><b>Approach:</b> Backtracking with sorting and pruning: try placing each number in one of k buckets; skip duplicates and prune when bucket exceeds target.
+     *
+     * @param nums the array of positive integers
+     * @param k    the number of equal-sum subsets
+     * @return true if the array can be partitioned into k subsets with equal sum
+     *
+     * <p><b>Time:</b> O(k * 2^n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static boolean canPartitionKSubsets(int[] nums,int k) { int sum=0; for(int n:nums) sum+=n; if(sum%k!=0) return false; int target=sum/k; Arrays.sort(nums); boolean[] used=new boolean[nums.length]; return btPartK(nums,k,0,0,target,used); }
     private static boolean btPartK(int[] nums,int k,int start,int cur,int target,boolean[] used) { if(k==0) return true; if(cur==target) return btPartK(nums,k-1,0,0,target,used); for(int i=start;i<nums.length;i++) { if(used[i]||cur+nums[i]>target) continue; if(i>0&&nums[i]==nums[i-1]&&!used[i-1]) continue; used[i]=true; if(btPartK(nums,k,i+1,cur+nums[i],target,used)) return true; used[i]=false; } return false; }
+    /**
+     * Remove Invalid Parentheses
+     *
+     * <p><b>Approach:</b> BFS level-by-level: try removing each parenthesis; if any valid string found at current level, stop expanding further.
+     *
+     * @param s the input string containing parentheses and letters
+     * @return all valid strings with minimum number of removals
+     *
+     * <p><b>Time:</b> O(2^n) time.
+     * <br><b>Space:</b> O(2^n) space.
+     */
     public static List<String> removeInvalidParentheses(String s) { List<String> r=new ArrayList<>(); Set<String> visited=new HashSet<>(); Queue<String> q=new LinkedList<>(); q.offer(s); visited.add(s); boolean found=false; while(!q.isEmpty()) { String cur=q.poll(); if(isValidParens(cur)) { r.add(cur); found=true; } if(found) continue; for(int i=0;i<cur.length();i++) { if(cur.charAt(i)!='('&&cur.charAt(i)!=')') continue; String next=cur.substring(0,i)+cur.substring(i+1); if(visited.add(next)) q.offer(next); } } return r; }
     private static boolean isValidParens(String s) { int c=0; for(char ch:s.toCharArray()) { if(ch=='(') c++; else if(ch==')') c--; if(c<0) return false; } return c==0; }
+    /**
+     * Factor Combinations
+     *
+     * <p><b>Approach:</b> Backtracking: for each factor i from start to sqrt(n), if i divides n, add [i, n/i] as a combination and recurse on n/i.
+     *
+     * @param n the number to factorize
+     * @return all unique combinations of factors that multiply to n
+     *
+     * <p><b>Time:</b> O(n * log n) time.
+     * <br><b>Space:</b> O(log n) space.
+     */
     public static List<List<Integer>> getFactors(int n) { List<List<Integer>> r=new ArrayList<>(); btFactors(n,2,new ArrayList<>(),r); return r; }
     private static void btFactors(int n,int start,List<Integer> cur,List<List<Integer>> r) { for(int i=start;i*i<=n;i++) { if(n%i==0) { cur.add(i); cur.add(n/i); r.add(new ArrayList<>(cur)); cur.remove(cur.size()-1); btFactors(n/i,i,cur,r); cur.remove(cur.size()-1); } } }
 

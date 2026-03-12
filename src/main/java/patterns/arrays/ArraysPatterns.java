@@ -13,7 +13,21 @@ import java.util.*;
 public class ArraysPatterns {
 
     // ======================= EASY 1: Two Sum =======================
-    /** Hash map stores seen values; for each num check if complement (target-num) exists. O(n) time, O(n) space. */
+    /**
+     * Two Sum — find two indices whose values add up to target.
+     *
+     * <p><b>Approach:</b> Hash map stores each seen value mapped to its index.
+     * For every element, check if the complement (target - nums[i]) exists in the map.
+     *
+     * <p><b>Example:</b> nums=[2,7,11,15], target=9 → [0,1] because 2+7=9.
+     *
+     * @param nums   array of integers
+     * @param target the desired sum
+     * @return indices of the two numbers that add up to target
+     *
+     * <p><b>Time:</b> O(n) — single pass with O(1) hash lookups.
+     * <br><b>Space:</b> O(n) — hash map stores at most n entries.
+     */
     public static int[] twoSum(int[] nums, int target) {
         Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
@@ -25,7 +39,20 @@ public class ArraysPatterns {
     }
 
     // ======================= EASY 2: Best Time to Buy and Sell Stock =======================
-    /** Track running minimum price; max profit = max(price - minSoFar). O(n) time, O(1) space. */
+    /**
+     * Best Time to Buy and Sell Stock — maximize profit from a single buy and sell.
+     *
+     * <p><b>Approach:</b> Maintain a running minimum price seen so far.
+     * At each price, the potential profit is price − minSoFar; track the global max.
+     *
+     * <p><b>Example:</b> prices=[7,1,5,3,6,4] → 5 (buy at 1, sell at 6).
+     *
+     * @param prices array of stock prices on each day
+     * @return maximum achievable profit (0 if no profit is possible)
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — two tracking variables.
+     */
     public static int maxProfit(int[] prices) {
         int min = Integer.MAX_VALUE, maxProfit = 0;
         for (int p : prices) { min = Math.min(min, p); maxProfit = Math.max(maxProfit, p - min); }
@@ -33,7 +60,20 @@ public class ArraysPatterns {
     }
 
     // ======================= EASY 3: Contains Duplicate =======================
-    /** HashSet.add returns false if element already present. O(n) time, O(n) space. */
+    /**
+     * Contains Duplicate — determine if any value appears at least twice.
+     *
+     * <p><b>Approach:</b> Insert elements into a HashSet; {@code add()} returns false
+     * if the element already exists, immediately indicating a duplicate.
+     *
+     * <p><b>Example:</b> [1,2,3,1] → true (1 appears twice).
+     *
+     * @param nums array of integers
+     * @return true if any element is repeated
+     *
+     * <p><b>Time:</b> O(n) — single pass with O(1) set operations.
+     * <br><b>Space:</b> O(n) — set stores up to n elements.
+     */
     public static boolean containsDuplicate(int[] nums) {
         Set<Integer> seen = new HashSet<>();
         for (int n : nums) if (!seen.add(n)) return true;
@@ -41,7 +81,22 @@ public class ArraysPatterns {
     }
 
     // ======================= EASY 4: Merge Sorted Array =======================
-    /** Fill nums1 from the back using three pointers (i, j, k). O(m+n) time, O(1) space. */
+    /**
+     * Merge Sorted Array — merge nums2 into nums1 (which has trailing space) in-place.
+     *
+     * <p><b>Approach:</b> Three pointers start from the end: compare the largest
+     * remaining elements from each array and place at the back of nums1.
+     *
+     * <p><b>Example:</b> nums1=[1,2,3,0,0,0], m=3, nums2=[2,5,6], n=3 → [1,2,2,3,5,6].
+     *
+     * @param nums1 first sorted array (length m+n, with trailing zeros)
+     * @param m     number of valid elements in nums1
+     * @param nums2 second sorted array
+     * @param n     number of elements in nums2
+     *
+     * <p><b>Time:</b> O(m+n) — each element is placed exactly once.
+     * <br><b>Space:</b> O(1) — in-place merge.
+     */
     public static void merge(int[] nums1, int m, int[] nums2, int n) {
         int i = m - 1, j = n - 1, k = m + n - 1;
         while (j >= 0) {
@@ -51,7 +106,21 @@ public class ArraysPatterns {
     }
 
     // ======================= EASY 5: Maximum Subarray (Kadane's) =======================
-    /** Kadane's: at each index, decide to extend current subarray or start fresh. O(n) time, O(1) space. */
+    /**
+     * Maximum Subarray — find the contiguous subarray with the largest sum.
+     *
+     * <p><b>Approach (Kadane's Algorithm):</b> At each index, decide whether to
+     * extend the current subarray (cur + nums[i]) or start a new one (nums[i]).
+     * Track the global maximum across all decisions.
+     *
+     * <p><b>Example:</b> [-2,1,-3,4,-1,2,1,-5,4] → 6 (subarray [4,-1,2,1]).
+     *
+     * @param nums array of integers (at least one element)
+     * @return the maximum subarray sum
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — two tracking variables.
+     */
     public static int maxSubArray(int[] nums) {
         int max = nums[0], cur = nums[0];
         for (int i = 1; i < nums.length; i++) { cur = Math.max(nums[i], cur + nums[i]); max = Math.max(max, cur); }
@@ -59,7 +128,20 @@ public class ArraysPatterns {
     }
 
     // ======================= EASY 6: Remove Duplicates from Sorted Array =======================
-    /** Slow pointer marks write position; fast pointer scans ahead for new values. O(n) time, O(1) space. */
+    /**
+     * Remove Duplicates from Sorted Array — remove duplicates in-place, return new length.
+     *
+     * <p><b>Approach:</b> Two pointers — slow marks the write position, fast scans ahead.
+     * When fast finds a new unique value, write it at slow+1.
+     *
+     * <p><b>Example:</b> [0,0,1,1,1,2,2,3,3,4] → returns 5, array becomes [0,1,2,3,4,...].
+     *
+     * @param nums sorted array of integers
+     * @return the count of unique elements
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — in-place modification.
+     */
     public static int removeDuplicates(int[] nums) {
         if (nums.length == 0) return 0;
         int slow = 0;
@@ -68,7 +150,20 @@ public class ArraysPatterns {
     }
 
     // ======================= EASY 7: Single Number =======================
-    /** XOR all elements; duplicates cancel out, leaving the unique one. O(n) time, O(1) space. */
+    /**
+     * Single Number — every element appears twice except one; find it.
+     *
+     * <p><b>Approach:</b> XOR all elements. Since a ⊕ a = 0 and a ⊕ 0 = a,
+     * all pairs cancel out, leaving only the unique element.
+     *
+     * <p><b>Example:</b> [4,1,2,1,2] → 4.
+     *
+     * @param nums array where every element appears twice except one
+     * @return the single element that has no duplicate
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — one variable.
+     */
     public static int singleNumber(int[] nums) {
         int result = 0;
         for (int n : nums) result ^= n;
@@ -76,7 +171,19 @@ public class ArraysPatterns {
     }
 
     // ======================= EASY 8: Move Zeroes =======================
-    /** Snowball approach: track zero count, swap non-zero with first zero. O(n) time, O(1) space. */
+    /**
+     * Move Zeroes — move all 0s to the end while preserving order of non-zero elements.
+     *
+     * <p><b>Approach:</b> Two pointers — write pointer tracks the next position for
+     * a non-zero element. Swap non-zeros forward as they are found.
+     *
+     * <p><b>Example:</b> [0,1,0,3,12] → [1,3,12,0,0].
+     *
+     * @param nums array of integers (modified in-place)
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — in-place swaps.
+     */
     public static void moveZeroes(int[] nums) {
         int write = 0;
         for (int read = 0; read < nums.length; read++) {
@@ -85,7 +192,21 @@ public class ArraysPatterns {
     }
 
     // ======================= EASY 9: Plus One =======================
-    /** Traverse from end; if digit < 9 increment and return, else set to 0 (carry). O(n) time, O(1) space. */
+    /**
+     * Plus One — increment a large integer represented as an array of digits.
+     *
+     * <p><b>Approach:</b> Traverse from the last digit. If digit &lt; 9, increment
+     * and return immediately (no carry). Otherwise set to 0 and continue.
+     * If all digits overflow, prepend a 1.
+     *
+     * <p><b>Example:</b> [9,9,9] → [1,0,0,0].
+     *
+     * @param digits array representing a non-negative integer
+     * @return the digits array after adding one
+     *
+     * <p><b>Time:</b> O(n) — worst case traverses all digits.
+     * <br><b>Space:</b> O(1) — unless overflow creates a new array of size n+1.
+     */
     public static int[] plusOne(int[] digits) {
         for (int i = digits.length - 1; i >= 0; i--) {
             if (digits[i] < 9) { digits[i]++; return digits; }
@@ -97,7 +218,20 @@ public class ArraysPatterns {
     }
 
     // ======================= EASY 10: Missing Number =======================
-    /** Sum formula: expected = n*(n+1)/2, subtract actual sum. O(n) time, O(1) space. */
+    /**
+     * Missing Number — find the missing number in [0..n] from an array of n elements.
+     *
+     * <p><b>Approach:</b> Gauss formula: expected sum = n*(n+1)/2.
+     * Subtract every element to find the missing one.
+     *
+     * <p><b>Example:</b> [3,0,1] → 2.
+     *
+     * @param nums array containing n distinct numbers from 0 to n
+     * @return the missing number
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — arithmetic only.
+     */
     public static int missingNumber(int[] nums) {
         int n = nums.length, sum = n * (n + 1) / 2;
         for (int num : nums) sum -= num;
@@ -105,7 +239,20 @@ public class ArraysPatterns {
     }
 
     // ======================= MEDIUM 1: Three Sum =======================
-    /** Sort array, fix one element, use two pointers for the pair; skip duplicates. O(n²) time, O(1) space. */
+    /**
+     * Three Sum — find all unique triplets that sum to zero.
+     *
+     * <p><b>Approach:</b> Sort the array. Fix one element (i), then use two pointers
+     * (left, right) to find pairs that complement it. Skip duplicates at all levels.
+     *
+     * <p><b>Example:</b> [-1,0,1,2,-1,-4] → [[-1,-1,2],[-1,0,1]].
+     *
+     * @param nums array of integers
+     * @return list of all unique triplets summing to zero
+     *
+     * <p><b>Time:</b> O(n²) — sorting O(n log n) + nested two-pointer O(n²).
+     * <br><b>Space:</b> O(1) — ignoring the output list.
+     */
     public static List<List<Integer>> threeSum(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> result = new ArrayList<>();
@@ -122,7 +269,20 @@ public class ArraysPatterns {
     }
 
     // ======================= MEDIUM 2: Container With Most Water =======================
-    /** Two pointers at both ends; move the shorter side inward. O(n) time, O(1) space. */
+    /**
+     * Container With Most Water — find two lines forming a container that holds the most water.
+     *
+     * <p><b>Approach:</b> Two pointers at both ends. Area = min(height[l], height[r]) × (r−l).
+     * Move the pointer with the shorter height inward to potentially find a taller line.
+     *
+     * <p><b>Example:</b> [1,8,6,2,5,4,8,3,7] → 49.
+     *
+     * @param height array of non-negative integers representing line heights
+     * @return maximum area of water the container can hold
+     *
+     * <p><b>Time:</b> O(n) — single pass with two pointers.
+     * <br><b>Space:</b> O(1) — constant extra variables.
+     */
     public static int maxArea(int[] height) {
         int l = 0, r = height.length - 1, max = 0;
         while (l < r) { max = Math.max(max, Math.min(height[l], height[r]) * (r - l)); if (height[l] < height[r]) l++; else r--; }
@@ -130,7 +290,21 @@ public class ArraysPatterns {
     }
 
     // ======================= MEDIUM 3: Product of Array Except Self =======================
-    /** Two passes: left-to-right prefix product, then right-to-left suffix product. O(n) time, O(1) extra space. */
+    /**
+     * Product of Array Except Self — return an array where each element is the product
+     * of all other elements, without using division.
+     *
+     * <p><b>Approach:</b> Two passes: left-to-right accumulates prefix products,
+     * right-to-left accumulates suffix products into the same result array.
+     *
+     * <p><b>Example:</b> [1,2,3,4] → [24,12,8,6].
+     *
+     * @param nums array of integers (length ≥ 2)
+     * @return product array where res[i] = product of all elements except nums[i]
+     *
+     * <p><b>Time:</b> O(n) — two linear passes.
+     * <br><b>Space:</b> O(1) extra — result array is not counted as extra space.
+     */
     public static int[] productExceptSelf(int[] nums) {
         int n = nums.length;
         int[] res = new int[n];
@@ -142,7 +316,20 @@ public class ArraysPatterns {
     }
 
     // ======================= MEDIUM 4: Rotate Array =======================
-    /** Triple-reverse trick: reverse all, reverse first k, reverse rest. O(n) time, O(1) space. */
+    /**
+     * Rotate Array — rotate the array to the right by k steps.
+     *
+     * <p><b>Approach (Triple Reverse):</b> Reverse the entire array, then reverse the
+     * first k elements, then reverse the remaining. This achieves in-place rotation.
+     *
+     * <p><b>Example:</b> [1,2,3,4,5,6,7], k=3 → [5,6,7,1,2,3,4].
+     *
+     * @param nums array of integers (modified in-place)
+     * @param k    number of positions to rotate right
+     *
+     * <p><b>Time:</b> O(n) — each element is reversed at most twice.
+     * <br><b>Space:</b> O(1) — in-place.
+     */
     public static void rotate(int[] nums, int k) {
         k %= nums.length;
         reverse(nums, 0, nums.length - 1);
@@ -152,7 +339,19 @@ public class ArraysPatterns {
     private static void reverse(int[] nums, int l, int r) { while (l < r) { int t = nums[l]; nums[l++] = nums[r]; nums[r--] = t; } }
 
     // ======================= MEDIUM 5: Sort Colors (Dutch National Flag) =======================
-    /** Three-way partition: lo/mid/hi pointers separate 0s, 1s, and 2s in one pass. O(n) time, O(1) space. */
+    /**
+     * Sort Colors (Dutch National Flag) — sort an array of 0s, 1s, and 2s in-place.
+     *
+     * <p><b>Approach:</b> Three-way partition with lo, mid, hi pointers.
+     * 0 → swap to lo region, 1 → keep in mid, 2 → swap to hi region. Single pass.
+     *
+     * <p><b>Example:</b> [2,0,2,1,1,0] → [0,0,1,1,2,2].
+     *
+     * @param nums array containing only 0, 1, and 2
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — in-place swaps.
+     */
     public static void sortColors(int[] nums) {
         int lo = 0, mid = 0, hi = nums.length - 1;
         while (mid <= hi) {
@@ -163,7 +362,23 @@ public class ArraysPatterns {
     }
 
     // ======================= MEDIUM 6: Next Permutation =======================
-    /** Find rightmost ascending pair, swap with next larger element, reverse suffix. O(n) time, O(1) space. */
+    /**
+     * Next Permutation — rearrange numbers into the lexicographically next greater permutation.
+     *
+     * <p><b>Approach:</b>
+     * <ol>
+     *   <li>Find the rightmost ascending pair (nums[i] &lt; nums[i+1]).</li>
+     *   <li>Swap nums[i] with the smallest element greater than it in the suffix.</li>
+     *   <li>Reverse the suffix after position i.</li>
+     * </ol>
+     *
+     * <p><b>Example:</b> [1,2,3] → [1,3,2].
+     *
+     * @param nums array of integers (modified in-place)
+     *
+     * <p><b>Time:</b> O(n) — at most three linear scans.
+     * <br><b>Space:</b> O(1) — in-place.
+     */
     public static void nextPermutation(int[] nums) {
         int i = nums.length - 2;
         while (i >= 0 && nums[i] >= nums[i + 1]) i--;
@@ -172,7 +387,22 @@ public class ArraysPatterns {
     }
 
     // ======================= MEDIUM 7: Subarray Sum Equals K =======================
-    /** Prefix sum with hash map counting previous prefix sums. O(n) time, O(n) space. */
+    /**
+     * Subarray Sum Equals K — count the number of contiguous subarrays that sum to k.
+     *
+     * <p><b>Approach:</b> Maintain a running prefix sum. Use a hash map to count
+     * how many times each prefix sum has occurred. For each index, the number of
+     * valid subarrays ending here is map[prefixSum − k].
+     *
+     * <p><b>Example:</b> [1,1,1], k=2 → 2 (subarrays [1,1] at indices 0-1 and 1-2).
+     *
+     * @param nums array of integers (may contain negatives)
+     * @param k    target sum
+     * @return count of subarrays with sum equal to k
+     *
+     * <p><b>Time:</b> O(n) — single pass with O(1) hash operations.
+     * <br><b>Space:</b> O(n) — hash map of prefix sums.
+     */
     public static int subarraySum(int[] nums, int k) {
         Map<Integer, Integer> map = new HashMap<>();
         map.put(0, 1);
@@ -186,7 +416,21 @@ public class ArraysPatterns {
     }
 
     // ======================= MEDIUM 8: Spiral Matrix =======================
-    /** Layer-by-layer peeling: top row, right col, bottom row, left col. O(m·n) time, O(1) extra space. */
+    /**
+     * Spiral Matrix — return all elements of a matrix in spiral (clockwise) order.
+     *
+     * <p><b>Approach:</b> Layer-by-layer peeling with four boundaries (top, bottom,
+     * left, right). Traverse top row → right column → bottom row → left column,
+     * then shrink boundaries inward.
+     *
+     * <p><b>Example:</b> [[1,2,3],[4,5,6],[7,8,9]] → [1,2,3,6,9,8,7,4,5].
+     *
+     * @param matrix 2D integer matrix (m × n)
+     * @return elements in spiral order
+     *
+     * <p><b>Time:</b> O(m·n) — visits each element once.
+     * <br><b>Space:</b> O(1) extra — excluding the output list.
+     */
     public static List<Integer> spiralOrder(int[][] matrix) {
         List<Integer> result = new ArrayList<>();
         if (matrix.length == 0) return result;
@@ -201,7 +445,22 @@ public class ArraysPatterns {
     }
 
     // ======================= MEDIUM 9: Find All Duplicates in Array =======================
-    /** Mark visited indices by negating; if already negative, it's a duplicate. O(n) time, O(1) space. */
+    /**
+     * Find All Duplicates in Array — elements are in range [1, n] and each appears
+     * once or twice; find all that appear twice.
+     *
+     * <p><b>Approach:</b> Use the array itself as a hash map by negating the value
+     * at index (|num| − 1). If the value at that index is already negative,
+     * the number has been seen before (duplicate).
+     *
+     * <p><b>Example:</b> [4,3,2,7,8,2,3,1] → [2,3].
+     *
+     * @param nums array of integers in range [1, n]
+     * @return list of duplicates
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — uses input array as hash map.
+     */
     public static List<Integer> findDuplicates(int[] nums) {
         List<Integer> result = new ArrayList<>();
         for (int n : nums) {
@@ -213,7 +472,22 @@ public class ArraysPatterns {
     }
 
     // ======================= MEDIUM 10: Kth Largest Element =======================
-    /** Quickselect with random pivot for average O(n) time. Worst case O(n²). */
+    /**
+     * Kth Largest Element — find the kth largest element in an unsorted array.
+     *
+     * <p><b>Approach (Quickselect):</b> Partition the array around a pivot.
+     * If the pivot lands at position (n−k), it's the answer. Otherwise recurse
+     * into the partition containing the target index.
+     *
+     * <p><b>Example:</b> [3,2,1,5,6,4], k=2 → 5.
+     *
+     * @param nums array of integers
+     * @param k    the rank (1-based) of the desired element
+     * @return the kth largest element
+     *
+     * <p><b>Time:</b> O(n) average, O(n²) worst case.
+     * <br><b>Space:</b> O(1) — in-place partitioning (ignoring recursion stack).
+     */
     public static int findKthLargest(int[] nums, int k) {
         int target = nums.length - k;
         return quickselect(nums, 0, nums.length - 1, target);
@@ -227,7 +501,20 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 1: Trapping Rain Water =======================
-    /** Two pointers with running left-max and right-max; water at each bar = max - height. O(n) time, O(1) space. */
+    /**
+     * Trapping Rain Water — compute how much water can be trapped between bars.
+     *
+     * <p><b>Approach:</b> Two pointers from both ends with running left-max and right-max.
+     * Water at each bar = min(leftMax, rightMax) − height. Always process the shorter side.
+     *
+     * <p><b>Example:</b> [0,1,0,2,1,0,1,3,2,1,2,1] → 6.
+     *
+     * @param height array of non-negative integers representing bar heights
+     * @return total units of water trapped
+     *
+     * <p><b>Time:</b> O(n) — single pass with two pointers.
+     * <br><b>Space:</b> O(1) — constant extra variables.
+     */
     public static int trap(int[] height) {
         int l = 0, r = height.length - 1, lMax = 0, rMax = 0, water = 0;
         while (l < r) {
@@ -238,7 +525,20 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 2: First Missing Positive =======================
-    /** Cyclic sort: place each value n at index n-1; first mismatch is the answer. O(n) time, O(1) space. */
+    /**
+     * First Missing Positive — find the smallest missing positive integer.
+     *
+     * <p><b>Approach (Cyclic Sort):</b> Place each value n at index n−1.
+     * After sorting, the first index where nums[i] ≠ i+1 is the answer.
+     *
+     * <p><b>Example:</b> [3,4,-1,1] → 2.
+     *
+     * @param nums array of integers (may contain negatives and duplicates)
+     * @return the smallest positive integer not present
+     *
+     * <p><b>Time:</b> O(n) — each element is swapped at most once.
+     * <br><b>Space:</b> O(1) — in-place.
+     */
     public static int firstMissingPositive(int[] nums) {
         int n = nums.length;
         for (int i = 0; i < n; i++) while (nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i]) { int t = nums[nums[i] - 1]; nums[nums[i] - 1] = nums[i]; nums[i] = t; }
@@ -247,7 +547,21 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 3: Median of Two Sorted Arrays =======================
-    /** Binary search on the shorter array to find the correct partition point. O(log(min(m,n))) time, O(1) space. */
+    /**
+     * Median of Two Sorted Arrays — find the median of two sorted arrays in logarithmic time.
+     *
+     * <p><b>Approach:</b> Binary search on the shorter array to find the correct partition
+     * point. The partition divides both arrays such that all left elements ≤ all right elements.
+     *
+     * <p><b>Example:</b> nums1=[1,3], nums2=[2] → 2.0.
+     *
+     * @param nums1 first sorted array
+     * @param nums2 second sorted array
+     * @return the median of the merged array
+     *
+     * <p><b>Time:</b> O(log(min(m, n))) — binary search on shorter array.
+     * <br><b>Space:</b> O(1) — constant variables.
+     */
     public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
         if (nums1.length > nums2.length) return findMedianSortedArrays(nums2, nums1);
         int m = nums1.length, n = nums2.length, lo = 0, hi = m;
@@ -264,7 +578,21 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 4: Longest Consecutive Sequence =======================
-    /** HashSet for O(1) lookup; only start chains where n-1 is absent. O(n) time, O(n) space. */
+    /**
+     * Longest Consecutive Sequence — find the length of the longest consecutive element sequence.
+     *
+     * <p><b>Approach:</b> Insert all elements into a HashSet. For each element,
+     * only start counting a chain if (n−1) is not in the set (ensuring we start
+     * at the beginning of a sequence). Extend while (n+len) exists.
+     *
+     * <p><b>Example:</b> [100,4,200,1,3,2] → 4 (sequence [1,2,3,4]).
+     *
+     * @param nums unsorted array of integers
+     * @return length of the longest consecutive sequence
+     *
+     * <p><b>Time:</b> O(n) — each element is visited at most twice.
+     * <br><b>Space:</b> O(n) — HashSet stores all elements.
+     */
     public static int longestConsecutive(int[] nums) {
         Set<Integer> set = new HashSet<>(); for (int n : nums) set.add(n);
         int max = 0;
@@ -275,7 +603,22 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 5: Largest Rectangle in Histogram =======================
-    /** Monotonic stack: pop when current bar is shorter; width = distance between stack boundaries. O(n) time. */
+    /**
+     * Largest Rectangle in Histogram — find the area of the largest rectangle
+     * that can be formed within a histogram.
+     *
+     * <p><b>Approach:</b> Monotonic increasing stack of indices. When a shorter bar
+     * is encountered, pop and compute the rectangle width using the distance between
+     * stack boundaries. Append a sentinel height=0 to flush the stack.
+     *
+     * <p><b>Example:</b> [2,1,5,6,2,3] → 10 (bars 5 and 6, width=2).
+     *
+     * @param heights array of non-negative integers representing histogram bar heights
+     * @return area of the largest rectangle
+     *
+     * <p><b>Time:</b> O(n) — each bar is pushed and popped at most once.
+     * <br><b>Space:</b> O(n) — stack stores indices.
+     */
     public static int largestRectangleArea(int[] heights) {
         Deque<Integer> stack = new ArrayDeque<>();
         int max = 0, n = heights.length;
@@ -292,7 +635,22 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 6: Sliding Window Maximum =======================
-    /** Monotonic deque stores indices in decreasing value order; front is always the window max. O(n) time. */
+    /**
+     * Sliding Window Maximum — find the maximum in each window of size k.
+     *
+     * <p><b>Approach:</b> Monotonic decreasing deque stores indices. The front is
+     * always the window maximum. Remove front if out-of-window, remove back if
+     * smaller than current element.
+     *
+     * <p><b>Example:</b> [1,3,-1,-3,5,3,6,7], k=3 → [3,3,5,5,6,7].
+     *
+     * @param nums array of integers
+     * @param k    sliding window size
+     * @return array of maximums for each window position
+     *
+     * <p><b>Time:</b> O(n) — each element is enqueued and dequeued at most once.
+     * <br><b>Space:</b> O(k) — deque stores at most k indices.
+     */
     public static int[] maxSlidingWindow(int[] nums, int k) {
         Deque<Integer> dq = new ArrayDeque<>();
         int[] result = new int[nums.length - k + 1];
@@ -306,7 +664,21 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 7: Maximum Product Subarray =======================
-    /** Track both max and min products (negatives flip sign). O(n) time, O(1) space. */
+    /**
+     * Maximum Product Subarray — find the contiguous subarray with the largest product.
+     *
+     * <p><b>Approach:</b> Track both the running maximum and minimum products,
+     * because a negative number can flip the minimum into the maximum.
+     * At each step, consider extending with curMax*num, curMin*num, or starting fresh with num.
+     *
+     * <p><b>Example:</b> [2,3,-2,4] → 6 (subarray [2,3]).
+     *
+     * @param nums array of integers (at least one element)
+     * @return the maximum product of any contiguous subarray
+     *
+     * <p><b>Time:</b> O(n) — single pass.
+     * <br><b>Space:</b> O(1) — three tracking variables.
+     */
     public static int maxProduct(int[] nums) {
         int max = nums[0], curMax = nums[0], curMin = nums[0];
         for (int i = 1; i < nums.length; i++) {
@@ -319,7 +691,22 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 8: Count of Smaller Numbers After Self =======================
-    /** Merge sort with index tracking; count right-side elements that move left during merge. O(n log n) time. */
+    /**
+     * Count of Smaller Numbers After Self — for each element, count how many
+     * elements to its right are smaller.
+     *
+     * <p><b>Approach:</b> Modified merge sort with index tracking. During the merge step,
+     * when a right-side element is placed before a left-side element, increment
+     * the count for that left-side element.
+     *
+     * <p><b>Example:</b> [5,2,6,1] → [2,1,1,0].
+     *
+     * @param nums array of integers
+     * @return list of counts for each position
+     *
+     * <p><b>Time:</b> O(n log n) — merge sort.
+     * <br><b>Space:</b> O(n) — auxiliary arrays for merge sort.
+     */
     public static List<Integer> countSmaller(int[] nums) {
         int n = nums.length;
         int[] result = new int[n], indices = new int[n];
@@ -346,7 +733,23 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 9: Shortest Unsorted Continuous Subarray =======================
-    /** Two passes: find right boundary from left, left boundary from right. O(n) time, O(1) space. */
+    /**
+     * Shortest Unsorted Continuous Subarray — find the shortest subarray such that
+     * sorting only that subarray makes the entire array sorted.
+     *
+     * <p><b>Approach:</b> Two passes: scan left-to-right tracking the running max —
+     * the last position where an element is smaller than max is the right boundary.
+     * Scan right-to-left tracking the running min — the last position where an element
+     * is larger than min is the left boundary.
+     *
+     * <p><b>Example:</b> [2,6,4,8,10,9,15] → 5 (subarray [6,4,8,10,9]).
+     *
+     * @param nums array of integers
+     * @return length of the shortest subarray to sort
+     *
+     * <p><b>Time:</b> O(n) — two linear passes.
+     * <br><b>Space:</b> O(1) — constant variables.
+     */
     public static int findUnsortedSubarray(int[] nums) {
         int n = nums.length, max = Integer.MIN_VALUE, min = Integer.MAX_VALUE;
         int left = -1, right = -1;
@@ -360,7 +763,22 @@ public class ArraysPatterns {
     }
 
     // ======================= HARD 10: Candy Distribution =======================
-    /** Two passes: left-to-right for rising, right-to-left for falling; take max at each position. O(n) time. */
+    /**
+     * Candy Distribution — give each child at least one candy; children with a higher
+     * rating than their neighbor must get more candies. Find the minimum total candies.
+     *
+     * <p><b>Approach:</b> Two passes: left-to-right ensures each child with a higher
+     * rating than its left neighbor gets more candy. Right-to-left ensures the same
+     * for the right neighbor, taking the max at each position.
+     *
+     * <p><b>Example:</b> [1,0,2] → 5 (candies: [2,1,2]).
+     *
+     * @param ratings array of children's ratings
+     * @return minimum total number of candies needed
+     *
+     * <p><b>Time:</b> O(n) — two linear passes.
+     * <br><b>Space:</b> O(n) — auxiliary candies array.
+     */
     public static int candy(int[] ratings) {
         int n = ratings.length;
         int[] candies = new int[n];

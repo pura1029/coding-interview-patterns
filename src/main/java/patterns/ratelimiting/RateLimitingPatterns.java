@@ -29,7 +29,11 @@ import java.util.concurrent.atomic.*;
 public class RateLimitingPatterns {
 
     // ======================= EASY 1: Fixed Window Counter =======================
-    /** Counts requests per fixed time window (e.g., per second). Simple but allows burst at window edges. */
+    /**
+     * Fixed Window Counter
+     *
+     * <p><b>Approach:</b> Counts requests per fixed time window (e. g. , per second). Simple but allows burst at window edges.
+     */
     static class FixedWindowCounter {
         private final int maxRequests;
         private final long windowMs;
@@ -56,7 +60,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= EASY 2: Token Bucket =======================
-    /** Tokens refill at a constant rate. Each request consumes one token. Allows bursts up to bucket capacity. */
+    /**
+     * Token Bucket
+     *
+     * <p><b>Approach:</b> Tokens refill at a constant rate. Each request consumes one token. Allows bursts up to bucket capacity.
+     */
     static class TokenBucket {
         private final int maxTokens;
         private final double refillRate; // tokens per second
@@ -93,7 +101,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= EASY 3: Leaky Bucket =======================
-    /** Requests enter a bucket and leak out at a fixed rate. Excess requests are dropped. Ensures constant output rate. */
+    /**
+     * Leaky Bucket
+     *
+     * <p><b>Approach:</b> Requests enter a bucket and leak out at a fixed rate. Excess requests are dropped. Ensures constant output rate.
+     */
     static class LeakyBucket {
         private final int capacity;
         private final double leakRatePerSec;
@@ -121,7 +133,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= EASY 4: Simple Counter Rate Limiter =======================
-    /** The simplest form: count requests and reject after N. Reset manually. */
+    /**
+     * Simple Counter Rate Limiter
+     *
+     * <p><b>Approach:</b> The simplest form: count requests and reject after N. Reset manually.
+     */
     static class SimpleCounter {
         private final int limit;
         private int count;
@@ -133,7 +149,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= EASY 5: Per-User Rate Limiter =======================
-    /** Maintains a separate fixed-window counter per user ID. */
+    /**
+     * Per-User Rate Limiter
+     *
+     * <p><b>Approach:</b> Maintains a separate fixed-window counter per user ID
+     */
     static class PerUserRateLimiter {
         private final int maxRequests;
         private final long windowMs;
@@ -156,7 +176,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= EASY 6: Request Throttler (Min Interval) =======================
-    /** Enforces a minimum time interval between consecutive requests. */
+    /**
+     * Request Throttler (Min Interval)
+     *
+     * <p><b>Approach:</b> Enforces a minimum time interval between consecutive requests
+     */
     static class Throttler {
         private final long minIntervalMs;
         private long lastRequestTime;
@@ -176,7 +200,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= EASY 7: Rate Limiter with Retry-After =======================
-    /** Returns how many milliseconds the client should wait before retrying. */
+    /**
+     * Rate Limiter with Retry-After
+     *
+     * <p><b>Approach:</b> Returns how many milliseconds the client should wait before retrying
+     */
     static class RetryAfterLimiter {
         private final int maxRequests;
         private final long windowMs;
@@ -198,7 +226,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= EASY 8: Concurrent Request Limiter (Semaphore) =======================
-    /** Limits the number of concurrent (in-flight) requests, not requests per time window. */
+    /**
+     * Concurrent Request Limiter (Semaphore)
+     *
+     * <p><b>Approach:</b> Limits the number of concurrent (in-flight) requests, not requests per time window
+     */
     static class ConcurrencyLimiter {
         private final int maxConcurrent;
         private final AtomicInteger inFlight = new AtomicInteger(0);
@@ -210,7 +242,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= EASY 9: Bandwidth Rate Limiter =======================
-    /** Limits total bytes transferred per window instead of request count. */
+    /**
+     * Bandwidth Rate Limiter
+     *
+     * <p><b>Approach:</b> Limits total bytes transferred per window instead of request count
+     */
     static class BandwidthLimiter {
         private final long maxBytesPerWindow;
         private final long windowMs;
@@ -234,7 +270,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= EASY 10: IP-Based Rate Limiter =======================
-    /** Rate limits by IP address using a map of fixed-window counters. */
+    /**
+     * IP-Based Rate Limiter
+     *
+     * <p><b>Approach:</b> Rate limits by IP address using a map of fixed-window counters
+     */
     static class IPRateLimiter {
         private final int maxRequests;
         private final long windowMs;
@@ -262,7 +302,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 1: Sliding Window Log =======================
-    /** Stores timestamps of each request. Precise but memory-intensive for high traffic. */
+    /**
+     * Sliding Window Log
+     *
+     * <p><b>Approach:</b> Stores timestamps of each request. Precise but memory-intensive for high traffic.
+     */
     static class SlidingWindowLog {
         private final int maxRequests;
         private final long windowMs;
@@ -284,7 +328,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 2: Sliding Window Counter =======================
-    /** Hybrid: uses current + previous window counts with weighted overlap. More accurate than fixed window. */
+    /**
+     * Sliding Window Counter
+     *
+     * <p><b>Approach:</b> Hybrid: uses current + previous window counts with weighted overlap. More accurate than fixed window.
+     */
     static class SlidingWindowCounter {
         private final int maxRequests;
         private final long windowMs;
@@ -314,7 +362,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 3: Token Bucket with Burst Control =======================
-    /** Token bucket that distinguishes between sustained rate and burst allowance. */
+    /**
+     * Token Bucket with Burst Control
+     *
+     * <p><b>Approach:</b> Token bucket that distinguishes between sustained rate and burst allowance
+     */
     static class BurstTokenBucket {
         private final int burstCapacity;
         private final double sustainedRate;
@@ -341,7 +393,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 4: Per-Endpoint Rate Limiter =======================
-    /** Different rate limits for different API endpoints. */
+    /**
+     * Per-Endpoint Rate Limiter
+     *
+     * <p><b>Approach:</b> Different rate limits for different API endpoints
+     */
     static class EndpointRateLimiter {
         private final Map<String, int[]> config = new HashMap<>();  // endpoint → [maxReq, windowMs]
         private final Map<String, long[]> state = new ConcurrentHashMap<>(); // endpoint → [windowStart, count]
@@ -364,7 +420,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 5: Tiered Rate Limiter =======================
-    /** Different rate limits based on user tier (free, basic, premium). */
+    /**
+     * Tiered Rate Limiter
+     *
+     * <p><b>Approach:</b> Different rate limits based on user tier (free, basic, premium)
+     */
     static class TieredRateLimiter {
         enum Tier { FREE(5), BASIC(20), PREMIUM(100);
             final int ratePerMinute; Tier(int r) { ratePerMinute = r; }
@@ -387,7 +447,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 6: Leaky Bucket Queue =======================
-    /** Queue-based leaky bucket: requests are queued and processed at a fixed rate. */
+    /**
+     * Leaky Bucket Queue
+     *
+     * <p><b>Approach:</b> Queue-based leaky bucket: requests are queued and processed at a fixed rate
+     */
     static class LeakyBucketQueue {
         private final int capacity;
         private final Queue<String> queue = new LinkedList<>();
@@ -406,7 +470,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 7: Quota Manager =======================
-    /** Daily / hourly quota system. Tracks usage against allocated quota. */
+    /**
+     * Quota Manager
+     *
+     * <p><b>Approach:</b> Daily / hourly quota system. Tracks usage against allocated quota.
+     */
     static class QuotaManager {
         private final Map<String, long[]> quotas = new HashMap<>();   // user → [dailyLimit, hourlyLimit]
         private final Map<String, long[]> usage = new HashMap<>();    // user → [dailyUsed, hourlyUsed]
@@ -435,7 +503,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 8: Exponential Backoff Calculator =======================
-    /** Computes retry delay with exponential backoff and optional jitter. */
+    /**
+     * Exponential Backoff Calculator
+     *
+     * <p><b>Approach:</b> Computes retry delay with exponential backoff and optional jitter
+     */
     static class ExponentialBackoff {
         private final long baseMs;
         private final long maxMs;
@@ -459,7 +531,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 9: Rate Limiter Middleware Simulation =======================
-    /** Simulates an HTTP middleware that checks rate limits and returns appropriate status codes. */
+    /**
+     * Rate Limiter Middleware Simulation
+     *
+     * <p><b>Approach:</b> Simulates an HTTP middleware that checks rate limits and returns appropriate status codes
+     */
     static class RateLimiterMiddleware {
         private final Map<String, TokenBucket> buckets = new ConcurrentHashMap<>();
         private final int maxTokens;
@@ -479,7 +555,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= MEDIUM 10: Global + Per-User Composite Limiter =======================
-    /** Two layers: a global rate limit for the whole service AND per-user limits. Both must pass. */
+    /**
+     * Global + Per-User Composite Limiter
+     *
+     * <p><b>Approach:</b> Two layers: a global rate limit for the whole service AND per-user limits. Both must pass.
+     */
     static class CompositeRateLimiter {
         private final TokenBucket globalBucket;
         private final Map<String, TokenBucket> userBuckets = new ConcurrentHashMap<>();
@@ -500,7 +580,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 1: Adaptive Rate Limiter =======================
-    /** Dynamically adjusts the rate limit based on server response times / error rates. */
+    /**
+     * Adaptive Rate Limiter
+     *
+     * <p><b>Approach:</b> Dynamically adjusts the rate limit based on server response times / error rates
+     */
     static class AdaptiveRateLimiter {
         private int currentLimit;
         private final int minLimit, maxLimit;
@@ -529,7 +613,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 2: Distributed Rate Limiter (Redis-Like) =======================
-    /** Simulates distributed rate limiting using a shared counter store (like Redis INCR + EXPIRE). */
+    /**
+     * Distributed Rate Limiter (Redis-Like)
+     *
+     * <p><b>Approach:</b> Simulates distributed rate limiting using a shared counter store (like Redis INCR + EXPIRE)
+     */
     static class DistributedRateLimiter {
         private final Map<String, long[]> store = new ConcurrentHashMap<>(); // key → [count, expireAt]
         private final int maxRequests;
@@ -556,7 +644,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 3: Sliding Window with Sub-Buckets =======================
-    /** Divides the window into N sub-buckets for finer granularity. More accurate than simple fixed window. */
+    /**
+     * Sliding Window with Sub-Buckets
+     *
+     * <p><b>Approach:</b> Divides the window into N sub-buckets for finer granularity. More accurate than simple fixed window.
+     */
     static class SlidingWindowBuckets {
         private final int maxRequests;
         private final long windowMs;
@@ -596,7 +688,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 4: Priority Rate Limiter =======================
-    /** Requests have priorities. High-priority requests are served first; low-priority dropped under load. */
+    /**
+     * Priority Rate Limiter
+     *
+     * <p><b>Approach:</b> Requests have priorities. High-priority requests are served first; low-priority dropped under load.
+     */
     static class PriorityRateLimiter {
         enum Priority { HIGH, MEDIUM, LOW }
         private final int totalCapacity;
@@ -629,7 +725,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 5: Circuit Breaker with Rate Limiting =======================
-    /** Combines rate limiting with circuit breaker pattern: CLOSED → OPEN → HALF_OPEN. */
+    /**
+     * Circuit Breaker with Rate Limiting
+     *
+     * <p><b>Approach:</b> Combines rate limiting with circuit breaker pattern: CLOSED → OPEN → HALF_OPEN
+     */
     static class CircuitBreakerLimiter {
         enum State { CLOSED, OPEN, HALF_OPEN }
         private State state = State.CLOSED;
@@ -668,7 +768,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 6: Token Bucket with Priority Queuing =======================
-    /** Token bucket where high-priority requests get tokens before low-priority ones. */
+    /**
+     * Token Bucket with Priority Queuing
+     *
+     * <p><b>Approach:</b> Token bucket where high-priority requests get tokens before low-priority ones
+     */
     static class PriorityTokenBucket {
         private final int maxTokens;
         private final double refillRate;
@@ -702,7 +806,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 7: Geo-Based Rate Limiter =======================
-    /** Different rate limits for different geographic regions. */
+    /**
+     * Geo-Based Rate Limiter
+     *
+     * <p><b>Approach:</b> Different rate limits for different geographic regions
+     */
     static class GeoRateLimiter {
         private final Map<String, int[]> regionLimits = new HashMap<>(); // region → [maxReq, windowMs]
         private final Map<String, Map<String, long[]>> regionUserState = new HashMap<>();
@@ -727,7 +835,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 8: Cost-Based Rate Limiter =======================
-    /** Each API operation has a cost. Limits are in cost units per window, not request count. */
+    /**
+     * Cost-Based Rate Limiter
+     *
+     * <p><b>Approach:</b> Each API operation has a cost. Limits are in cost units per window, not request count.
+     */
     static class CostBasedRateLimiter {
         private final Map<String, Integer> operationCosts = new HashMap<>();
         private final int maxCostPerWindow;
@@ -753,7 +865,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 9: Rate Limiter with Penalty Box =======================
-    /** Clients that exceed limits get put in a penalty box with increasingly longer bans. */
+    /**
+     * Rate Limiter with Penalty Box
+     *
+     * <p><b>Approach:</b> Clients that exceed limits get put in a penalty box with increasingly longer bans
+     */
     static class PenaltyBoxLimiter {
         private final int maxRequests;
         private final long windowMs;
@@ -782,7 +898,11 @@ public class RateLimitingPatterns {
     }
 
     // ======================= HARD 10: Multi-Algorithm Rate Limiter =======================
-    /** Combines multiple algorithms: token bucket for bursts, sliding window for sustained, concurrency limit. */
+    /**
+     * Multi-Algorithm Rate Limiter
+     *
+     * <p><b>Approach:</b> Combines multiple algorithms: token bucket for bursts, sliding window for sustained, concurrency limit
+     */
     static class MultiAlgorithmLimiter {
         private final TokenBucket burstBucket;
         private final SlidingWindowLog sustainedWindow;

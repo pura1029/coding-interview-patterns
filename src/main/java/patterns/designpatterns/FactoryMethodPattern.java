@@ -43,6 +43,17 @@ public class FactoryMethodPattern {
 
     // ======================== Factory ========================
     static class NotificationFactory {
+        /**
+         * Factory Method - Create Product
+         *
+         * <p><b>Approach:</b> Factory method pattern: subclasses override this method to instantiate the appropriate product type.
+         *
+         * @param type the product type to create
+         * @return a new product instance of the specified type
+         *
+         * <p><b>Time:</b> O(1) time.
+         * <br><b>Space:</b> O(1) space.
+         */
         public static Notification create(String type) {
             return switch (type.toLowerCase()) {
                 case "email" -> new EmailNotification();

@@ -3,20 +3,47 @@
 ## What is it?
 Caching stores frequently accessed data in a fast-access layer to reduce latency and backend load. Choosing the right **eviction policy** and **write strategy** is critical for performance, consistency, and scalability.
 
-## Core Concepts
+## Top 5 Caching Strategies You Should Know
 
-### Write Strategies
+### 1. Read-Through
+The application checks the cache first. On a cache miss, the **cache itself** fetches data from the DB, stores it, and returns it to the application. The app never talks to the DB directly for reads.
+
+**Best for**: Read-heavy apps like CDNs and social feeds.
+
+### 2. Write-Through
+Every write updates both the cache and DB **at the same time**. Ensures cache always stays fresh and consistent with the database. Write is only confirmed after both succeed.
+
+**Best for**: Systems needing strong consistency (e.g., finance apps, inventory counts).
+
+### 3. Cache-Aside (Lazy Loading)
+The app looks in the cache first. On a miss, it fetches from the DB and **explicitly** updates the cache. The most common and simplest caching pattern — the application controls the cache.
+
+**Best for**: Read-heavy workloads where slight data staleness is okay.
+
+### 4. Write-Around
+Writes go straight to the DB, **skipping the cache**. Cache gets updated only on a subsequent read. Prevents cache pollution from data that is written but rarely read back.
+
+**Best for**: Write-heavy systems with rare immediate reads (e.g., logging, analytics, audit trails).
+
+### 5. Write-Back (Write-Behind)
+Writes go to the cache first, and are **asynchronously persisted** to the DB later. Minimizes write latency but introduces risk of data loss if the cache crashes before flushing.
+
+**Best for**: High-performance, write-heavy systems (counters, leaderboards, IoT sensor data).
+
+## Strategy Comparison
+
+| Strategy | Consistency | Write Speed | Read Speed | Data Safety | Best Use Case |
+|----------|:-----------:|:-----------:|:----------:|:-----------:|--------------|
+| **Read-Through** | Cache-managed | N/A | Fast (cache hit) | Safe | CDNs, social feeds |
+| **Write-Through** | Strong | Slow (both) | Fast (always fresh) | Safe | Finance, inventory |
+| **Cache-Aside** | Eventual | N/A | Fast (after warmup) | Safe | General web apps |
+| **Write-Around** | Eventual | Medium (DB) | Slow (first read) | Safe | Logging, analytics |
+| **Write-Back** | Eventual | Fastest (cache only) | Fast | Risk of loss | Counters, IoT |
+
+## Additional Strategies
+
 | Strategy | How it Works | Trade-off |
 |----------|-------------|-----------|
-| **Write-Through** | Write to cache AND database synchronously | Strong consistency, higher write latency |
-| **Write-Back (Write-Behind)** | Write to cache only; flush to DB later | Low write latency, risk of data loss |
-| **Write-Around** | Write to DB only; cache on read | Avoids cache pollution, higher read-miss latency |
-
-### Read Strategies
-| Strategy | How it Works | Trade-off |
-|----------|-------------|-----------|
-| **Cache-Aside (Lazy Loading)** | App checks cache first, loads from DB on miss | Simple, potential stale data |
-| **Read-Through** | Cache itself loads from DB on miss | Transparent to app, tighter coupling |
 | **Refresh-Ahead** | Proactively refresh entries before expiry | Low latency, wasted refreshes if data not needed |
 
 ### Eviction Policies

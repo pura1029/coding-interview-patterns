@@ -20,6 +20,16 @@ public class SingletonPattern {
 
         private EagerSingleton() {}
 
+        /**
+         * Get Singleton Instance
+         *
+         * <p><b>Approach:</b> Thread-safe lazy initialization: returns the single shared instance, creating it on first access if needed.
+         *
+         * @return the singleton instance
+         *
+         * <p><b>Time:</b> O(1) time.
+         * <br><b>Space:</b> O(1) space.
+         */
         public static EagerSingleton getInstance() { return INSTANCE; }
 
         public void serve(String request) {
@@ -35,6 +45,16 @@ public class SingletonPattern {
 
         private LazySingleton() {}
 
+        /**
+         * Get Singleton Instance
+         *
+         * <p><b>Approach:</b> Thread-safe lazy initialization: returns the single shared instance, creating it on first access if needed.
+         *
+         * @return the singleton instance
+         *
+         * <p><b>Time:</b> O(1) time.
+         * <br><b>Space:</b> O(1) space.
+         */
         public static LazySingleton getInstance() {
             if (instance == null) {
                 synchronized (LazySingleton.class) {

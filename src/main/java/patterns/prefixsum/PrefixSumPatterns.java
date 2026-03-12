@@ -13,7 +13,11 @@ import java.util.*;
 public class PrefixSumPatterns {
 
     // ======================= EASY 1 =======================
-    /** Range Sum Query – Immutable. Build prefix array in O(n); answer sumRange(l, r) in O(1). */
+    /**
+     * Range Sum Query – Immutable
+     *
+     * <p><b>Approach:</b> Range Sum Query – Immutable
+     */
     static class RangeSumQuery {
         private final int[] prefix;
         public RangeSumQuery(int[] nums) {
@@ -26,7 +30,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= EASY 2 =======================
-    /** Running Sum of 1D Array. result[i] = sum(nums[0]..nums[i]). O(n) time, O(n) space. */
+    /**
+     * Running Sum of 1D Array
+     *
+     * <p><b>Approach:</b> Running Sum of 1D Array. result[i] = sum(nums[0]. nums[i]).
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int[] runningSum(int[] nums) {
         int[] result = new int[nums.length];
         result[0] = nums[0];
@@ -35,7 +49,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= EASY 3 =======================
-    /** Find Pivot Index. leftSum == totalSum - leftSum - nums[i]. O(n) time, O(1) space. */
+    /**
+     * Find Pivot Index
+     *
+     * <p><b>Approach:</b> Find Pivot Index. leftSum == totalSum - leftSum - nums[i].
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int pivotIndex(int[] nums) {
         int total = 0;
         for (int n : nums) total += n;
@@ -48,7 +72,16 @@ public class PrefixSumPatterns {
     }
 
     // ======================= EASY 4 =======================
-    /** Sum of All Odd Length Subarrays. Count how many odd-length subarrays include each element. O(n) time. */
+    /**
+     * Sum of All Odd Length Subarrays
+     *
+     * <p><b>Approach:</b> Sum of All Odd Length Subarrays. Count how many odd-length subarrays include each element.
+     *
+     * @param arr the arr parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     */
     public static int sumOddLengthSubarrays(int[] arr) {
         int n = arr.length, result = 0;
         for (int i = 0; i < n; i++) {
@@ -59,7 +92,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= EASY 5 =======================
-    /** Number of Good Pairs. For each value, pairs = count so far. Frequency counting. O(n) time, O(1) space. */
+    /**
+     * Number of Good Pairs
+     *
+     * <p><b>Approach:</b> Number of Good Pairs. For each value, pairs = count so far. Frequency counting.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int numGoodPairs(int[] nums) {
         int[] count = new int[101];
         int result = 0;
@@ -71,7 +114,16 @@ public class PrefixSumPatterns {
     }
 
     // ======================= EASY 6 =======================
-    /** Left and Right Sum Differences. Single pass: rightSum = total - leftSum - nums[i]. O(n) time. */
+    /**
+     * Left and Right Sum Differences
+     *
+     * <p><b>Approach:</b> Left and Right Sum Differences. Single pass: rightSum = total - leftSum - nums[i].
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     */
     public static int[] leftRightDifference(int[] nums) {
         int n = nums.length;
         int total = 0;
@@ -87,7 +139,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= EASY 7 =======================
-    /** Count Positive Prefix Sums. Count indices where running sum > 0. O(n) time, O(1) space. */
+    /**
+     * Count Positive Prefix Sums
+     *
+     * <p><b>Approach:</b> Count Positive Prefix Sums. Count indices where running sum > 0.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int countPositivePrefixSums(int[] nums) {
         int sum = 0, count = 0;
         for (int n : nums) {
@@ -98,7 +160,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= EASY 8 =======================
-    /** Max After Range Increments. Difference array for range updates, then prefix sum. O(n + q) time. */
+    /**
+     * Max After Range Increments
+     *
+     * <p><b>Approach:</b> Max After Range Increments. Difference array for range updates, then prefix sum.
+     *
+     * @param n the n parameter
+     * @param queries the queries parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n + q) time.
+     */
     public static int maxAfterRangeIncrements(int n, int[][] queries) {
         int[] diff = new int[n + 1];
         for (int[] q : queries) {
@@ -114,7 +186,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= EASY 9 =======================
-    /** Min Start Value for Positive Step Sum. startValue = 1 - min(prefixSum). O(n) time, O(1) space. */
+    /**
+     * Min Start Value for Positive Step Sum
+     *
+     * <p><b>Approach:</b> Min Start Value for Positive Step Sum. startValue = 1 - min(prefixSum).
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int minStartValue(int[] nums) {
         int minPrefix = 0, sum = 0;
         for (int n : nums) {
@@ -125,7 +207,18 @@ public class PrefixSumPatterns {
     }
 
     // ======================= EASY 10 =======================
-    /** Check If All 1's Are K Places Apart. Track last 1's index; verify gap >= k. O(n) time, O(1) space. */
+    /**
+     * Check If All 1's Are K Places Apart
+     *
+     * <p><b>Approach:</b> Check If All 1's Are K Places Apart. Track last 1's index; verify gap >= k.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean kLengthApart(int[] nums, int k) {
         int lastOne = -k - 1;
         for (int i = 0; i < nums.length; i++) {
@@ -138,7 +231,18 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 1 =======================
-    /** Subarray Sum Equals K. Prefix sum + hashmap: count occurrences of (sum - k). O(n) time, O(n) space. */
+    /**
+     * Subarray Sum Equals K
+     *
+     * <p><b>Approach:</b> Subarray Sum Equals K. Prefix sum + hashmap: count occurrences of (sum - k).
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int subarraySumEqualsK(int[] nums, int k) {
         Map<Integer, Integer> prefixCount = new HashMap<>();
         prefixCount.put(0, 1);
@@ -152,7 +256,16 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 2 =======================
-    /** Contiguous Array. Replace 0→-1; find longest subarray with sum=0 via first-occurrence map. O(n) time. */
+    /**
+     * Contiguous Array
+     *
+     * <p><b>Approach:</b> Contiguous Array. Replace 0→-1; find longest subarray with sum=0 via first-occurrence map.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     */
     public static int findMaxLength(int[] nums) {
         Map<Integer, Integer> firstOccurrence = new HashMap<>();
         firstOccurrence.put(0, -1);
@@ -169,7 +282,16 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 3 =======================
-    /** Product of Array Except Self. Left prefix product pass + right suffix product pass. O(n) time, O(1) extra. */
+    /**
+     * Product of Array Except Self
+     *
+     * <p><b>Approach:</b> Product of Array Except Self. Left prefix product pass + right suffix product pass.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     */
     public static int[] productExceptSelf(int[] nums) {
         int n = nums.length;
         int[] result = new int[n];
@@ -184,7 +306,18 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 4 =======================
-    /** Subarrays Divisible by K. Same prefix-sum trick with remainder counting. O(n) time, O(k) space. */
+    /**
+     * Subarrays Divisible by K
+     *
+     * <p><b>Approach:</b> Subarrays Divisible by K. Same prefix-sum trick with remainder counting.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(k) space.
+     */
     public static int subarraysDivByK(int[] nums, int k) {
         Map<Integer, Integer> remainderCount = new HashMap<>();
         remainderCount.put(0, 1);
@@ -199,7 +332,19 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 5 =======================
-    /** Subarrays with Bounded Max. countAtMost(right) - countAtMost(left-1). O(n) time, O(1) space. */
+    /**
+     * Subarrays with Bounded Max
+     *
+     * <p><b>Approach:</b> Subarrays with Bounded Max. countAtMost(right) - countAtMost(left-1).
+     *
+     * @param nums the nums parameter
+     * @param left the left parameter
+     * @param right the right parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int numSubarrayBoundedMax(int[] nums, int left, int right) {
         return countAtMost(nums, right) - countAtMost(nums, left - 1);
     }
@@ -214,7 +359,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 6 =======================
-    /** Binary Subarrays With Sum. Prefix sum hashmap counts subarrays summing to goal. O(n) time. */
+    /**
+     * Binary Subarrays With Sum
+     *
+     * <p><b>Approach:</b> Binary Subarrays With Sum. Prefix sum hashmap counts subarrays summing to goal.
+     *
+     * @param nums the nums parameter
+     * @param goal the goal parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     */
     public static int numSubarraysWithSum(int[] nums, int goal) {
         Map<Integer, Integer> prefixCount = new HashMap<>();
         prefixCount.put(0, 1);
@@ -228,7 +383,18 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 7 =======================
-    /** Max Size Subarray Sum Equals K. Track first occurrence of each prefix sum. O(n) time, O(n) space. */
+    /**
+     * Max Size Subarray Sum Equals K
+     *
+     * <p><b>Approach:</b> Max Size Subarray Sum Equals K. Track first occurrence of each prefix sum.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int maxSubArrayLen(int[] nums, int k) {
         Map<Integer, Integer> firstIndex = new HashMap<>();
         firstIndex.put(0, -1);
@@ -244,7 +410,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 8 =======================
-    /** Range Addition. Difference array for O(1) range updates, then prefix sum to materialize. O(n + q) time. */
+    /**
+     * Range Addition
+     *
+     * <p><b>Approach:</b> Range Addition
+     *
+     * @param length the length parameter
+     * @param updates the updates parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n + q) time.
+     */
     public static int[] rangeAddition(int length, int[][] updates) {
         int[] diff = new int[length];
         for (int[] u : updates) {
@@ -256,7 +432,15 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 9 =======================
-    /** Continuous Subarray Sum. Prefix sum remainder map; same remainder at distance >= 2 means multiple of k. O(n). */
+    /**
+     * Continuous Subarray Sum
+     *
+     * <p><b>Approach:</b> Continuous Subarray Sum. Prefix sum remainder map; same remainder at distance >= 2 means multiple of k.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static boolean checkSubarraySum(int[] nums, int k) {
         Map<Integer, Integer> remainderIndex = new HashMap<>();
         remainderIndex.put(0, -1);
@@ -274,7 +458,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= MEDIUM 10 =======================
-    /** Nice Subarrays (exactly k odds). atMost(k) - atMost(k-1) sliding window trick. O(n) time. */
+    /**
+     * Nice Subarrays (exactly k odds)
+     *
+     * <p><b>Approach:</b> Nice Subarrays (exactly k odds). atMost(k) - atMost(k-1) sliding window trick.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     */
     public static int numberOfSubarrays(int[] nums, int k) {
         return atMostKOdd(nums, k) - atMostKOdd(nums, k - 1);
     }
@@ -293,7 +487,14 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 1 =======================
-    /** Max Subarray Sum After Removing One Element. Forward and backward max subarrays; bridge at each i. O(n). */
+    /**
+     * Max Subarray Sum After Removing One Element
+     *
+     * <p><b>Approach:</b> Max Subarray Sum After Removing One Element. Forward and backward max subarrays; bridge at each i.
+     *
+     * @param nums the nums parameter
+     * @return the computed result
+     */
     public static int maxSumAfterRemoval(int[] nums) {
         int n = nums.length;
         int[] maxEndingHere = new int[n];
@@ -312,7 +513,11 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 2 =======================
-    /** 2D Range Sum Query. Build 2D prefix sum in O(m·n); answer sumRegion in O(1) via inclusion-exclusion. */
+    /**
+     * 2D Range Sum Query
+     *
+     * <p><b>Approach:</b> 2D Range Sum Query
+     */
     static class RangeSum2D {
         private final int[][] prefix;
         public RangeSum2D(int[][] matrix) {
@@ -328,7 +533,15 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 3 =======================
-    /** Subarray Sum Equals K (Long). Same prefix-sum hashmap approach but with long to handle large sums. O(n). */
+    /**
+     * Subarray Sum Equals K (Long)
+     *
+     * <p><b>Approach:</b> Subarray Sum Equals K (Long). Same prefix-sum hashmap approach but with long to handle large sums.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     */
     public static long subarraySumEqualsKLong(int[] nums, int k) {
         Map<Long, Long> prefixCount = new HashMap<>();
         prefixCount.put(0L, 1L);
@@ -342,7 +555,18 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 4 =======================
-    /** Max Sum of 3 Non-Overlapping Subarrays. Window sums + left/right best indices. O(n) time, O(n) space. */
+    /**
+     * Max Sum of 3 Non-Overlapping Subarrays
+     *
+     * <p><b>Approach:</b> Max Sum of 3 Non-Overlapping Subarrays. Window sums + left/right best indices.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int[] maxSumOfThreeSubarrays(int[] nums, int k) {
         int n = nums.length;
         int[] windowSum = new int[n - k + 1];
@@ -376,7 +600,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 5 =======================
-    /** Shortest Subarray with Sum >= K. Prefix sum + monotonic deque. Handles negatives. O(n) time. */
+    /**
+     * Shortest Subarray with Sum >= K
+     *
+     * <p><b>Approach:</b> Shortest Subarray with Sum >= K. Prefix sum + monotonic deque. Handles negatives.
+     *
+     * @param nums the nums parameter
+     * @param k the k parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     */
     public static int shortestSubarrayWithSumK(int[] nums, int k) {
         int n = nums.length;
         long[] prefix = new long[n + 1];
@@ -396,7 +630,18 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 6 =======================
-    /** Count of Range Sum. Merge sort on prefix sums to count pairs in [lower, upper]. O(n log n) time. */
+    /**
+     * Count of Range Sum
+     *
+     * <p><b>Approach:</b> Count of Range Sum. Merge sort on prefix sums to count pairs in [lower, upper].
+     *
+     * @param nums the nums parameter
+     * @param lower the lower parameter
+     * @param upper the upper parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n log n) time.
+     */
     public static int countRangeSum(int[] nums, int lower, int upper) {
         int n = nums.length;
         long[] prefix = new long[n + 1];
@@ -424,7 +669,15 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 7 =======================
-    /** Max Non-Overlapping Subarrays with Sum = Target. Greedy: reset prefix set after each match. O(n). */
+    /**
+     * Max Non-Overlapping Subarrays with Sum = Target
+     *
+     * <p><b>Approach:</b> Max Non-Overlapping Subarrays with Sum = Target. Greedy: reset prefix set after each match.
+     *
+     * @param nums the nums parameter
+     * @param target the target parameter
+     * @return the computed result
+     */
     public static int maxNonOverlapping(int[] nums, int target) {
         Set<Integer> prefixSet = new HashSet<>();
         prefixSet.add(0);
@@ -444,7 +697,15 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 8 =======================
-    /** Make Sum Divisible by P. Remove shortest subarray so remaining sum % p == 0. Prefix remainder map. O(n). */
+    /**
+     * Make Sum Divisible by P
+     *
+     * <p><b>Approach:</b> Make Sum Divisible by P. Remove shortest subarray so remaining sum % p == 0. Prefix remainder map.
+     *
+     * @param nums the nums parameter
+     * @param p the p parameter
+     * @return the computed result
+     */
     public static int minSubarray(int[] nums, int p) {
         long totalSum = 0;
         for (int n : nums) totalSum += n;
@@ -465,7 +726,17 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 9 =======================
-    /** Submatrices That Sum to Target. Fix row range, reduce to 1D subarray sum equals k. O(m²·n) time. */
+    /**
+     * Submatrices That Sum to Target
+     *
+     * <p><b>Approach:</b> Submatrices That Sum to Target. Fix row range, reduce to 1D subarray sum equals k.
+     *
+     * @param matrix the matrix parameter
+     * @param target the target parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(m²·n) time.
+     */
     public static int numSubmatrixSumTarget(int[][] matrix, int target) {
         int m = matrix.length, n = matrix[0].length, count = 0;
         for (int r1 = 0; r1 < m; r1++) {
@@ -486,7 +757,18 @@ public class PrefixSumPatterns {
     }
 
     // ======================= HARD 10 =======================
-    /** Min Operations to Reduce X to Zero. Find longest subarray with sum = total - x. O(n) time, O(n) space. */
+    /**
+     * Min Operations to Reduce X to Zero
+     *
+     * <p><b>Approach:</b> Min Operations to Reduce X to Zero. Find longest subarray with sum = total - x.
+     *
+     * @param nums the nums parameter
+     * @param x the x parameter
+     * @return the computed result
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int minOperations(int[] nums, int x) {
         int total = 0;
         for (int n : nums) total += n;

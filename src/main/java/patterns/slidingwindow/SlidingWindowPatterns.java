@@ -12,6 +12,20 @@ import java.util.*;
 public class SlidingWindowPatterns {
 
     // ======================= EASY 1: Max Sum Subarray of Size K =======================
+    /**
+     * Max Sum Subarray of Size K
+     *
+     * <p><b>Approach:</b> Fixed-size sliding window: initialize sum with first k elements,
+     * then slide by adding the entering element and removing the leaving element,
+     * tracking the maximum sum seen.
+     *
+     * @param nums the input array of integers
+     * @param k    the fixed window size
+     * @return the maximum sum of any contiguous subarray of size k
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int maxSumSubarray(int[] nums, int k) {
         int sum = 0, max;
         for (int i = 0; i < k; i++) sum += nums[i];
@@ -21,6 +35,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= EASY 2: Average of Subarrays of Size K =======================
+    /**
+     * Average of Subarrays of Size K
+     *
+     * <p><b>Approach:</b> Fixed-size sliding window: maintain running sum, divide by k at each position
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static double[] averagesOfSubarrays(int[] nums, int k) {
         double[] result = new double[nums.length - k + 1];
         double sum = 0;
@@ -31,6 +53,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= EASY 3: Maximum Number of Vowels in Substring of Size K =======================
+    /**
+     * Maximum Number of Vowels in Substring of Size K
+     *
+     * <p><b>Approach:</b> Fixed-size sliding window tracking vowel count; add entering char, remove leaving char
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int maxVowels(String s, int k) {
         int count = 0;
         for (int i = 0; i < k; i++) if (isVowel(s.charAt(i))) count++;
@@ -45,6 +75,14 @@ public class SlidingWindowPatterns {
     private static boolean isVowel(char c) { return "aeiou".indexOf(c) >= 0; }
 
     // ======================= EASY 4: Minimum Recolors to Get K Consecutive Black Blocks =======================
+    /**
+     * Minimum Recolors for K Consecutive Black Blocks
+     *
+     * <p><b>Approach:</b> Fixed-size sliding window counting white blocks; minimum whites = minimum recolors
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int minimumRecolors(String blocks, int k) {
         int whites = 0;
         for (int i = 0; i < k; i++) if (blocks.charAt(i) == 'W') whites++;
@@ -58,6 +96,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= EASY 5: Contains Duplicate II =======================
+    /**
+     * Contains Duplicate II
+     *
+     * <p><b>Approach:</b> Sliding window with HashSet of size k; check membership before inserting
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(k) space.
+     */
     public static boolean containsNearbyDuplicate(int[] nums, int k) {
         Set<Integer> window = new HashSet<>();
         for (int i = 0; i < nums.length; i++) {
@@ -68,6 +114,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= EASY 6: Number of Sub-arrays of Size K with Avg >= Threshold =======================
+    /**
+     * Subarrays of Size K with Average >= Threshold
+     *
+     * <p><b>Approach:</b> Fixed-size sliding window; count windows where sum/k >= threshold
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int numOfSubarrays(int[] arr, int k, int threshold) {
         int sum = 0, count = 0;
         for (int i = 0; i < k; i++) sum += arr[i];
@@ -80,6 +134,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= EASY 7: Diet Plan Performance =======================
+    /**
+     * Diet Plan Performance
+     *
+     * <p><b>Approach:</b> Fixed-size sliding window tracking calorie sum; score based on lower/upper thresholds
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int dietPlanPerformance(int[] calories, int k, int lower, int upper) {
         int sum = 0, points = 0;
         for (int i = 0; i < k; i++) sum += calories[i];
@@ -92,6 +154,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= EASY 8: Defuse the Bomb =======================
+    /**
+     * Defuse the Bomb
+     *
+     * <p><b>Approach:</b> Circular sliding window: compute initial sum for range, slide circularly
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int[] decrypt(int[] code, int k) {
         int n = code.length;
         int[] result = new int[n];
@@ -108,6 +178,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= EASY 9: Find All K-Distant Indices =======================
+    /**
+     * Find All K-Distant Indices
+     *
+     * <p><b>Approach:</b> For each index, check if any element within k distance equals the key
+     *
+     * <p><b>Time:</b> O(n·k) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static List<Integer> findKDistantIndices(int[] nums, int key, int k) {
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < nums.length; i++) {
@@ -119,6 +197,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= EASY 10: Grumpy Bookstore Owner =======================
+    /**
+     * Grumpy Bookstore Owner
+     *
+     * <p><b>Approach:</b> Fixed window of 'minutes' size maximizes extra satisfied customers from grumpy periods
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
         int baseSatisfied = 0;
         for (int i = 0; i < customers.length; i++) if (grumpy[i] == 0) baseSatisfied += customers[i];
@@ -134,6 +220,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 1: Longest Substring Without Repeating =======================
+    /**
+     * Longest Substring Without Repeating Characters
+     *
+     * <p><b>Approach:</b> Variable-size sliding window with HashSet; shrink left when duplicate found
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(min(n,m)) space.
+     */
     public static int longestWithoutRepeats(String s) {
         Set<Character> seen = new HashSet<>();
         int l = 0, max = 0;
@@ -146,6 +240,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 2: Longest Repeating Character Replacement =======================
+    /**
+     * Longest Repeating Character Replacement
+     *
+     * <p><b>Approach:</b> Sliding window: track max frequency char count; window valid if size - maxCount <= k
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int characterReplacement(String s, int k) {
         int[] count = new int[26];
         int l = 0, maxCount = 0, max = 0;
@@ -158,6 +260,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 3: Fruit Into Baskets (at most 2 types) =======================
+    /**
+     * Fruit Into Baskets (At Most 2 Types)
+     *
+     * <p><b>Approach:</b> Variable-size sliding window with HashMap; shrink when more than 2 distinct types
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int totalFruit(int[] fruits) {
         Map<Integer, Integer> basket = new HashMap<>();
         int l = 0, max = 0;
@@ -174,6 +284,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 4: Max Consecutive Ones III (flip at most k) =======================
+    /**
+     * Max Consecutive Ones III
+     *
+     * <p><b>Approach:</b> Sliding window: expand right, count zeros; shrink left when zeros exceed k
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int longestOnes(int[] nums, int k) {
         int l = 0, zeros = 0, max = 0;
         for (int r = 0; r < nums.length; r++) {
@@ -185,6 +303,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 5: Permutation in String =======================
+    /**
+     * Permutation in String
+     *
+     * <p><b>Approach:</b> Fixed-size sliding window with frequency array; matched count tracks valid chars
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static boolean checkInclusion(String s1, String s2) {
         if (s1.length() > s2.length()) return false;
         int[] count = new int[26];
@@ -199,6 +325,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 6: Find All Anagrams in a String =======================
+    /**
+     * Find All Anagrams in a String
+     *
+     * <p><b>Approach:</b> Fixed-size sliding window with frequency array; collect start indices when all chars matched
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static List<Integer> findAnagrams(String s, String p) {
         List<Integer> result = new ArrayList<>();
         if (s.length() < p.length()) return result;
@@ -214,6 +348,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 7: Longest Substring with At Most K Distinct =======================
+    /**
+     * Longest Substring with At Most K Distinct Characters
+     *
+     * <p><b>Approach:</b> Variable-size sliding window with frequency map; shrink when distinct chars exceed k
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(k) space.
+     */
     public static int lengthOfLongestSubstringKDistinct(String s, int k) {
         Map<Character, Integer> freq = new HashMap<>();
         int l = 0, max = 0;
@@ -230,6 +372,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 8: Minimum Size Subarray Sum =======================
+    /**
+     * Minimum Size Subarray Sum
+     *
+     * <p><b>Approach:</b> Variable-size sliding window: expand to reach target sum, shrink to minimize length
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int minSubArrayLen(int target, int[] nums) {
         int l = 0, sum = 0, min = Integer.MAX_VALUE;
         for (int r = 0; r < nums.length; r++) {
@@ -240,6 +390,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 9: Subarray Product Less Than K =======================
+    /**
+     * Subarray Product Less Than K
+     *
+     * <p><b>Approach:</b> Sliding window with running product; shrink left when product >= k
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int numSubarrayProductLessThanK(int[] nums, int k) {
         if (k <= 1) return 0;
         int l = 0, product = 1, count = 0;
@@ -252,6 +410,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= MEDIUM 10: K Radius Subarray Averages =======================
+    /**
+     * K Radius Subarray Averages
+     *
+     * <p><b>Approach:</b> Fixed-size window of (2k+1); slide and compute average at each valid center
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int[] getAverages(int[] nums, int k) {
         int n = nums.length;
         int[] result = new int[n];
@@ -268,6 +434,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= HARD 1: Minimum Window Substring =======================
+    /**
+     * Minimum Window Substring
+     *
+     * <p><b>Approach:</b> Variable-size sliding window: expand to satisfy, shrink to minimize; track required vs formed
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static String minWindowSubstring(String s, String t) {
         if (s.length() < t.length()) return "";
         Map<Character, Integer> need = new HashMap<>();
@@ -288,6 +462,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= HARD 2: Sliding Window Maximum =======================
+    /**
+     * Sliding Window Maximum
+     *
+     * <p><b>Approach:</b> Monotonic decreasing deque of indices; front always holds window maximum
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(k) space.
+     */
     public static int[] maxSlidingWindow(int[] nums, int k) {
         Deque<Integer> dq = new ArrayDeque<>();
         int[] result = new int[nums.length - k + 1];
@@ -301,6 +483,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= HARD 3: Substring with Concatenation of All Words =======================
+    /**
+     * Substring with Concatenation of All Words
+     *
+     * <p><b>Approach:</b> Fixed-length sliding window with word frequency maps; check at each starting offset
+     *
+     * <p><b>Time:</b> O(n·m·w) time.
+     * <br><b>Space:</b> O(m) space.
+     */
     public static List<Integer> findSubstring(String s, String[] words) {
         List<Integer> result = new ArrayList<>();
         if (words.length == 0) return result;
@@ -327,11 +517,27 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= HARD 4: Longest Substring with At Most Two Distinct =======================
+    /**
+     * Longest Substring with At Most Two Distinct
+     *
+     * <p><b>Approach:</b> Delegates to K-distinct with k=2; variable-size sliding window
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int lengthOfLongestSubstringTwoDistinct(String s) {
         return lengthOfLongestSubstringKDistinct(s, 2);
     }
 
     // ======================= HARD 5: Count Subarrays With Fixed Bounds =======================
+    /**
+     * Count Subarrays With Fixed Bounds
+     *
+     * <p><b>Approach:</b> Track last positions of minK, maxK, and out-of-bound elements; count valid subarrays
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static long countSubarrays(int[] nums, int minK, int maxK) {
         long count = 0;
         int lastMin = -1, lastMax = -1, lastBad = -1;
@@ -345,6 +551,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= HARD 6: Minimum Window Subsequence =======================
+    /**
+     * Minimum Window Subsequence
+     *
+     * <p><b>Approach:</b> Forward pass to find subsequence, backward pass to minimize window length
+     *
+     * <p><b>Time:</b> O(n·m) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static String minWindowSubsequence(String s1, String s2) {
         int m = s1.length(), n = s2.length();
         int minLen = Integer.MAX_VALUE, minStart = 0;
@@ -364,6 +578,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= HARD 7: Max Value of Equation (y_j + y_i + |x_j - x_i|) =======================
+    /**
+     * Max Value of Equation
+     *
+     * <p><b>Approach:</b> Monotonic deque maintains max(y-x) within distance k; compute y_j+x_j + max(y_i-x_i)
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int findMaxValueOfEquation(int[][] points, int k) {
         Deque<int[]> dq = new ArrayDeque<>();
         int max = Integer.MIN_VALUE;
@@ -377,6 +599,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= HARD 8: Subarrays with K Different Integers =======================
+    /**
+     * Subarrays with K Different Integers
+     *
+     * <p><b>Approach:</b> atMost(k) - atMost(k-1) trick; sliding window counts subarrays with at most k distinct
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int subarraysWithKDistinct(int[] nums, int k) {
         return atMostKDistinct(nums, k) - atMostKDistinct(nums, k - 1);
     }
@@ -396,6 +626,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= HARD 9: Minimum Number of K Consecutive Bit Flips =======================
+    /**
+     * Minimum Number of K Consecutive Bit Flips
+     *
+     * <p><b>Approach:</b> Greedy flipping with a flip counter sliding window; track cumulative flips
+     *
+     * <p><b>Time:</b> O(n) time.
+     * <br><b>Space:</b> O(n) space.
+     */
     public static int minKBitFlips(int[] nums, int k) {
         int n = nums.length, flips = 0, flipCount = 0;
         int[] isFlipped = new int[n];
@@ -412,6 +650,14 @@ public class SlidingWindowPatterns {
     }
 
     // ======================= HARD 10: Longest Substring with At Least K Repeating =======================
+    /**
+     * Longest Substring with At Least K Repeating Characters
+     *
+     * <p><b>Approach:</b> Enumerate unique char targets 1..26; sliding window for each target validates k-frequency
+     *
+     * <p><b>Time:</b> O(26·n) time.
+     * <br><b>Space:</b> O(1) space.
+     */
     public static int longestSubstringKRepeating(String s, int k) {
         int max = 0;
         for (int uniqueTarget = 1; uniqueTarget <= 26; uniqueTarget++) {

@@ -8,17 +8,18 @@
 ## Table of Contents
 
 1. [What Is Caching and Why It Matters](#1-what-is-caching-and-why-it-matters)
-2. [Cache Topologies — Where to Cache](#2-cache-topologies--where-to-cache)
-3. [Read Strategies — Cache-Aside, Read-Through](#3-read-strategies--cache-aside-read-through)
-4. [Write Strategies — Write-Through, Write-Back, Write-Around](#4-write-strategies--write-through-write-back-write-around)
-5. [Eviction Policies — LRU, LFU, FIFO, and More](#5-eviction-policies--lru-lfu-fifo-and-more)
-6. [Cache Invalidation — The Hardest Problem](#6-cache-invalidation--the-hardest-problem)
-7. [Distributed Caching — Scaling Beyond One Node](#7-distributed-caching--scaling-beyond-one-node)
-8. [Cache Stampede, Thundering Herd, and Other Pitfalls](#8-cache-stampede-thundering-herd-and-other-pitfalls)
-9. [Real-World Caching Architectures](#9-real-world-caching-architectures)
-10. [Caching Products Comparison](#10-caching-products-comparison)
-11. [System Design Interview — Caching Questions](#11-system-design-interview--caching-questions)
-12. [Quick Reference — Cheat Sheet](#12-quick-reference--cheat-sheet)
+2. [Top 5 Caching Strategies You Should Know](#top-5-caching-strategies-you-should-know)
+3. [Cache Topologies — Where to Cache](#2-cache-topologies--where-to-cache)
+4. [Read Strategies — Cache-Aside, Read-Through](#3-read-strategies--cache-aside-read-through)
+5. [Write Strategies — Write-Through, Write-Back, Write-Around](#4-write-strategies--write-through-write-back-write-around)
+6. [Eviction Policies — LRU, LFU, FIFO, and More](#5-eviction-policies--lru-lfu-fifo-and-more)
+7. [Cache Invalidation — The Hardest Problem](#6-cache-invalidation--the-hardest-problem)
+8. [Distributed Caching — Scaling Beyond One Node](#7-distributed-caching--scaling-beyond-one-node)
+9. [Cache Stampede, Thundering Herd, and Other Pitfalls](#8-cache-stampede-thundering-herd-and-other-pitfalls)
+10. [Real-World Caching Architectures](#9-real-world-caching-architectures)
+11. [Caching Products Comparison](#10-caching-products-comparison)
+12. [System Design Interview — Caching Questions](#11-system-design-interview--caching-questions)
+13. [Quick Reference — Cheat Sheet](#12-quick-reference--cheat-sheet)
 
 ---
 
@@ -108,6 +109,156 @@ Example:
     80% hit ratio → 20,000 DB queries
     95% hit ratio → 5,000 DB queries       (4x fewer)
     99% hit ratio → 1,000 DB queries       (20x fewer)
+```
+
+---
+
+## Top 5 Caching Strategies You Should Know
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     TOP 5 CACHING STRATEGIES                                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  1. READ THROUGH                                                             │
+│  ───────────────                                                             │
+│  The application checks the cache first. On a cache miss, the cache          │
+│  ITSELF fetches data from the DB, stores it, and returns it to the app.      │
+│                                                                              │
+│     App ──→ Cache ──HIT?──→ Return data                                      │
+│                │                                                             │
+│              MISS ──→ Cache queries DB ──→ Store + Return                     │
+│                                                                              │
+│  Best for: Read-heavy apps like CDNs and social feeds.                       │
+│  Real-world: AWS DAX, Hibernate L2 Cache, NCache                             │
+│                                                                              │
+│  ─────────────────────────────────────────────────────────────────────────    │
+│                                                                              │
+│  2. WRITE THROUGH                                                            │
+│  ────────────────                                                            │
+│  Every write updates both the cache AND the database at the same time.       │
+│  Ensures the cache always stays fresh and consistent with the DB.            │
+│                                                                              │
+│     App ──write──→ Cache ──write──→ Database                                 │
+│                      │                  │                                    │
+│                      ←── ACK ──────── ACK                                    │
+│                                                                              │
+│  Best for: Systems needing strong consistency (e.g., finance apps,           │
+│            inventory counts, configuration systems).                         │
+│  Real-world: Amazon DAX (DynamoDB Accelerator)                               │
+│                                                                              │
+│  ─────────────────────────────────────────────────────────────────────────    │
+│                                                                              │
+│  3. CACHE ASIDE (Lazy Loading)                                               │
+│  ─────────────────────────────                                               │
+│  The app looks in the cache first. On a miss, it fetches from the DB         │
+│  and EXPLICITLY updates the cache. The most common caching pattern.          │
+│                                                                              │
+│     App ──→ Cache ──HIT?──→ Return data                                      │
+│                │                                                             │
+│              MISS ──→ App queries DB ──→ App writes to Cache ──→ Return      │
+│                                                                              │
+│  Best for: Read-heavy workloads where slight data staleness is okay.         │
+│  Real-world: Facebook, Instagram, Stripe, GitHub                             │
+│                                                                              │
+│  ─────────────────────────────────────────────────────────────────────────    │
+│                                                                              │
+│  4. WRITE AROUND                                                             │
+│  ──────────────                                                              │
+│  Writes go straight to the DB, skipping the cache entirely.                  │
+│  Cache gets updated only on a subsequent read (via cache-aside).             │
+│                                                                              │
+│     App ──write──→ Database (cache NOT updated)                              │
+│     ...later...                                                              │
+│     App ──read──→ Cache MISS ──→ DB ──→ populate cache                       │
+│                                                                              │
+│  Best for: Write-heavy systems with rare immediate reads                     │
+│            (e.g., logging, analytics, audit trails).                          │
+│                                                                              │
+│  ─────────────────────────────────────────────────────────────────────────    │
+│                                                                              │
+│  5. WRITE BACK (Write-Behind)                                                │
+│  ────────────────────────────                                                │
+│  Writes go to the cache FIRST, and are asynchronously persisted to the       │
+│  DB later. Minimizes write latency at the cost of durability risk.           │
+│                                                                              │
+│     App ──write──→ Cache ──→ ACK (immediate!)                                │
+│                      │                                                       │
+│                      └── async (later) ──→ Database                          │
+│                                                                              │
+│  Best for: High-performance, write-heavy systems                             │
+│            (counters, analytics, gaming leaderboards, IoT data).              │
+│  Real-world: Facebook like counts, gaming leaderboards                       │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Strategy Selection Quick Guide
+
+```
+┌──────────────────┬──────────────────┬───────────────────────────────────────┐
+│     Strategy     │   Consistency    │   Best Use Case                       │
+├──────────────────┼──────────────────┼───────────────────────────────────────┤
+│ Read-Through     │ Cache-managed    │ CDNs, social feeds, read-heavy apps   │
+│ Write-Through    │ Strong           │ Finance, inventory, config systems    │
+│ Cache-Aside      │ Eventual (brief  │ General web apps, APIs, most CRUD     │
+│                  │  staleness OK)   │                                       │
+│ Write-Around     │ Eventual         │ Logging, analytics, audit trails      │
+│ Write-Back       │ Eventual (risk   │ Counters, leaderboards, IoT, high-   │
+│                  │  of data loss)   │  throughput writes                    │
+└──────────────────┴──────────────────┴───────────────────────────────────────┘
+
+Decision Flowchart:
+
+  Is the workload read-heavy or write-heavy?
+  │
+  ├── READ-HEAVY
+  │   ├── Does the app need full cache control?
+  │   │   ├── YES → Cache-Aside (most common, app manages cache)
+  │   │   └── NO  → Read-Through (cache auto-loads, cleaner app code)
+  │   │
+  │   └── Must reads ALWAYS return fresh data after writes?
+  │       └── YES → Pair with Write-Through
+  │
+  └── WRITE-HEAVY
+      ├── Is the written data read back immediately?
+      │   ├── YES → Write-Through (consistent, but slower writes)
+      │   └── NO  → Write-Around (avoids polluting cache with unread data)
+      │
+      └── Is write speed more important than data durability?
+          ├── YES → Write-Back (fastest writes, async DB flush)
+          └── NO  → Write-Through or Write-Around
+```
+
+### Combined Strategies in Production
+
+Most real-world systems **mix multiple strategies** for different data types:
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│  Example: E-Commerce Platform                                     │
+│                                                                  │
+│  User profile:      Write-Through + Cache-Aside                  │
+│  ├── User sees changes immediately (write-through)               │
+│  └── Other users get cached profile (cache-aside reads)          │
+│                                                                  │
+│  Product catalog:   Read-Through                                 │
+│  ├── High read volume, catalog changes rarely                    │
+│  └── Cache auto-loads products transparently                     │
+│                                                                  │
+│  View/click counts: Write-Back                                   │
+│  ├── Millions of events per second                               │
+│  └── Batch-flush to DB every few seconds                         │
+│                                                                  │
+│  Order audit logs:  Write-Around                                 │
+│  ├── Written once, rarely re-read                                │
+│  └── No need to cache write-heavy audit data                     │
+│                                                                  │
+│  Session data:      Cache-Aside + TTL                            │
+│  ├── Load session on first request, cache with expiry            │
+│  └── TTL = session timeout (30 min)                              │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -1163,15 +1314,20 @@ What kind of data are you caching?
         Monitor hit ratio and adjust
 ```
 
-### One-Line Summaries
+### One-Line Summaries — Top 5 Caching Strategies
+
+| # | Strategy | One Liner | Best For |
+|---|---------|-----------|----------|
+| 1 | **Read-Through** | Cache auto-loads from DB on miss; app only talks to cache | CDNs, social feeds, read-heavy apps |
+| 2 | **Write-Through** | Write to cache AND DB synchronously; always consistent | Finance apps, inventory, strong consistency |
+| 3 | **Cache-Aside** | App checks cache first; on miss, loads from DB and fills cache | General web apps, slight staleness OK |
+| 4 | **Write-Around** | Write to DB only; cache populated on next read | Logging, analytics, write-heavy rarely-read |
+| 5 | **Write-Back** | Write to cache only; async batch flush to DB; fast but risky | Counters, leaderboards, IoT, high-throughput |
+
+### One-Line Summaries — Other Concepts
 
 | Concept | One Liner |
 |---------|-----------|
-| **Cache-Aside** | App checks cache first; on miss, loads from DB and fills cache |
-| **Read-Through** | Cache auto-loads from DB on miss; app only talks to cache |
-| **Write-Through** | Write to cache AND DB synchronously; always consistent |
-| **Write-Back** | Write to cache only; async batch flush to DB; fast but risky |
-| **Write-Around** | Write to DB only; cache populated on next read |
 | **LRU** | Evict whatever was used least recently |
 | **LFU** | Evict whatever was used least frequently |
 | **FIFO** | Evict whatever was added first |
