@@ -170,6 +170,7 @@ The `docs/` folder contains detailed reference guides for system design intervie
 | [**Kafka**](docs/kafka.md) | Messages, Topics, Partitions, Producers, Consumers, Clusters, Use Cases |
 | [**Rate Limiting**](docs/rate-limiting.md) | 5 Core Algorithms, Types, Distributed Limiting, Architecture, Real-World Case Studies |
 | [**Java Fundamentals**](docs/java-fundamentals.md) | If-Else, Switch, Ternary, Loops, Pattern Matching, Optional, Operators, Javadoc Conventions |
+| [**Senior Java Interview**](docs/senior-java-interview.md) | 20 Real Production Questions — Multithreading, Kafka, Spring Transactions, AWS/Azure, System Design, Caching |
 
 ## How to Run
 
