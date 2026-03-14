@@ -171,6 +171,9 @@ The `docs/` folder contains detailed reference guides for system design intervie
 | [**Rate Limiting**](docs/rate-limiting.md) | 5 Core Algorithms, Types, Distributed Limiting, Architecture, Real-World Case Studies |
 | [**Java Fundamentals**](docs/java-fundamentals.md) | If-Else, Switch, Ternary, Loops, Pattern Matching, Optional, Operators, Javadoc Conventions |
 | [**Senior Java Interview**](docs/senior-java-interview.md) | 20 Real Production Questions — Multithreading, Kafka, Spring Transactions, AWS/Azure, System Design, Caching |
+| [**System Design Handbook**](docs/system-design-handbook.md) | Load Balancers, Latency vs Throughput, CAP Trade-offs, Architecture Patterns (Monolith/Microservices/Event-Driven), Scalability/Reliability/Availability Checklists |
+| [**System Design 30 Concepts**](docs/system-design-30-concepts.md) | Client-Server, DNS, Proxy, HTTP, REST, GraphQL, SQL/NoSQL, Scaling, Sharding, Caching, CDN, WebSockets, Webhooks, Microservices, Queues, Rate Limiting, Idempotency |
+| [**System Design Interview Questions**](docs/system-design-interview-questions.md) | 15 Questions: URL Shortener, Chat App, Instagram, YouTube, Amazon, Uber, Google Drive, Web Crawler, Notification, Logging, IRCTC Train Ticketing, RedBus, BookMyShow, MakeMyTrip Hotel, Rate Limiting |
 
 ## How to Run
 
