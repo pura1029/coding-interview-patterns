@@ -1,4 +1,4 @@
-# 15 System Design Interview Questions
+# 16 System Design Interview Questions
 
 > Detailed answers with architecture diagrams, multiple approaches with pros/cons, and Java LLD code for the most frequently asked system design interview questions.
 
@@ -25,6 +25,7 @@
 | 13 | Movie Ticketing (BookMyShow) | Seat locking, concurrent booking, surge | Redis TTL Lock, Event-Driven |
 | 14 | Hotel Booking (MakeMyTrip) | Availability calendar, overbooking, pricing | Calendar Index, Rate Engine |
 | 15 | Rate Limiting System | Distributed counters, algorithm choice, fairness | Token Bucket, Redis, Lua |
+| 16 | Distributed Job Scheduler | Retries, failure detection, cancellation, scaling | Kafka, Docker, Redis, Cassandra |
 
 ---
 
@@ -6770,6 +6771,928 @@ Rule storage:
 
 ---
 
+## Q16: Design a Distributed Job Scheduler
+
+> **Reference:** [Shreya Soni — Distributed Job Scheduler (LinkedIn)](https://www.linkedin.com/feed/update/urn:li:activity:7438497376904044544)
+
+### Requirements
+
+```
+Functional:
+  • Create, schedule, edit, and cancel jobs (one-time & recurring)
+  • Execute jobs at the scheduled time (e.g., run a Python script)
+  • Retry failed jobs with configurable retry count
+  • Cancel running or future jobs
+  • Search jobs by jobId, status, or userId
+  • Store job artifacts/scripts in object storage
+
+Non-Functional:
+  • At-least-once execution guarantee
+  • Scalable horizontally — handle millions of jobs
+  • Fault-tolerant — detect and recover from executor crashes
+  • Low scheduling latency (< 5 seconds from scheduled time)
+  • 99.9% availability
+  • Isolated execution — jobs shouldn't affect each other
+```
+
+### High-Level Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                     DISTRIBUTED JOB SCHEDULER — ARCHITECTURE                     │
+│                                                                                  │
+│  Client (User/API)                                                               │
+│         │                                                                        │
+│         ▼                                                                        │
+│  ┌──────────────┐                                                                │
+│  │ API Gateway   │  ← Auth, Rate Limiting, Routing                               │
+│  └──────┬───────┘                                                                │
+│         │                                                                        │
+│    ┌────┴──────────────────┐                                                     │
+│    │                       │                                                     │
+│    ▼                       ▼                                                     │
+│  ┌──────────────┐   ┌──────────────────┐                                         │
+│  │ Job Service   │   │ Job Search       │                                         │
+│  │              │   │ Service          │                                         │
+│  │ • Create     │   │                  │                                         │
+│  │ • Edit       │   │ • Search by      │                                         │
+│  │ • Schedule   │   │   jobId, status  │                                         │
+│  │ • Cancel     │   │ • Filter & page  │                                         │
+│  └──────┬───────┘   └────────┬─────────┘                                         │
+│         │                    │                                                   │
+│         │ publish            │ read                                              │
+│         ▼                    ▼                                                   │
+│  ┌──────────────┐   ┌──────────────────┐                                         │
+│  │    Kafka      │   │   Database       │                                         │
+│  │ (Event Bus)   │   │  (Cassandra)     │                                         │
+│  │              │   │                  │                                         │
+│  │ Topics:      │   │ PK: user_id      │                                         │
+│  │ • job-exec   │   │ CK: job_id       │                                         │
+│  │ • job-retry  │   │                  │                                         │
+│  │ • job-cancel │   │ Columns:          │                                         │
+│  └──────┬───────┘   │ status, script,   │                                         │
+│         │           │ retry_count,      │                                         │
+│         │           │ scheduled_time,   │                                         │
+│         │           │ modified_time     │                                         │
+│         │           └──────────────────┘                                         │
+│    ┌────┴────────────────────┐                                                   │
+│    │                         │                                                   │
+│    ▼                         ▼                                                   │
+│  ┌──────────────┐   ┌──────────────────┐                                         │
+│  │ Watcher       │   │ Job Consumer     │                                         │
+│  │ Service       │   │ Service          │                                         │
+│  │              │   │                  │                                         │
+│  │ Poll every    │   │ Consumes Kafka   │                                         │
+│  │ 10-20s for:  │   │ events to update │                                         │
+│  │ • Upcoming   │   │ job status &     │                                         │
+│  │   jobs       │   │ metadata in DB   │                                         │
+│  │ • Stale      │   │                  │                                         │
+│  │   running    │   │                  │                                         │
+│  │   jobs       │   │                  │                                         │
+│  └──────┬───────┘   └──────────────────┘                                         │
+│         │                                                                        │
+│         │ enqueue to Kafka                                                       │
+│         ▼                                                                        │
+│  ┌──────────────┐   ┌──────────────────┐   ┌──────────────────┐                   │
+│  │ Executor      │   │   Docker         │   │   Object Store   │                   │
+│  │ Service       │──►│   Container      │   │   (S3)           │                   │
+│  │ (Multiple     │   │                  │   │                  │                   │
+│  │  instances)   │   │ Runs job script  │   │ Job scripts &    │                   │
+│  │              │   │ in isolation     │   │ artifacts        │                   │
+│  │ Polls Redis  │   └──────────────────┘   └──────────────────┘                   │
+│  │ for cancel   │                                                                │
+│  │ signals      │   ┌──────────────────┐                                         │
+│  │              │   │   Zookeeper       │                                         │
+│  │ Reports to   │──►│                  │                                         │
+│  │ Kafka on     │   │ Heartbeat &      │                                         │
+│  │ success/fail │   │ coordination     │                                         │
+│  └──────┬───────┘   └──────────────────┘                                         │
+│         │                                                                        │
+│         │ poll for cancel signals                                                │
+│         ▼                                                                        │
+│  ┌──────────────┐                                                                │
+│  │   Redis       │                                                                │
+│  │              │                                                                │
+│  │ Cancel signal │                                                                │
+│  │ store with    │                                                                │
+│  │ TTL expiry    │                                                                │
+│  └──────────────┘                                                                │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Service Interaction Diagram
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│              SERVICE INTERACTION — REQUEST & DATA FLOWS                           │
+│                                                                                  │
+│  ═══════════════════════════════════════════════════════════════════              │
+│  FLOW 1: CREATE & SCHEDULE A JOB                                                │
+│  ═══════════════════════════════════════════════════════════════════              │
+│                                                                                  │
+│  Client ──POST /jobs──► API Gateway ──► Job Service                              │
+│                                            │                                     │
+│                                            ├──► DB (INSERT job, status=SCHEDULED)│
+│                                            │                                     │
+│                                            └──► S3 (upload job script/artifact)  │
+│                                                                                  │
+│  ═══════════════════════════════════════════════════════════════════              │
+│  FLOW 2: JOB EXECUTION (Happy Path)                                              │
+│  ═══════════════════════════════════════════════════════════════════              │
+│                                                                                  │
+│  Watcher Service                                                                 │
+│    │ (polls DB every 10-20s for jobs in [now, now+5min])                         │
+│    │                                                                             │
+│    ├──► DB: UPDATE status = QUEUED                                               │
+│    │                                                                             │
+│    └──► Kafka (job-exec topic): publish job event                                │
+│              │                                                                   │
+│              ▼                                                                   │
+│         Executor Service (consumer group — multiple instances)                   │
+│              │                                                                   │
+│              ├──► S3: download job script                                         │
+│              │                                                                   │
+│              ├──► Docker: spin up container, execute script                       │
+│              │                                                                   │
+│              ├──► DB: UPDATE status = RUNNING, modified_time = now               │
+│              │                                                                   │
+│              ├──► Zookeeper: send heartbeat                                       │
+│              │                                                                   │
+│              └──► (on success) Kafka (job-status topic): publish SUCCESS          │
+│                        │                                                         │
+│                        ▼                                                         │
+│                   Job Consumer Service                                           │
+│                        │                                                         │
+│                        └──► DB: UPDATE status = COMPLETED                        │
+│                                                                                  │
+│  ═══════════════════════════════════════════════════════════════════              │
+│  FLOW 3: JOB FAILURE & RETRY                                                    │
+│  ═══════════════════════════════════════════════════════════════════              │
+│                                                                                  │
+│  Executor Service                                                                │
+│    │ (job execution fails inside Docker container)                               │
+│    │                                                                             │
+│    └──► Kafka (job-retry topic): publish FAILED event                            │
+│              │                                                                   │
+│              ▼                                                                   │
+│         Job Consumer Service                                                     │
+│              │                                                                   │
+│              ├──► DB: INCREMENT retry_count, UPDATE status = RETRY_PENDING       │
+│              │                                                                   │
+│              └──► (if retry_count < max_retries)                                 │
+│                     Kafka (job-exec topic): re-enqueue for execution              │
+│                                                                                  │
+│              └──► (if retry_count >= max_retries)                                │
+│                     DB: UPDATE status = PERMANENTLY_FAILED                        │
+│                     (move to Dead Letter Queue for inspection)                   │
+│                                                                                  │
+│  ═══════════════════════════════════════════════════════════════════              │
+│  FLOW 4: EXECUTOR CRASH — FAILURE DETECTION                                     │
+│  ═══════════════════════════════════════════════════════════════════              │
+│                                                                                  │
+│  Watcher Service                                                                 │
+│    │ (polls DB every 10-20s)                                                     │
+│    │                                                                             │
+│    ├──► DETECT: status = RUNNING AND modified_time > 15s stale                   │
+│    │                                                                             │
+│    ├──► DB: UPDATE status = FAILED                                               │
+│    │                                                                             │
+│    └──► Kafka (job-retry topic): publish for retry                               │
+│              │                                                                   │
+│              ▼                                                                   │
+│         (continues to FLOW 3 retry logic)                                        │
+│                                                                                  │
+│  ═══════════════════════════════════════════════════════════════════              │
+│  FLOW 5: CANCEL JOB                                                             │
+│  ═══════════════════════════════════════════════════════════════════              │
+│                                                                                  │
+│  Client ──DELETE /jobs/{id}──► API Gateway ──► Job Service                       │
+│                                                    │                             │
+│                                    ┌───────────────┤                             │
+│                                    │               │                             │
+│                              (if SCHEDULED)   (if RUNNING)                       │
+│                                    │               │                             │
+│                                    ▼               ▼                             │
+│                              Kafka (cancel    Redis: SET                          │
+│                              topic)           cancel:{jobId}                     │
+│                                    │          with TTL                            │
+│                                    ▼               │                             │
+│                              Job Consumer          ▼                             │
+│                              Service          Executor Service                   │
+│                                    │          (polls Redis)                       │
+│                                    ▼               │                             │
+│                              DB: status =          ▼                             │
+│                              CANCELLED        Kill Docker                         │
+│                                               container                          │
+│                                                    │                             │
+│                                                    ▼                             │
+│                                               DB: status =                       │
+│                                               CANCELLED                          │
+│                                                                                  │
+│  ═══════════════════════════════════════════════════════════════════              │
+│  FLOW 6: SEARCH JOBS                                                            │
+│  ═══════════════════════════════════════════════════════════════════              │
+│                                                                                  │
+│  Client ──GET /jobs?status=RUNNING──► API Gateway ──► Job Search Service         │
+│                                                            │                     │
+│                                                            └──► DB (Cassandra)   │
+│                                                                 query by         │
+│                                                                 user_id +        │
+│                                                                 filters          │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Component Deep Dive
+
+#### API Gateway
+
+```
+Responsibilities:
+  • Authentication & authorization (JWT / API keys)
+  • Rate limiting (per-user, per-endpoint)
+  • Request validation
+  • Route to internal microservices (Job Service, Job Search Service)
+  • TLS termination
+
+Endpoints:
+  POST   /api/v1/jobs              → Create/schedule a job
+  PUT    /api/v1/jobs/{jobId}      → Edit a job
+  DELETE /api/v1/jobs/{jobId}      → Cancel a job
+  GET    /api/v1/jobs/{jobId}      → Get job details
+  GET    /api/v1/jobs?status=X     → Search jobs
+```
+
+#### Job Service
+
+```
+Core operations:
+  ┌─────────────────────────────────────────────────────────┐
+  │                     JOB SERVICE                          │
+  │                                                          │
+  │  CREATE JOB:                                             │
+  │    1. Validate request (cron expression, script path)    │
+  │    2. Upload script to S3                                │
+  │    3. Insert job record in Cassandra                     │
+  │       (status = SCHEDULED, retry_count = 0)              │
+  │    4. Return jobId to client                             │
+  │                                                          │
+  │  EDIT JOB:                                               │
+  │    1. Validate job exists and is in SCHEDULED state      │
+  │    2. Update fields in DB                                │
+  │    3. If script changed, re-upload to S3                 │
+  │                                                          │
+  │  CANCEL JOB:                                             │
+  │    1. Check current status                               │
+  │    2. If SCHEDULED → publish cancel event to Kafka       │
+  │    3. If RUNNING → write cancel signal to Redis          │
+  │    4. If already COMPLETED/CANCELLED → return error      │
+  └─────────────────────────────────────────────────────────┘
+```
+
+#### Watcher Service
+
+```
+  ┌─────────────────────────────────────────────────────────┐
+  │                   WATCHER SERVICE                        │
+  │                                                          │
+  │  Poll Interval: 10-20 seconds                            │
+  │                                                          │
+  │  TASK 1 — Upcoming Job Detection:                        │
+  │    Query: SELECT * FROM jobs                             │
+  │            WHERE scheduled_time BETWEEN now AND now+5min │
+  │              AND status = SCHEDULED                      │
+  │    Action:                                               │
+  │      • UPDATE status = QUEUED                            │
+  │      • Publish to Kafka job-exec topic                   │
+  │                                                          │
+  │  TASK 2 — Stale Running Job Detection:                   │
+  │    Query: SELECT * FROM jobs                             │
+  │            WHERE status = RUNNING                        │
+  │              AND modified_time < now - 15s               │
+  │    Action:                                               │
+  │      • UPDATE status = FAILED                            │
+  │      • Publish to Kafka job-retry topic                  │
+  │                                                          │
+  │  Scaling: Use leader election (Zookeeper) to ensure      │
+  │           only ONE watcher instance polls at a time      │
+  └─────────────────────────────────────────────────────────┘
+```
+
+#### Executor Service
+
+```
+  ┌─────────────────────────────────────────────────────────┐
+  │                  EXECUTOR SERVICE                        │
+  │                                                          │
+  │  Kafka Consumer Group: "executor-group"                  │
+  │  (multiple instances for horizontal scaling)             │
+  │                                                          │
+  │  ON RECEIVING JOB EVENT:                                 │
+  │    1. Download script from S3                            │
+  │    2. Spin up Docker container                           │
+  │    3. Mount script and execute                           │
+  │    4. Periodically update modified_time in DB            │
+  │       (heartbeat to prove "I'm still alive")            │
+  │    5. Poll Redis for cancel signal (cancel:{jobId})      │
+  │                                                          │
+  │  ON SUCCESS:                                             │
+  │    → Publish SUCCESS to Kafka job-status topic           │
+  │    → Destroy Docker container                            │
+  │                                                          │
+  │  ON FAILURE:                                             │
+  │    → Publish FAILED to Kafka job-retry topic             │
+  │    → Destroy Docker container                            │
+  │                                                          │
+  │  ON CANCEL SIGNAL:                                       │
+  │    → Kill Docker container                               │
+  │    → Publish CANCELLED to Kafka job-status topic         │
+  │                                                          │
+  │  HEARTBEAT:                                              │
+  │    → Send heartbeat to Zookeeper every 5s                │
+  │    → If executor dies, Zookeeper detects and             │
+  │      triggers rebalancing of Kafka consumer group        │
+  └─────────────────────────────────────────────────────────┘
+```
+
+#### Kafka Topics & Event Schema
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │                    KAFKA TOPICS                            │
+  │                                                            │
+  │  Topic: job-exec                                           │
+  │    Key: jobId                                              │
+  │    Value: { jobId, userId, scriptPath, scheduledTime,      │
+  │             maxRetries, timeout }                           │
+  │    Producers: Watcher Service, Job Consumer (re-enqueue)   │
+  │    Consumers: Executor Service (consumer group)            │
+  │                                                            │
+  │  Topic: job-retry                                          │
+  │    Key: jobId                                              │
+  │    Value: { jobId, retryCount, failureReason, timestamp }  │
+  │    Producers: Executor Service, Watcher Service            │
+  │    Consumers: Job Consumer Service                         │
+  │                                                            │
+  │  Topic: job-status                                         │
+  │    Key: jobId                                              │
+  │    Value: { jobId, status, executionTime, output }         │
+  │    Producers: Executor Service                             │
+  │    Consumers: Job Consumer Service                         │
+  │                                                            │
+  │  Topic: job-cancel                                         │
+  │    Key: jobId                                              │
+  │    Value: { jobId, cancelledBy, timestamp }                │
+  │    Producers: Job Service                                  │
+  │    Consumers: Job Consumer Service                         │
+  │                                                            │
+  │  DLQ: job-dlq                                              │
+  │    Jobs that exceed max retries go here for manual          │
+  │    inspection and replay.                                   │
+  └──────────────────────────────────────────────────────────┘
+```
+
+#### Database Schema (Cassandra)
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │                 CASSANDRA DATA MODEL                       │
+  │                                                            │
+  │  Table: jobs                                               │
+  │  ─────────────────────────────────────────────────         │
+  │  Partition Key:  user_id (UUID)                            │
+  │  Clustering Key: job_id (TIMEUUID, DESC)                   │
+  │                                                            │
+  │  Columns:                                                  │
+  │  ┌────────────────────┬──────────────┬──────────────────┐  │
+  │  │ Column             │ Type         │ Description       │  │
+  │  ├────────────────────┼──────────────┼──────────────────┤  │
+  │  │ user_id            │ UUID         │ Partition key     │  │
+  │  │ job_id             │ TIMEUUID     │ Clustering key    │  │
+  │  │ job_name           │ TEXT         │ Human-readable    │  │
+  │  │ status             │ TEXT         │ SCHEDULED/QUEUED/ │  │
+  │  │                    │              │ RUNNING/COMPLETED/│  │
+  │  │                    │              │ FAILED/CANCELLED  │  │
+  │  │ script_path        │ TEXT         │ S3 path           │  │
+  │  │ scheduled_time     │ TIMESTAMP    │ When to execute   │  │
+  │  │ cron_expression    │ TEXT         │ For recurring jobs│  │
+  │  │ retry_count        │ INT          │ Current retries   │  │
+  │  │ max_retries        │ INT          │ Max allowed       │  │
+  │  │ timeout_seconds    │ INT          │ Execution timeout │  │
+  │  │ created_time       │ TIMESTAMP    │ Creation time     │  │
+  │  │ modified_time      │ TIMESTAMP    │ Last heartbeat    │  │
+  │  │ execution_output   │ TEXT         │ Stdout/stderr     │  │
+  │  └────────────────────┴──────────────┴──────────────────┘  │
+  │                                                            │
+  │  Secondary Index Table: jobs_by_status                     │
+  │  ─────────────────────────────────────────────────         │
+  │  PK: status    CK: scheduled_time (ASC)                    │
+  │  (Materialized view for Watcher Service queries)           │
+  │                                                            │
+  │  Why Cassandra?                                            │
+  │  • High write throughput for status updates                │
+  │  • Scalable partitioning by user_id                        │
+  │  • Tunable consistency (QUORUM for writes, ONE for reads)  │
+  │  • Time-series friendly with TIMEUUID clustering           │
+  └──────────────────────────────────────────────────────────┘
+```
+
+#### Redis — Cancellation Store
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │                  REDIS CANCEL STORE                        │
+  │                                                            │
+  │  Key Pattern:  cancel:{jobId}                              │
+  │  Value:        { cancelledBy, timestamp }                  │
+  │  TTL:          300 seconds (5 minutes)                     │
+  │                                                            │
+  │  SET cancel:abc-123 '{"by":"user1"}' EX 300                │
+  │                                                            │
+  │  Why Redis?                                                │
+  │  • Sub-millisecond reads for polling from executors        │
+  │  • TTL ensures stale cancel requests auto-expire           │
+  │  • No persistent storage needed — ephemeral by nature      │
+  │                                                            │
+  │  Executor polling loop:                                    │
+  │    while (jobRunning):                                     │
+  │      if Redis.EXISTS("cancel:" + jobId):                   │
+  │        killDockerContainer()                               │
+  │        publishCancelledEvent()                             │
+  │        break                                               │
+  │      sleep(1s)                                             │
+  └──────────────────────────────────────────────────────────┘
+```
+
+### Job State Machine
+
+```
+  ┌──────────────────────────────────────────────────────────────┐
+  │                    JOB STATE MACHINE                          │
+  │                                                               │
+  │                    ┌───────────┐                              │
+  │         ┌──────────│ SCHEDULED │◄──── Job Service creates    │
+  │         │          └─────┬─────┘                              │
+  │         │                │                                    │
+  │         │   Watcher picks up (within 5 min window)           │
+  │         │                │                                    │
+  │         │                ▼                                    │
+  │    Cancel (future)  ┌──────────┐                              │
+  │         │           │  QUEUED  │──── Kafka job-exec topic     │
+  │         │           └────┬─────┘                              │
+  │         │                │                                    │
+  │         │     Executor picks up from Kafka                   │
+  │         │                │                                    │
+  │         │                ▼                                    │
+  │         │          ┌──────────┐                               │
+  │         │          │ RUNNING  │──── Docker container active   │
+  │         │          └──┬───┬───┘                               │
+  │         │             │   │                                   │
+  │         │      ┌──────┘   └──────────┐                       │
+  │         │      │                     │                       │
+  │         │   Success              Failure                     │
+  │         │      │                     │                       │
+  │         │      ▼                     ▼                       │
+  │         │ ┌───────────┐    ┌──────────────────┐              │
+  │         │ │ COMPLETED │    │  RETRY_PENDING   │              │
+  │         │ └───────────┘    └────────┬─────────┘              │
+  │         │                           │                        │
+  │         │              retry_count < max?                    │
+  │         │               ┌───────┴───────┐                   │
+  │         │               │               │                   │
+  │         │              YES              NO                  │
+  │         │               │               │                   │
+  │         │               ▼               ▼                   │
+  │         │          ┌──────────┐  ┌──────────────────┐       │
+  │         │          │  QUEUED  │  │ PERMANENTLY_FAILED│       │
+  │         │          │ (re-enq) │  │ (→ DLQ)          │       │
+  │         │          └──────────┘  └──────────────────┘       │
+  │         │                                                    │
+  │         ▼                                                    │
+  │    ┌───────────┐                                             │
+  │    │ CANCELLED │ ← via Kafka (future) or Redis (running)    │
+  │    └───────────┘                                             │
+  └──────────────────────────────────────────────────────────────┘
+```
+
+### Retry & Failure Strategy
+
+```
+  ┌──────────────────────────────────────────────────────────────┐
+  │                  RETRY & FAILURE STRATEGY                     │
+  │                                                               │
+  │  Retry Policy:                                                │
+  │  ┌──────────────────────────────────────────────────────────┐ │
+  │  │ Approach: Exponential backoff with jitter                │ │
+  │  │                                                          │ │
+  │  │   Delay = min(base × 2^retryCount + random(0, jitter),  │ │
+  │  │               maxDelay)                                  │ │
+  │  │                                                          │ │
+  │  │   Retry 1:  2s  + jitter                                │ │
+  │  │   Retry 2:  4s  + jitter                                │ │
+  │  │   Retry 3:  8s  + jitter                                │ │
+  │  │   Retry 4: 16s  + jitter                                │ │
+  │  │   Retry 5: 30s  (max delay cap)                         │ │
+  │  └──────────────────────────────────────────────────────────┘ │
+  │                                                               │
+  │  Failure Detection — TWO mechanisms:                          │
+  │                                                               │
+  │  1. EXPLICIT FAILURE (executor reports)                       │
+  │     Executor catches exception → publishes to job-retry topic │
+  │     Fast: detected in < 1 second                              │
+  │                                                               │
+  │  2. IMPLICIT FAILURE (executor crash)                         │
+  │     Executor process/container dies → cannot report failure   │
+  │     Watcher polls DB for RUNNING jobs with stale modified_time│
+  │     Threshold: modified_time > 15 seconds ago                 │
+  │     Slower: detected within 10-35 seconds (poll interval)     │
+  │                                                               │
+  │  Dead Letter Queue (DLQ):                                     │
+  │     Jobs exceeding max_retries are pushed to Kafka job-dlq    │
+  │     topic for manual inspection, debugging, or replay         │
+  └──────────────────────────────────────────────────────────────┘
+```
+
+### Approaches Comparison
+
+| Approach | Scheduler | Pros | Cons |
+|----------|-----------|------|------|
+| **Approach 1: DB Polling (this design)** | Watcher polls DB every 10-20s | Simple, reliable, no message loss | Slight delay (up to poll interval), DB load |
+| **Approach 2: Delay Queue (RabbitMQ/SQS)** | Message delayed delivery | Precise timing, no polling overhead | Queue depth issues, harder failure detection |
+| **Approach 3: Time-wheel (Kafka + in-memory)** | Hierarchical timing wheel | O(1) insert/cancel, very low latency | Complex, state loss on crash, memory bound |
+| **Approach 4: Cron-based (Kubernetes CronJob)** | K8s native scheduling | Zero infra to build, built-in retry | Limited to K8s, no fine-grained control |
+
+### Scalability & Design Decisions
+
+```
+  ┌──────────────────────────────────────────────────────────────┐
+  │              SCALABILITY & DESIGN DECISIONS                   │
+  │                                                               │
+  │  HORIZONTAL SCALING:                                          │
+  │  ┌──────────────────────────────────────────────────────────┐ │
+  │  │ Component         │ Scaling Strategy                     │ │
+  │  ├───────────────────┼─────────────────────────────────────┤ │
+  │  │ API Gateway       │ Multiple instances behind LB         │ │
+  │  │ Job Service       │ Stateless → scale out freely         │ │
+  │  │ Watcher Service   │ Leader election → 1 active, N standby│ │
+  │  │ Executor Service  │ Kafka consumer group → auto-rebalance│ │
+  │  │ Job Consumer      │ Kafka consumer group → auto-rebalance│ │
+  │  │ Kafka             │ Add partitions + brokers             │ │
+  │  │ Cassandra         │ Add nodes, vnodes handle rebalancing │ │
+  │  │ Redis             │ Redis Cluster for HA                  │ │
+  │  └──────────────────────────────────────────────────────────┘ │
+  │                                                               │
+  │  KEY DESIGN DECISIONS:                                        │
+  │                                                               │
+  │  1. Why Kafka over RabbitMQ?                                  │
+  │     • Replay-ability: can reprocess events                    │
+  │     • Consumer groups: natural load balancing for executors   │
+  │     • Durability: persists messages to disk                   │
+  │     • Throughput: handles millions of events/sec              │
+  │                                                               │
+  │  2. Why Docker for execution?                                 │
+  │     • Isolation: one job can't crash another                  │
+  │     • Consistency: same runtime everywhere                    │
+  │     • Resource limits: CPU/memory capping per job             │
+  │     • Security: sandboxed execution                           │
+  │                                                               │
+  │  3. Why Cassandra over PostgreSQL?                            │
+  │     • Write-heavy workload (status updates every few seconds) │
+  │     • Partition by user_id → queries scoped to single user    │
+  │     • Linear scalability — add nodes, no resharding           │
+  │     • AP system — availability over consistency for job status │
+  │                                                               │
+  │  4. Why Redis for cancellation (not DB)?                      │
+  │     • Sub-ms reads needed for executor polling loop           │
+  │     • Ephemeral data — TTL auto-cleanup                       │
+  │     • No persistence overhead                                 │
+  │                                                               │
+  │  5. Why Zookeeper for coordination?                           │
+  │     • Leader election for Watcher (avoid duplicate polling)   │
+  │     • Executor health monitoring via ephemeral nodes          │
+  │     • Kafka already depends on Zookeeper (or KRaft in newer)  │
+  └──────────────────────────────────────────────────────────────┘
+```
+
+### Capacity Estimation
+
+```
+Assumptions:
+  • 10M jobs scheduled per day
+  • Average job execution: 30 seconds
+  • Peak: 3x average load
+
+Throughput:
+  10M jobs/day = ~115 jobs/sec (average)
+  Peak: ~350 jobs/sec
+  Kafka can handle 100K+ messages/sec → no bottleneck
+
+Executor capacity:
+  If avg job = 30s, each executor handles ~2 jobs/min = 120 jobs/hr
+  At peak 350 jobs/sec = 21,000 jobs/min
+  Need: 21,000 / 2 = ~10,500 executor instances at peak
+  With auto-scaling: 2,000 base + burst to 12,000
+
+Storage (Cassandra):
+  Each job record: ~1 KB
+  10M jobs/day × 365 days × 1 KB = ~3.65 TB/year
+  With RF=3: ~11 TB/year
+  10-node cluster with 2 TB each → handles 2+ years
+
+Kafka retention:
+  Events: ~500 bytes each
+  10M events/day × 500B = 5 GB/day
+  7-day retention: 35 GB → trivial
+
+Redis (cancel signals):
+  Active running jobs at any time: ~10K
+  Cancel signals: ~1% = 100 keys × 200 bytes = 20 KB
+  Negligible memory usage
+
+S3 (scripts & artifacts):
+  Average script: 10 KB
+  10M jobs × 10 KB = 100 GB/day (with dedup much less)
+  Lifecycle policy: archive after 30 days
+```
+
+### Java LLD — Core Classes
+
+```java
+// === Job Entity ===
+public class Job {
+    private UUID jobId;
+    private UUID userId;
+    private String jobName;
+    private JobStatus status;
+    private String scriptPath;
+    private Instant scheduledTime;
+    private String cronExpression;
+    private int retryCount;
+    private int maxRetries;
+    private int timeoutSeconds;
+    private Instant createdTime;
+    private Instant modifiedTime;
+    private String executionOutput;
+}
+
+public enum JobStatus {
+    SCHEDULED, QUEUED, RUNNING, COMPLETED,
+    FAILED, RETRY_PENDING, PERMANENTLY_FAILED, CANCELLED
+}
+
+// === Job Service ===
+public class JobService {
+    private final JobRepository jobRepository;
+    private final S3Client s3Client;
+    private final KafkaProducer<String, JobEvent> kafkaProducer;
+    private final RedisClient redisClient;
+
+    public Job createJob(CreateJobRequest request) {
+        String scriptPath = s3Client.upload(request.getScript());
+        Job job = Job.builder()
+            .jobId(UUID.randomUUID())
+            .userId(request.getUserId())
+            .jobName(request.getJobName())
+            .status(JobStatus.SCHEDULED)
+            .scriptPath(scriptPath)
+            .scheduledTime(request.getScheduledTime())
+            .cronExpression(request.getCronExpression())
+            .maxRetries(request.getMaxRetries())
+            .timeoutSeconds(request.getTimeoutSeconds())
+            .retryCount(0)
+            .createdTime(Instant.now())
+            .modifiedTime(Instant.now())
+            .build();
+        jobRepository.save(job);
+        return job;
+    }
+
+    public void cancelJob(UUID jobId) {
+        Job job = jobRepository.findById(jobId)
+            .orElseThrow(() -> new JobNotFoundException(jobId));
+
+        switch (job.getStatus()) {
+            case SCHEDULED:
+            case QUEUED:
+                kafkaProducer.send("job-cancel",
+                    new CancelEvent(jobId, Instant.now()));
+                break;
+            case RUNNING:
+                redisClient.setex("cancel:" + jobId,
+                    300, "{\"timestamp\":\"" + Instant.now() + "\"}");
+                break;
+            default:
+                throw new InvalidStateException(
+                    "Cannot cancel job in " + job.getStatus() + " state");
+        }
+    }
+}
+
+// === Watcher Service ===
+public class WatcherService implements Runnable {
+    private final JobRepository jobRepository;
+    private final KafkaProducer<String, JobEvent> kafkaProducer;
+
+    @Override
+    public void run() {
+        while (true) {
+            pollUpcomingJobs();
+            detectStaleRunningJobs();
+            sleep(Duration.ofSeconds(15));
+        }
+    }
+
+    private void pollUpcomingJobs() {
+        Instant now = Instant.now();
+        Instant window = now.plus(Duration.ofMinutes(5));
+        List<Job> upcoming = jobRepository
+            .findByStatusAndScheduledTimeBetween(
+                JobStatus.SCHEDULED, now, window);
+
+        for (Job job : upcoming) {
+            job.setStatus(JobStatus.QUEUED);
+            job.setModifiedTime(Instant.now());
+            jobRepository.save(job);
+            kafkaProducer.send("job-exec",
+                new ExecuteEvent(job.getJobId(), job.getScriptPath(),
+                    job.getMaxRetries(), job.getTimeoutSeconds()));
+        }
+    }
+
+    private void detectStaleRunningJobs() {
+        Instant threshold = Instant.now().minus(Duration.ofSeconds(15));
+        List<Job> stale = jobRepository
+            .findByStatusAndModifiedTimeBefore(
+                JobStatus.RUNNING, threshold);
+
+        for (Job job : stale) {
+            job.setStatus(JobStatus.FAILED);
+            job.setModifiedTime(Instant.now());
+            jobRepository.save(job);
+            kafkaProducer.send("job-retry",
+                new RetryEvent(job.getJobId(), job.getRetryCount(),
+                    "Executor crash detected"));
+        }
+    }
+}
+
+// === Executor Service ===
+public class ExecutorService {
+    private final DockerClient dockerClient;
+    private final S3Client s3Client;
+    private final KafkaProducer<String, JobEvent> kafkaProducer;
+    private final RedisClient redisClient;
+    private final JobRepository jobRepository;
+
+    @KafkaListener(topics = "job-exec", groupId = "executor-group")
+    public void executeJob(ExecuteEvent event) {
+        UUID jobId = event.getJobId();
+        try {
+            String script = s3Client.download(event.getScriptPath());
+            String containerId = dockerClient.createContainer(script,
+                event.getTimeoutSeconds());
+
+            jobRepository.updateStatus(jobId, JobStatus.RUNNING);
+            dockerClient.startContainer(containerId);
+
+            CompletableFuture<?> heartbeat = startHeartbeat(jobId);
+            CompletableFuture<?> cancelMonitor = monitorCancel(
+                jobId, containerId);
+
+            int exitCode = dockerClient.waitContainer(containerId);
+
+            heartbeat.cancel(true);
+            cancelMonitor.cancel(true);
+
+            if (exitCode == 0) {
+                kafkaProducer.send("job-status",
+                    new StatusEvent(jobId, JobStatus.COMPLETED));
+            } else {
+                kafkaProducer.send("job-retry",
+                    new RetryEvent(jobId, 0, "Exit code: " + exitCode));
+            }
+        } catch (Exception e) {
+            kafkaProducer.send("job-retry",
+                new RetryEvent(jobId, 0, e.getMessage()));
+        }
+    }
+
+    private CompletableFuture<?> startHeartbeat(UUID jobId) {
+        return CompletableFuture.runAsync(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                jobRepository.updateModifiedTime(jobId, Instant.now());
+                sleep(Duration.ofSeconds(5));
+            }
+        });
+    }
+
+    private CompletableFuture<?> monitorCancel(
+            UUID jobId, String containerId) {
+        return CompletableFuture.runAsync(() -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                if (redisClient.exists("cancel:" + jobId)) {
+                    dockerClient.killContainer(containerId);
+                    kafkaProducer.send("job-status",
+                        new StatusEvent(jobId, JobStatus.CANCELLED));
+                    break;
+                }
+                sleep(Duration.ofSeconds(1));
+            }
+        });
+    }
+}
+
+// === Job Consumer Service ===
+public class JobConsumerService {
+    private final JobRepository jobRepository;
+    private final KafkaProducer<String, JobEvent> kafkaProducer;
+
+    @KafkaListener(topics = "job-status", groupId = "consumer-group")
+    public void handleStatusUpdate(StatusEvent event) {
+        jobRepository.updateStatus(
+            event.getJobId(), event.getStatus());
+    }
+
+    @KafkaListener(topics = "job-retry", groupId = "consumer-group")
+    public void handleRetry(RetryEvent event) {
+        Job job = jobRepository.findById(event.getJobId()).orElseThrow();
+        int newRetryCount = job.getRetryCount() + 1;
+
+        if (newRetryCount <= job.getMaxRetries()) {
+            job.setRetryCount(newRetryCount);
+            job.setStatus(JobStatus.RETRY_PENDING);
+            jobRepository.save(job);
+
+            long delay = calculateBackoff(newRetryCount);
+            scheduledExecutor.schedule(() ->
+                kafkaProducer.send("job-exec",
+                    new ExecuteEvent(job.getJobId(),
+                        job.getScriptPath(),
+                        job.getMaxRetries(),
+                        job.getTimeoutSeconds())),
+                delay, TimeUnit.MILLISECONDS);
+        } else {
+            job.setStatus(JobStatus.PERMANENTLY_FAILED);
+            jobRepository.save(job);
+            kafkaProducer.send("job-dlq",
+                new DlqEvent(job.getJobId(), event.getFailureReason()));
+        }
+    }
+
+    @KafkaListener(topics = "job-cancel", groupId = "consumer-group")
+    public void handleCancel(CancelEvent event) {
+        jobRepository.updateStatus(
+            event.getJobId(), JobStatus.CANCELLED);
+    }
+
+    private long calculateBackoff(int retryCount) {
+        long base = 2000;
+        long maxDelay = 30000;
+        long delay = (long) (base * Math.pow(2, retryCount - 1));
+        long jitter = ThreadLocalRandom.current().nextLong(0, 1000);
+        return Math.min(delay + jitter, maxDelay);
+    }
+}
+```
+
+### Interview Tips
+
+```
+Key Talking Points:
+  ✅ Exactly-once vs at-least-once: this design uses at-least-once with
+     idempotent execution (prefer idempotent jobs)
+  ✅ Leader election for Watcher prevents duplicate job enqueueing
+  ✅ Two failure detection mechanisms (explicit + implicit) cover all cases
+  ✅ DLQ prevents infinite retry loops
+  ✅ Docker isolation prevents one bad job from taking down the executor
+  ✅ Kafka consumer groups give natural load balancing and fault tolerance
+
+Common Follow-Up Questions:
+  Q: "How do you handle recurring/cron jobs?"
+  A: After COMPLETED, Job Consumer checks cron_expression. If present,
+     calculate next scheduled_time and INSERT a new SCHEDULED job.
+
+  Q: "How do you guarantee exactly-once execution?"
+  A: True exactly-once is very hard. Use at-least-once with idempotency
+     keys. Each job has a unique execution_id; the job script should be
+     idempotent or check the execution_id before performing side effects.
+
+  Q: "What if Watcher goes down?"
+  A: Zookeeper leader election promotes a standby Watcher. Jobs may be
+     delayed by up to one poll interval (10-20s) during failover.
+
+  Q: "How do you handle job dependencies (DAG)?"
+  A: Add a depends_on field with a list of jobIds. Job Consumer checks
+     if all dependencies are COMPLETED before enqueueing. This creates
+     a DAG executor similar to Apache Airflow.
+
+  Q: "What about job priority?"
+  A: Use separate Kafka topics per priority level (high, medium, low).
+     Executors consume from high-priority topic first. Or use a priority
+     queue in front of Kafka.
+```
+
+---
+
 ## Interview Approach — How to Present These Designs
 
 ```
@@ -6816,4 +7739,4 @@ Rule storage:
 | [Apache Kafka](kafka.md) | Topics, Partitions, Consumer Groups |
 | [Senior Java Interview](senior-java-interview.md) | 20 Production-Grade Questions |
 
-> **Total:** 15 system designs with multiple approaches, pros/cons comparison tables, Java LLD code, and capacity estimation for each.
+> **Total:** 16 system designs with multiple approaches, pros/cons comparison tables, Java LLD code, and capacity estimation for each.
